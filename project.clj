@@ -1,8 +1,8 @@
 (defproject undefined "0.1.0-SNAPSHOT"
   :description "undefined's website"
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [noir "1.3.0-beta3"]
-                 [fetch "0.1.0-SNAPSHOT"]
+                 [noir "1.3.0-beta8"]
+                 [fetch "0.1.0-alpha2"]
                  [enlive "1.0.0"]]
   :plugins [[lein-cljsbuild "0.2.6"]]
   :cljsbuild {
@@ -17,4 +17,3 @@
                                    ; :optimizations :advanced
                                    :pretty-print true}}]}
   :main undefined.server)
-
