@@ -11,9 +11,7 @@
                         :compiler {
                                    :output-to "resources/public/js/main.js"
                                    :optimizations :whitespace
-                                   ;:externs ["web/js-static/jquery-min.js"
-                                   ;          "web/js-static/src/jqtouch.min.js" 
-                                   ;          "web/js-static/src/jqtouch-jquery.min.js"] 
+                                   ;:externs ["web/js-static/jquery-min.js"]
                                    ; :optimizations :advanced
                                    :pretty-print true}}]}
   :main undefined.server)
