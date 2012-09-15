@@ -1,9 +1,11 @@
 (ns undefined.views.welcome
-  (:require [undefined.views.common :as common]
-            [noir.content.getting-started])
-  (:use [noir.core :only [defpage]]))
+  (:require [net.cgrand.enlive-html :as html])
+  (:use [noir.core :only [defpage]]
+        [undefined.views.common :only [index]]))
 
 ;; this shall fuck off real quick.
 (defpage "/welcome" []
-         (common/layout
-           [:p "Welcome to undefined"]))
+         (index "a fucking string"))
+
+(defpage "/" []
+         (index "another fucking string"))

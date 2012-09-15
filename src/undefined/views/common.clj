@@ -1,14 +1,7 @@
 (ns undefined.views.common
-  (:use [noir.core :only [defpartial]]
-        [hiccup.page :only [include-js include-css html5]]))
+  (:require [net.cgrand.enlive-html :as html]))
 
-;; shall be replaced with enlive
-(defpartial layout [& content]
-            (html5
-              [:head
-               [:title "undefined"]
-               (include-css "/css/reset.css")
-               (include-js "/js/main.js")]
-              [:body
-               [:div#wrapper
-                content]]))
+(html/deftemplate index "templates/index.html"
+      [ctx]
+      [:title]    (html/content "Undefined Development")
+      [:#content] (html/content ctx))
