@@ -1,9 +1,13 @@
 (defproject undefined "0.1.0-SNAPSHOT"
   :description "undefined's website"
   :dependencies [[org.clojure/clojure "1.4.0"]
+                 ;; clj:
                  [noir "1.3.0-beta8"]
+                 [enlive "1.0.0"]
+                 ;; clj & cljs:
                  [fetch "0.1.0-alpha2"]
-                 [enlive "1.0.0"]]
+                 ;; cljs:
+                 [enfocus "1.0.0-alpha3"]]
   :plugins [[lein-cljsbuild "0.2.6"]]
   :cljsbuild {
               :builds [{
