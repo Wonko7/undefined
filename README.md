@@ -6,6 +6,7 @@ Undefined's website.
 
 ```bash
 lein deps
+lein cljsbuild once
 lein run
 ```
 
