@@ -1,4 +1,4 @@
-(ns undefined.views.welcome
+(ns undefined.views.index
   (:require [net.cgrand.enlive-html :as html])
   (:use [noir.core :only [defpage]]
         [undefined.views.common :only [index]]))
