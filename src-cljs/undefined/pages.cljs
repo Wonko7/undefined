@@ -10,6 +10,18 @@
     (em/at js/document
            [:#content] (em/content page))))
 
+(defn show-loading
+  (em/at js/document
+           [:#loading] (em/chain 
+                         (em/add-class "visible")
+                         (em/remove-class "hidden"))))
+
+(defn hide-loading
+  (em/at js/document
+           [:#loading] (em/chain 
+                         (em/add-class "hidden")
+                         (em/remove-class "visible"))))
+
 (defn page-click [e]
   (let [a    (.-currentTarget e)
         href (em/from a (em/get-attr :href))]
