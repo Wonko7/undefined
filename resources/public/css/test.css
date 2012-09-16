@@ -2,4 +2,41 @@
 body {
 	background: #393;
 	color: #a22;
+	padding: 0;
+	margin: 0;
+}
+
+#content {
+	background: #DDD;
+	width: 96%;
+	margin-left: 2%;
+	margin-right: 2%;
+	min-height: 50px;
+}
+
+#nav {
+	width: 100%;
+	background: #363;
+	padding: 0;
+	margin: 0;
+}
+
+#nav a {
+	border-radius: 5px;
+	background: #353;
+	margin-left: 20px;
+	padding: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 20px;
+	line-height: 44px;
+	text-align: center;
+	text-decoration: none;
+	color: white;
+}
+
+#nav a:hover {
+	color: #fff;
+	/*background: #363;*/
+	background: #a22;
 }

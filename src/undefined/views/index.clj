@@ -6,7 +6,7 @@
 
 
 (defpage "/" []
-  (index "another fucking string"))
+  (index "Loading..."))
 
 (defremote get-page [href]
   href)
