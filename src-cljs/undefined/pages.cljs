@@ -8,7 +8,9 @@
 (defn load-page [href & [args]]
   (fm/letrem [page (get-page href args)]
     (em/at js/document
-           [:#page-wrapper] (em/content page))))
+           [:#page-wrapper] (em/content page))
+    (em/at js/document
+           [:#page-wrapper :a] (em/listen :click page-click))))
 
 (defn page-click [e]
   (let [a    (.-currentTarget e)
