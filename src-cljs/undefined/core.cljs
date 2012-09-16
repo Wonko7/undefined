@@ -6,4 +6,4 @@
 
 (set! (.-onload js/window) #(fm/letrem [x (testremote "lol")]
                               (em/at js/document
-                                ["#content"] (em/append x))))
+                                [:#content] (em/append x))))

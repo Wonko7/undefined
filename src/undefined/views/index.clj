@@ -11,4 +11,4 @@
   (index "another fucking string"))
 
 (defremote testremote [arg]
-  (str arg " omg lol"))
+  (str " " arg " omg lol: <a href=welcome> well well</a>"))
