@@ -13,7 +13,6 @@
 (defn page-click [e]
   (let [a    (.-currentTarget e)
         href (em/from a (em/get-attr :href))]
-    (js/console.log "lolju")
     (.preventDefault e)
     (em/at js/document
            [:#content] (em/chain
