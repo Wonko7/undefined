@@ -15,6 +15,12 @@
   [:.article-date]  (html/content date)
   [:.article]       (html/html-content article))
 
+(html/defsnippet product "templates/product.html" [:div.whole-article]
+  [title link article sc]
+  [:.article-title :a]   (html/do-> (html/content title) (html/set-attr :href link))
+  [:.product-desc]       (html/content article)
+  [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
+
 (html/defsnippet page "templates/page.html" [:#page]
   [title content]
   [:#title]   (html/content title)

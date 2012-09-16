@@ -15,13 +15,15 @@
 (defn page-click [e]
   (let [a    (.-currentTarget e)
         href (em/from a (em/get-attr :href))
+        ext  (em/from a (em/get-attr :data-ext))
         args (em/from a (em/get-attr :data-args))]
-    (.preventDefault e)
-    (em/at js/document
-           [:#page] (em/chain
-                      (em/fade-out 100)
-                      (ef/chainable-standard #(load-page href args))
-                      (em/fade-in 100)))))
+    (when (not= ext "true")
+      (.preventDefault e)
+      (em/at js/document
+             [:#page] (em/chain
+                        (em/fade-out 100)
+                        (ef/chainable-standard #(load-page href args))
+                        (em/fade-in 100))))))
 
 (add-init! #(em/at js/document
                    [:#nav :a] (em/listen :click page-click)))

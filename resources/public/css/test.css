@@ -99,3 +99,13 @@ a, a:visited {
 a:hover {
 	color: #353;
 }
+
+.product-desc {
+	float: right;
+	display: inline-block;
+	width: 60%;
+}
+
+.product-screenshot {
+	width: 40%;
+}
