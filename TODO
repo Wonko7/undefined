@@ -1,2 +1,6 @@
 * build:
 	- better cljs compilation with https://github.com/ibdknox/noir-cljs
+* ui:
+	- rss
+* misc:
+	- domain name
