@@ -10,6 +10,7 @@ body {
 #page {
 	background: #DDD;
 	width: 92%;
+	margin-bottom: 2%;
 	margin-left: 2%;
 	margin-right: 2%;
 	min-height: 50px;
