@@ -11,9 +11,15 @@
            [:#content] (em/content page))))
 
 (defn page-click [e]
-  (let [a (.-currentTarget e)]
+  (let [a    (.-currentTarget e)
+        href (em/from a (em/get-attr :href))]
+    (js/console.log "lolju")
     (.preventDefault e)
-    (load-page (em/from a (em/get-attr :href)))))
+    (em/at js/document
+           [:#content] (em/chain
+                         (em/fade-out 100)
+                         (ef/chainable-standard #(load-page href))
+                         (em/fade-in 100)))))
 
 (add-init! #(em/at js/document
                    [:#nav :a] (em/listen :click page-click)))
