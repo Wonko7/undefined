@@ -25,7 +25,7 @@
 (defremote get-page [href & [args]]
   (apply str (html/emit* (if-let [f (page-inits href)]
                            (f href args)
-                           (page "404" {:tag :img :attrs {:src "/img/404.jpg"}})))))
+                           (page "404" {:tag :center :content [{:tag :img :attrs {:src "/img/404.jpg"}}]})))))
 
 ;; WARNING: not thread safe.
 (defn add-page-init! [name func]
