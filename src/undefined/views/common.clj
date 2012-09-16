@@ -1,5 +1,7 @@
 (ns undefined.views.common
-  (:use [noir.fetch.remotes])
+  (:use [noir.fetch.remotes]
+        ;[undefined.misc :only [doall-recur]]
+        )
   (:require [net.cgrand.enlive-html :as html]))
 
 (html/deftemplate base "templates/index.html"
@@ -11,19 +13,19 @@
   [title date article]
   [:.article-title] (html/content title)
   [:.article-date]  (html/content date)
-  [:.article]       (html/content article))
+  [:.article]       (html/html-content article))
 
 (html/defsnippet page "templates/page.html" [:#page]
   [title content]
   [:#title]   (html/content title)
-  [:#content] (html/html-content content))
+  [:#content] (html/append content))
 
 (def page-inits {})
 
 (defremote get-page [href & [args]]
-  (apply str (html/emit* (if-let [f (page-inits name)]
-                           (f name args)
-                           (page "404" "<img src=\"/img/404.jpg\" />")))))
+  (apply str (html/emit* (if-let [f (page-inits href)]
+                           (f href args)
+                           (page "404" {:tag :img :attrs {:src "/img/404.jpg"}})))))
 
 ;; WARNING: not thread safe.
 (defn add-page-init! [name func]
