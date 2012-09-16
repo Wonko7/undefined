@@ -4,11 +4,9 @@
         [noir.fetch.remotes]
         [undefined.views.common :only [index]]))
 
-(defpage "/welcome" []
-  (index "a fucking string"))
 
 (defpage "/" []
   (index "another fucking string"))
 
-(defremote testremote [arg]
-  (str " " arg " omg lol: <a href=welcome> well well</a>"))
+(defremote get-page [href]
+  href)
