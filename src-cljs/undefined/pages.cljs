@@ -17,6 +17,9 @@
         href (em/from a (em/get-attr :href))
         ext  (em/from a (em/get-attr :data-ext))
         args (em/from a (em/get-attr :data-args))]
+    ;(js/console.log (str (em/from a                                ;; FIXME this should work. check css-select.
+    ;                              :href [:a] (em/get-attr :href)
+    ;                              :args [:a] (em/get-attr :data-args))))
     (when (not= ext "true")
       (.preventDefault e)
       (em/at js/document
