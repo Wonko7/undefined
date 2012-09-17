@@ -6,3 +6,4 @@
 	- blog admin -> htaccess? bcrypt?
 * misc:
 	- domain name
+	- setup a real web architecture, maybe nginx: http://grokbase.com/t/gg/clj-noir/119ysw9vf0/noir-how-do-i-serve-static-files
