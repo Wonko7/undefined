@@ -72,6 +72,7 @@ body {
 	padding: 4px;
 	margin-bottom: 20px;
 	margin-top: 20px;
+	overflow: hidden;
 }
 
 .article-title {
@@ -101,11 +102,11 @@ a:hover {
 }
 
 .product-desc {
-	float: right;
-	display: inline-block;
 	width: 60%;
+	float: right;
 }
 
 .product-screenshot {
 	width: 40%;
+	float: left;
 }
