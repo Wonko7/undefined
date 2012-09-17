@@ -6,4 +6,9 @@
   (:require-macros [fetch.macros :as fm]
                    [enfocus.macros :as em]))
 
-(add-init! #(load-page "news") :last)
+(defn init-first-page []
+  (let [page (em/from (em/select [:#title]) (em/get-text))]
+    (when (not= "404" page)
+      (load-page "news"))))
+
+(add-init! init-first-page :last)
