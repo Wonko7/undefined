@@ -19,9 +19,8 @@
                                     :fields string/upper-case}}))
 
 (defentity articles
-  (pk :uid)
   (table :articles)
   (entity-fields :title :body)
   (database undef-db))
 
-(js/alert (sql-only (select articles)))
+(defn db_test [] (select articles))
