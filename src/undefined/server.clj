@@ -10,5 +10,7 @@
     (server/start port {:mode mode
                         :ns 'undefined
                         :jetty-options {:ssl? true
-                                        :ssl-port 8084}}
+                                        :ssl-port 8084
+                                        :keystore "keystore"
+                                        :key-password "123456"}}
                   )))
