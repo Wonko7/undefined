@@ -4,7 +4,7 @@
                  ;; clj:
                  [noir "1.3.0-beta8"]
                  [enlive "1.0.0"]
-                 [postgresql "8.4-702.jdbc4"] ;; FIXME: adapt for server/local testing
+                 [org.clojars.narma/postgresql "9.1-902.jdbc4"] ;; FIXME: adapt for server/local testing
                  [korma "0.3.0-beta9"]
                  ;; clj & cljs:
                  [fetch "0.1.0-alpha2"]
