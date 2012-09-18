@@ -1,5 +1,6 @@
 (ns undefined.sql
   ;(:require [net.cgrand.enlive-html :as html])
+  (:require  [clojure.string :as string])
   (:use ;[noir.core :only [defpage]]
         ;[noir.statuses]
         ;[undefined.views.common :only [base page page-404]]
