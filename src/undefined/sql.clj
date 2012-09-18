@@ -12,7 +12,7 @@
                            :password "droptableusers"
                            ;;OPTIONAL KEYS
                            :host "127.0.0.1"
-                           :port "4567"
+                           :port "5432"
                            :delimiters "" ;; remove delimiters
                            :naming {:keys string/lower-case
                                     ;; set map keys to lower
