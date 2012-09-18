@@ -7,7 +7,7 @@
         [korma.db]
         [korma.core]))
 
-(defdb undef-db (postgres {:db "undefined"
+(defdb undef-db (postgres {:db "undefined_bak"
                            :user "web"
                            :password "droptableusers"
                            ;;OPTIONAL KEYS
@@ -17,3 +17,11 @@
                            :naming {:keys string/lower-case
                                     ;; set map keys to lower
                                     :fields string/upper-case}}))
+
+(defentity articles
+  (pk :uid)
+  (table :articles)
+  (entity-fields :title :body)
+  (database undef-db))
+
+(js/alert (sql-only (select articles)))
