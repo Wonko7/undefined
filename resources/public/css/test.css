@@ -73,6 +73,8 @@ body {
 	margin-bottom: 20px;
 	margin-top: 20px;
 	overflow: hidden;
+
+	box-shadow: 5px 5px 5px #444;
 }
 
 .article-title {
