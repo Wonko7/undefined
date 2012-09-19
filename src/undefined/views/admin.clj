@@ -1,9 +1,8 @@
 (ns undefined.views.admin
   (:use [noir.core :only [defpage pre-route]]
         [noir.response :only [redirect]]
-        [undefined.views.common :only [base page login]])
+        [noir.fetch.remotes]
   (:require [net.cgrand.enlive-html :as html]
-            [noir.fetch.remotes :as remotes]
             [noir.session :as session]
             [noir.server :as server]
             [cemerick.friend :as friend]
