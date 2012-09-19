@@ -8,7 +8,7 @@
 
 (defn init-first-page []
   (let [page (em/from (em/select [:#title]) (em/get-text))]
-    (when (not= "404" page)
+    (when (= "Loading..." page)
       (load-page "news"))))
 
 (add-init! init-first-page :last)

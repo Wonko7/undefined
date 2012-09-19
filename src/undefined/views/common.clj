@@ -36,8 +36,8 @@
   [:.product-desc]       (html/content article)
   [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
 
-;(html/defsnippet login "templates/login.html" [:form]
-;  [])
+(html/defsnippet login "templates/login.html" [:form]
+  [])
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
