@@ -17,11 +17,15 @@
         article-prev (- article-id 10)
         article-prev (if (pos? article-prev) article-prev 0)
         blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
-                      {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]
-
-        debug (select_authors)]
-;  (page title (concat (map #(article (:title %) (str (:birth %)) (:body %)) (select_articles article-id nb-articles)) blognav debug))))
-  (page debug (concat (map #(article (:title %) (tags_by_article (:uid %)) (:body %)) (select_articles article-id nb-articles)) blognav))))
+                      {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]]
+  ;(page title (concat (map #(article (:title %) (str (:birth %)) (:body %)) (select_articles article-id nb-articles)) blognav debug))))
+  (page title (concat (map 
+                        #(article (:title %) (str (:birth %)) (:body %)
+                                  (tags_by_article (:uid %))
+                                  (categories_by_article (:uid %))
+                                  (authors_by_article (:uid %)))
+                        (select_articles article-id nb-articles))
+                      blognav))))
 
 
 (add-page-init! "news" news-page)

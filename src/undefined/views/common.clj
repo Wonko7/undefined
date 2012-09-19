@@ -1,30 +1,33 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
-        ;[undefined.misc :only [doall-recur]]
-        )
+     ;[undefined.misc :only [doall-recur]]
+     )
   (:require [net.cgrand.enlive-html :as html]))
 
 (html/deftemplate base "templates/index.html"
-  [content]
-  [:title] (html/content "Undefined Development")
-  [:#page-wrapper]  (html/append content))
+      [content]
+      [:title] (html/content "Undefined Development")
+      [:#page-wrapper]  (html/append content))
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-  [title date article]
-  [:.article-title] (html/content title)
-  [:.article-date]  (html/content date)
-  [:.article]       (html/html-content article))
+      [title date article tags categories authors]
+      [:.article-title] (html/content title)
+      [:.article-date]  (html/content date)
+      [:.article]       (html/html-content article)
+      [:.tags]          (html/content tags)
+      [:.categories]    (html/content categories)
+      [:.authors]       (html/content authors))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
-  [title link article sc]
-  [:.article-title :a]   (html/do-> (html/content title) (html/set-attr :href link))
-  [:.product-desc]       (html/content article)
-  [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
+      [title link article sc]
+      [:.article-title :a]   (html/do-> (html/content title) (html/set-attr :href link))
+      [:.product-desc]       (html/content article)
+      [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
 
 (html/defsnippet page "templates/page.html" [:#page]
-  [title content]
-  [:#title]   (html/content title)
-  [:#content] (html/append content))
+      [title content]
+      [:#title]   (html/content title)
+      [:#content] (html/append content))
 
 (def page-inits {})
 
