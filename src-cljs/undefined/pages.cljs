@@ -47,7 +47,7 @@
       (em/at js/document
              [:#page] (em/chain
                         (em/fade-out 100)
-                        (ef/chainable-standard #(load-page href args))
+                        (ef/chainable-standard #(load-page href args)) ;; if you want synch, this is where it should be done, chainable.
                         (em/fade-in 100))))))
 
 (add-init! #(em/at js/document

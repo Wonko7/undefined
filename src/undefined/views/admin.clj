@@ -2,6 +2,7 @@
   (:use [noir.core :only [defpage pre-route]]
         [noir.response :only [redirect]]
         [noir.fetch.remotes]
+        [undefined.views.common :only [base page login metadata]]) 
   (:require [net.cgrand.enlive-html :as html]
             [noir.session :as session]
             [noir.server :as server]
@@ -17,8 +18,11 @@
 (defremote get-user []
   (:username (friend/current-authentication)))
 
-(defremote login [auth]
+(defremote auth-login [auth]
   (friend/authorize #{:friendly.server/user}
                     (:username (friend/current-authentication))))
 
-(defremote logout [] nil)
+(defremote auth-logout [] nil)
+
+(defpage "/login" []
+  (base  (page "Log In:" (login) (metadata {:data-page "login" :data-lol "lol"}))))

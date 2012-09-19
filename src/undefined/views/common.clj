@@ -40,6 +40,9 @@
 (html/defsnippet login "templates/login.html" [:form]
   [])
 
+(html/defsnippet metadata "templates/metadata.html" [:#metadata]
+  [data]
+  [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page loading:
