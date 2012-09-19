@@ -23,7 +23,7 @@
                                             (js/console.log (str "try to log with: " id))
                                             (fm/letrem [user (auth-login id)]
                                               (if user
-                                                (js/console.log (str "logged in as: " user)
+                                                (js/console.log (str "logged in as: " (str user))
                                                 (js/console.log (str "log in failed. "))))))))))))
 
 (add-page-init! "login" login-page)

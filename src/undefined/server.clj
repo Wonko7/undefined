@@ -26,7 +26,7 @@
   (if (= "/_fetch" (:uri request))
     (let [{:keys [remote params]} (:params request)
           [{:keys [user pass]}] (remotes/safe-read params)]
-      (if (= remote "login")
+      (if (= remote "auth-login")
         (if-let [user-record ((:credential-fn  (::friend/auth-config request))
                               ^{::friend/workflow :fetch-workflow}
                               {:username user :password pass})]
