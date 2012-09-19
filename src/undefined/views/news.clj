@@ -1,7 +1,7 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article]]
-        [undefined.sql :only [db_test]]
+        [undefined.sql :only [select_articles insert_article]]
         [noir.fetch.remotes]))
 
 (defn news-page [name article-id]
@@ -15,13 +15,7 @@
         article-prev (if (pos? article-prev) article-prev 0)
         blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
                       {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]]
-    (page title (concat (map #(apply article %) (db_test)) blognav))))
-
-;    (page title (concat (for [i (range article-id article-stop)]
-;                          (article (str name "Title " i)
-;                                   (str  i "/" i "/" i)
-;                                   (apply str (repeat 500 (str " " i)))))
-;                        blognav))))
+  (page title (concat (map #(article (:title %) (str (:birth %)) (:body %)) (select_articles article-id nb-articles)) blognav))))
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
