@@ -15,7 +15,7 @@
         article-prev (if (pos? article-prev) article-prev 0)
         blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
                       {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]]
-    (page title (concat (article "title" "date" (db_test)) blognav))))
+    (page title (concat (map #(apply article %) (db_test)) blognav))))
 
 ;    (page title (concat (for [i (range article-id article-stop)]
 ;                          (article (str name "Title " i)
