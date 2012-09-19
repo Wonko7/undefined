@@ -4,10 +4,25 @@
         )
   (:require [net.cgrand.enlive-html :as html]))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page minimum:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (html/deftemplate base "templates/index.html"
   [content]
   [:title] (html/content "Undefined Development")
   [:#page-wrapper]  (html/append content))
+
+(html/defsnippet page "templates/page.html" [:#page]
+  [title content]
+  [:#title]   (html/content title)
+  [:#content] (html/append content))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page composition:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
   [title date article]
@@ -21,10 +36,13 @@
   [:.product-desc]       (html/content article)
   [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
 
-(html/defsnippet page "templates/page.html" [:#page]
-  [title content]
-  [:#title]   (html/content title)
-  [:#content] (html/append content))
+;(html/defsnippet login "templates/login.html" [:form]
+;  [])
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page loading:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def page-inits {})
 

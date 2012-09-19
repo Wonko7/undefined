@@ -6,6 +6,8 @@
                  [enlive "1.0.0"]
                  [org.clojars.narma/postgresql "9.1-902.jdbc4"] ;; FIXME: adapt for server/local testing
                  [korma "0.3.0-beta9"]
+                 [clj-time "0.4.4"]
+                 [com.cemerick/friend "0.1.0"]
                  ;; clj & cljs:
                  [fetch "0.1.0-alpha2"]
                  ;; cljs:
