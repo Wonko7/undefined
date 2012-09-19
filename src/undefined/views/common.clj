@@ -15,9 +15,10 @@
   [:#page-wrapper]  (html/append content))
 
 (html/defsnippet page "templates/page.html" [:#page]
-  [title content]
+  [title content & [bottom]]
   [:#title]   (html/content title)
-  [:#content] (html/append content))
+  [:#content] (html/append content)
+  [:#bottom]  (html/append bottom))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
