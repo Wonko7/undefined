@@ -25,4 +25,6 @@
 (defremote auth-logout [] nil)
 
 (defpage "/login" []
-  (base  (page "Log In:" (login) (metadata {:data-page "login" :data-lol "lol"}))))
+  (base  (page "Log In:"
+               (login)
+               {:metadata {:data-init-page "login"}})))

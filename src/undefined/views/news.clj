@@ -19,7 +19,7 @@
                   (article (str name "Title " i)
                            (str  i "/" i "/" i)
                            (apply str (repeat 500 (str " " i)))))
-          blognav)))
+          {:bottom blognav})))
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)

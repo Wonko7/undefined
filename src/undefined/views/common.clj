@@ -6,22 +6,6 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  Page minimum:
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(html/deftemplate base "templates/index.html"
-  [content]
-  [:title] (html/content "Undefined Development")
-  [:#page-wrapper]  (html/append content))
-
-(html/defsnippet page "templates/page.html" [:#page]
-  [title content & [bottom]]
-  [:#title]   (html/content title)
-  [:#content] (html/append content)
-  [:#bottom]  (html/append bottom))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page composition:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -43,6 +27,23 @@
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]
   [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page skeleton:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(html/deftemplate base "templates/index.html"
+  [content]
+  [:title] (html/content "Undefined Development")
+  [:#page-wrapper]  (html/append content))
+
+(html/defsnippet page "templates/page.html" [:#page]
+  [title content & [optional]]
+  [:#title]   (html/content title)
+  [:#content] (html/do-> (html/append content)
+                         (html/append (metadata (:metadata optional))))
+  [:#bottom]  (html/append (:bottom optional)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page loading:
