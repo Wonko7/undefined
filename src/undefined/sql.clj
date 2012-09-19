@@ -9,7 +9,7 @@
 
 (defdb undef-db (postgres {:db "undefined_bak"
                            :user "web"
-                           :password "droptableusers"
+                           :password "password" ;droptableusers"
                            ;;OPTIONAL KEYS
                            :host "127.0.0.1"
                            :port "5432"
@@ -21,12 +21,12 @@
 ;TODO joins with cats, tags, authors
 (defentity articles
   (table :articles)
-  (entity-fields :title :body :birth)
+  (entity-fields :uid :title :body :birth)
   (database undef-db))
 
 (defentity tags
   (table :tags)
-  (entity-fields :label)
+  (entity-fields :id :label)
   (database undef-db))
 
 (defentity authors
@@ -57,37 +57,73 @@
 ;TODO pre-weed out duplicate tags, get new tags id to link to article.
 ;TODO use maps to insert mutiple values for tags/cats/auths
 ;TODO transaction
-(defn add_article [title body authors categories tags]
-  (:pre [(not nil? title) (not nil? body) (not nil? authors) (not nil? categories) (not nil? tags)])
-  (let [newid (insert articles
-            (values {:title title :body body}))
-        newtag ()
-        authids ()
-        catids ()]
-        (insert article_authors
-            (values {:artid newid :authid authors}))
-    (insert article_tags
-            (values {:artid newid :tagid tags}))
-    (insert article_categories
-            (values {:artid newid :catid categories}))))
+;(defn add_article [title body authors categories tags]
+;  (:pre [(not nil? title) (not nil? body) (not nil? authors) (not nil? categories) (not nil? tags)])
+;  (let [newid (insert articles
+;            (values {:title title :body body}))
+;        newtag ()
+;        authids ()
+;        catids ()]
+;        (insert article_authors
+;            (values {:artid newid :authid authors}))
+;    (insert article_tags
+;            (values {:artid newid :tagid tags}))
+;    (insert article_categories
+;            (values {:artid newid :catid categories}))))
 
 
 ;TODO transaction, adding all the NEW tags, means I have to weed out pre-existing tags
-(defn add_tag [tag] (insert tags
-                            (values {:label tag})))
+;(defn add_tag [tag] (insert tags
+;                            (values {:label tag})))
 
 
 
 ;TODO authors, cat, tags
 (defn insert_article [title body] (insert articles
-                                      (values {:title title :body body})))
+                                          (values {:title title :body body})))
 
+
+;Starts here
+;
+;SELECT
+
+;articles
 (defn select_articles [off n]
   (select articles
           (limit n)
           (offset off)
           (order :birth :DESC)))
-;
-;(defn get_tags [& article_id]
-;"Gets all tags if article_id = nil"
-;  (->
+
+;tags
+(defn select_tags []
+  (select tags))
+
+(defn tags_by_article [id]
+  (select article_tags
+          (where {:artid id})))
+
+(defn tags_by_label [label]
+  (select tags
+          (where {:label [like (str "%" label "%")]})))
+
+;categories
+(defn select_categories []
+  (select categories))
+
+(defn categories_by_article [id]
+  (select article_categories
+          (where {:artid id})))
+
+;authors
+(defn select_authors []
+  (select authors))
+
+(defn authors_by_article [id]
+  (select article_authors
+          (where {:artid id})))
+
+;INSERT
+
+;UPDATE
+
+;DELETE
