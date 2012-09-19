@@ -16,6 +16,13 @@
 (defn add-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
+(defn init-page []
+  (let [data (em/from js/document
+                      :init [:#metadata] (em/get-attr :data-init-page)
+                      :args [:#metadata] (em/get-attr :data-init-args))]
+    (when (:init data)
+      (if-let [f ((:init data) page-inits)]
+        (f (:args data))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page loading:
@@ -30,8 +37,7 @@
            [:#page-wrapper] (em/content page))
     (em/at js/document
            [:#page-wrapper :a] (em/listen :click page-click))
-    (if-let [init (href page-inits)]
-      (init href args))))
+    (init-page)))
 
 (defn page-click [e]
   (let [a    (.-currentTarget e)

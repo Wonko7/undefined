@@ -1,6 +1,6 @@
 (ns undef.core
   (:use [undef.init :only [add-init!]]
-        [undef.pages :only [load-page]])
+        [undef.pages :only [load-page init-page]])
   (:require [fetch.remotes :as remotes]
             [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
@@ -8,7 +8,8 @@
 
 (defn init-first-page []
   (let [page (em/from (em/select [:#title]) (em/get-text))]
-    (when (= "Loading..." page)
-      (load-page "news"))))
+    (if (= "Loading..." page)
+      (load-page "news")
+      (init-page))))
 
 (add-init! init-first-page :last)
