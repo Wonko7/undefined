@@ -21,28 +21,20 @@
 ;;;   ;; ;           )
 ;;;   
 
-(defpage "/logout" []
-      (session/clear!)
-      (redirect "/"))
-
-(defpage "/login" []
-  (base (page "Log In:" (login))))
-
-
-(def users {"admin" {:username "admin"
-                     :password (creds/hash-bcrypt "admin1")
-                     :roles #{::admin}}
-            "alice" {:username "alice"
-                     :password (creds/hash-bcrypt "alice1")
-                     :roles #{::user}}})
-
-(server/add-middleware
-  friend/authenticate
-  {:credential-fn (partial creds/bcrypt-credential-fn users)
-   :workflows [(workflows/interactive-form)]
-   :login-uri "/login"
-   :unauthorized-redirect-uri "/404"
-   :default-landing-uri "/"})
+;;(defpage "/logout" []
+;;      (session/clear!)
+;;      (redirect "/"))
+;;
+;;(defpage "/login" []
+;;  (base (page "Log In:" (login))))
+;;
+;;(server/add-middleware
+;;  friend/authenticate
+;;  {:credential-fn (partial creds/bcrypt-credential-fn users)
+;;   :workflows [(workflows/interactive-form)]
+;;   :login-uri "/login"
+;;   :unauthorized-redirect-uri "/404"
+;;   :default-landing-uri "/"})
 
 ;;;   ;; (pre-route [:get ["/:path" :path #"(?!login|logout)*"]] {:as req}
 ;;;   ;;            (friend/authenticated
