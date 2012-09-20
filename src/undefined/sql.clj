@@ -65,36 +65,11 @@
   (entity-fields :uid :title :body :birth)
   (database undef-db))
 
-;TODO pre-weed out duplicate tags, get new tags id to link to article.
-;TODO use maps to insert mutiple values for tags/cats/auths
-;TODO transaction
-;(defn add_article [title body authors categories tags]
-;  (:pre [(not nil? title) (not nil? body) (not nil? authors) (not nil? categories) (not nil? tags)])
-;  (let [newid (insert articles
-;            (values {:title title :body body}))
-;        newtag ()
-;        authids ()
-;        catids ()]
-;        (insert article_authors
-;            (values {:artid newid :authid authors}))
-;    (insert article_tags
-;            (values {:artid newid :tagid tags}))
-;    (insert article_categories
-;            (values {:artid newid :catid categories}))))
-
-(defn select_articles_full [off n]
-  (select articles
-          (fields :title :body :birth :article_tags.tagid :article_categories.catid :article_authors.authid)
-          (join article_tags)
-          (join article_categories)
-          (join article_authors)
-          (limit n)
-          (offset off)
-          (order :birth :DESC)))
-
+;DRAFT-->
 ;TODO authors, cat, tags
 (defn insert_article [title body] (insert articles
                                           (values {:title title :body body})))
+;-->DRAFT
 
 
 ;Starts here

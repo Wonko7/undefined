@@ -17,13 +17,14 @@
         article-prev (- article-id 10)
         article-prev (if (pos? article-prev) article-prev 0)
         blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
-                      {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]]
+                      {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]
+        get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))]
 
   (page title (concat (map 
                         #(article (:title %) (str (:birth %)) (:body %)
-                                  (str "Tag: "(tags_by_article (:uid %)))
-                                  (str "Categories: " (categories_by_article (:uid %)))
-                                  (str "Authors: " (authors_by_article (:uid %)))
+                                  (str "Tag: " (get_labels (tags_by_article (:uid %)) :label))
+                                  (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
+                                  (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
                                   %)
                         (select_articles article-id nb-articles))
                       blognav))))    
