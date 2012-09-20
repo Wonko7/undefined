@@ -28,8 +28,10 @@
   [])
 
 (html/defsnippet newarticle "templates/new_article.html" [:div.newarticle]
-      []
-      [:.article-title]     (html/content "test"))
+      [title body tags]
+      [:#inp_title]   (html/set-attr :value title)
+      [:#txt_body]    (html/set-attr :value body)
+      [:#inp_tags]    (html/set-attr :value tags))
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]

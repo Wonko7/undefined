@@ -1,7 +1,7 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article]]
-        [undefined.sql :only [select_articles insert_article insert_article2
+        [undefined.sql :only [select_articles
                               select_tags tags_by_article tags_by_label
                               select_categories categories_by_article
                               select_authors authors_by_article]]
@@ -25,7 +25,7 @@
                                   (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                                   (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                                   (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
-                                  (insert_article2 "New title" "New body" "authors"))
+                                  %)
                         (select_articles article-id nb-articles))
                       blognav))))    
 

@@ -9,6 +9,8 @@
 
 (defn new-article-page [name article-id]
   (let [title        "Add a new post"]
-  (page title (newarticle))))    
+  (page title
+        (newarticle "New titre" "New body" "New tags")
+        [{:tag :p :content "Bottom stuff"}])))    
 
 (add-page-init! "newarticle" new-article-page)
