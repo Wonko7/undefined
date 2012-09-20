@@ -27,6 +27,10 @@
 (html/defsnippet login "templates/login.html" [:form]
   [])
 
+(html/defsnippet newarticle "templates/new_article.html" [:div.newarticle]
+      []
+      [:.article-title]     (html/content "test"))
+
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]
   [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
