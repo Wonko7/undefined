@@ -1,4 +1,5 @@
 (ns undefined.server
+(:import org.mindrot.jbcrypt.BCrypt)
   (:require [noir.server :as server]
             [noir.fetch.remotes :as remotes]
             [cemerick.friend :as friend]
@@ -39,11 +40,9 @@
 (server/add-middleware friend/authenticate
                        {:credential-fn (partial creds/bcrypt-credential-fn users) ;; <-- this will change with db FIXME.
                         :workflows [#'fetch-workflow]
-                        :unauthorized-handler
-                        (constantly
-                         {:status 401
-                          :body (pr-str
-                                 "Sorry, you do not have access to this resource.")})})
+                        :unauthorized-handler (constantly
+                                                {:status 401
+                                                 :body (pr-str "Sorry, you do not have access to this resource.")})})
 
 (defn fetch-logout [handler]
   (fn [request]

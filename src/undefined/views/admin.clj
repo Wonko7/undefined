@@ -19,7 +19,7 @@
   (:username (friend/current-authentication)))
 
 (defremote auth-login [auth]
-  (friend/authorize #{:friendly.server/user}
+  (friend/authorize #{:undefined.server/admin :undefined.server/user}
                     (:username (friend/current-authentication))))
 
 (defremote auth-logout [] nil)

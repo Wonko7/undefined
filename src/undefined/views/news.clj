@@ -22,11 +22,20 @@
 
   (page title (concat (map 
                         #(article (:title %) (str (:birth %)) (:body %)
-                                  (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
-                                  (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
-                                  (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
+                                  ;(str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
+                                  ;(str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
+                                  ;(str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
+                                  (str "Tags: " :linux :clojure)
+                                  (str "Categories: " :lol :morf)
+                                  (str "Authors: " :batman)
                                   %)
-                        (select_articles article-id nb-articles))
+                        ;(select_articles article-id nb-articles)
+                        [{:title "lol" :birth "11/22/3333" :body "erhm mha gherd anrn uhrtucle1" }
+                         {:title "lo2" :birth "11/22/3333" :body "erhm mha gherd anrn uhrtucle2" }
+                         {:title "lo3" :birth "11/22/3333" :body "erhm mha gherd anrn uhrtucle3" }
+                         {:title "lo4" :birth "11/22/3333" :body "erhm mha gherd anrn uhrtucle4" }
+                         {:title "lo4" :birth "11/22/3333" :body "erhm mha gherd anrn uhrtucle5" }
+                         ])
                       blognav))))    
 
 (add-page-init! "news" news-page)
