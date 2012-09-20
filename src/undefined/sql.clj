@@ -93,6 +93,13 @@
           (join tags)
           (where {:artid id})))
 
+(defn tags_by_article2 [id]
+  (select article_tags
+          (fields :tags.label)
+          (join tags)
+          (transform #(str "test"(:tags.label %)))
+          (where {:artid id})))
+
 (defn tags_by_label [label]
   (select tags
           (where {:label [like (str "%" label "%")]})))
