@@ -24,4 +24,4 @@
 
 (defn is-admin? []
   (friend/authorized? #{:undefined.server/admin}
-                      (friend/current-authentication)))
+                      friend/*identity*))
