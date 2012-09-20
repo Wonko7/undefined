@@ -9,13 +9,7 @@
      [noir.fetch.remotes]
      [noir.core :only [defpage pre-route]]))
 
-<<<<<<< HEAD
-(defremote get-text [] ("test"))
-
-(defn  new-article-page [name id]
-=======
 (defn new-article-page [name id]
->>>>>>> william/master
   (page "Add a new post" 
         (newarticle (select_authors) (select_categories))
         {:metadata {:data-init-page "newarticle"}}))
