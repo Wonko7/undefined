@@ -1,13 +1,14 @@
 (ns undef.newarticle
   (:use [undef.pages :only [add-page-init!]])
   (:require [fetch.remotes :as remotes]
-            [enfocus.core :as ef])
+     [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
-                   [enfocus.macros :as em]))
+     [enfocus.macros :as em]))
 
 
 (defn newarticlepage [href & [args]]
- ; (fm/letrem [user (get-text)]
-    (em/at js/document [:#btn_add_article] (em/listen :click #(js/alert "test"))))
+  (let [title (em/from (em/select ["#inp_title"]) (em/get-prop :value))
+        body  (em/from (em/select ["#txt_body"]) (em/get-prop :value))]
+    (em/at js/document [:#btn_add_article] (em/listen :click #(js/alert (str "Title: " title "\nBody: " body))))));#(fm/letrem [res (insert_article title body)] (js/alert res))))))
 
 (add-page-init! "newarticle" newarticlepage)

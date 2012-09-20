@@ -1,11 +1,10 @@
 (ns undefined.sql
   ;(:require [net.cgrand.enlive-html :as html])
   (:require  [clojure.string :as string])
-  (:use ;[noir.core :only [defpage]]
-     ;[noir.statuses]
-     ;[undefined.views.common :only [base page page-404]]
+  (:use [noir.fetch.remotes]
      [korma.db]
      [korma.core]))
+
 
 (defdb undef-db (postgres {:db "undefined_bak"
                            :user "web"
@@ -118,6 +117,10 @@
           (where {:artid id})))
 
 ;INSERT
+
+(defremote insert_article [title body]; (str "Title: " title "\nBody: " body)); (insert_article title body))
+  (insert articles
+          (values {:title title :body body})))
 
 (defn insert_article2 [title body authors]
   (str title " " body " " authors))
