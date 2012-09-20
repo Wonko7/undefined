@@ -39,22 +39,29 @@
            [:#page-wrapper :a] (em/listen :click page-click))
     (init-page)))
 
-(defn page-click [e]
-  (let [a    (.-currentTarget e)
-        href (em/from a (em/get-attr :href))
-        ext  (em/from a (em/get-attr :data-ext))
-        args (em/from a (em/get-attr :data-args))]
-    ;; FIXME this should work. check css-select.
-    ;(js/console.log (str (em/from a
-    ;                              :href [:a] (em/get-attr :href)
-    ;                              :args [:a] (em/get-attr :data-args))))
-    (when (not= ext "true")
-      (.preventDefault e)
-      (em/at js/document
-             [:#page] (em/chain
-                        (em/fade-out 100)
-                        (ef/chainable-standard #(load-page href args)) ;; if you want synch, this is where it should be done, chainable.
-                        (em/fade-in 100))))))
+
+;; FIXME this should work. check css-select.
+;(js/console.log (str (em/from a
+;                              :href [:a] (em/get-attr :href)
+;                              :args [:a] (em/get-attr :data-args))))
+
+(defn page-click
+  ;; call with an event (used through em/listen)
+  ([e]
+   (let [a    (.-currentTarget e)
+         href (em/from a (em/get-attr :href))
+         ext  (em/from a (em/get-attr :data-ext))
+         args (em/from a (em/get-attr :data-args))]
+     (when (not= ext "true")
+       (.preventDefault e)
+       (page-click href args))))
+  ;; can be called directly:
+  ([href args]
+   (em/at js/document
+          [:#page] (em/chain
+                     (em/fade-out 100)
+                     (ef/chainable-standard #(load-page href args)) ;; if you want synch, this is where it should be done, chainable.
+                     (em/fade-in 100)))))
 
 (add-init! #(em/at js/document
                    [:#nav :a] (em/listen :click page-click)))
