@@ -4,7 +4,6 @@
                  ;; clj:
                  [noir "1.3.0-beta8"]
                  [enlive "1.0.0"]
-                 [org.clojars.narma/postgresql "9.1-902.jdbc4"] ;"8.4-702.jdbc4" ;; FIXME: adapt for server/local testing
                  [korma "0.3.0-beta9"]
                  [clj-time "0.4.4"]
                  [com.cemerick/friend "0.1.0"]
@@ -22,4 +21,8 @@
                                    ;:externs ["web/js-static/jquery-min.js"]
                                    ; :optimizations :advanced
                                    :pretty-print true}}]}
+  :profiles {:srv-test {:dependencies [[postgresql "8.4-702.jdbc4"]]}
+             :srv-prod {:dependencies [[postgresql "8.4-702.jdbc4"]]} ;; FIXME; adapt port settings
+             :c        {:dependencies [[postgresql "9.1-901-1.jdbc4"]]}
+             :w        {:dependencies [[postgresql "9.1-901-1.jdbc4"]]}}
   :main undefined.server)
