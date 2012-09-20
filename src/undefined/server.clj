@@ -47,7 +47,7 @@
 (defn fetch-logout [handler]
   (fn [request]
     (if (and (= "/_fetch" (:uri request))
-             (= "logout" (:remote (:params request))))
+             (= "auth-logout" (:remote (:params request))))
       ((friend/logout handler) request)
       (handler request))))
 
