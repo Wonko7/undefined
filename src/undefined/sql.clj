@@ -7,7 +7,7 @@
      [korma.db]
      [korma.core]))
 
-(defdb undef-db (postgres {:db "undefined"
+(defdb undef-db (postgres {:db "undefined_bak"
                            :user "web"
                            :password "password" ;droptableusers"
                            ;;OPTIONAL KEYS

@@ -1,12 +1,14 @@
 <div class="newarticle">
-	<input id="inp_title" type="text"></input><br/>
-	<textarea></textarea><br/>
-	<input type="text"></input><br/>
-	<select multiple="multiple">
-		<option> test </option>
-		<option> test2 </option>
-	</select><br/>
-	<input type="checkbox">Tech</input>
-	<input type="checkbox">Promo</input><br/>
-	<button>Submit</button>
+	<input id="inp_title" type="text"></input><span>Title</span><br/>
+	<textarea id="txt_body"></textarea><span>Body</span><br/>
+	<input id="inp_tags" type="text"></input><span>Tags</span><br/>
+	<fieldset>
+		<legend>Authors</legend>
+		<div id="cbx_authors"></div>
+	</fieldset>
+	<fieldset>
+		<legend>Categories</legend>
+		<div id="cbx_categories"></div>
+	</fieldset>
+	<button id="btn_add_article">Submit</button>
 </div>

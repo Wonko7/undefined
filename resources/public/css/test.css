@@ -115,6 +115,33 @@ a:hover {
 	box-shadow: 5px 5px 5px #444;
 }
 
+/********************/
+/* Add article page */
+/********************/
+
+.newarticle div {
+	margin: 10px;
+}
+
+.newarticle span {
+	float: right;
+	padding-top: 12px;
+}
+
+.newarticle input, textarea {
+	padding: 5px;
+	margin: 5px;
+	background-color: #88CC77;
+	border: 4px solid #449933;
+	border-radius: 3px;
+}
+
+#inp_title { width: 50%; font-weight: bold;}
+
+#inp_tags { width: 80%; font-style: italic;}
+
+#txt_body { width: 65%; height: 100px;}
+
 .newarticle {
 	margin: 50px auto;
 	padding: 10px;

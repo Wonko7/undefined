@@ -28,10 +28,13 @@
   [])
 
 (html/defsnippet newarticle "templates/new_article.html" [:div.newarticle]
-      [title body tags]
-      [:#inp_title]   (html/set-attr :value title)
-      [:#txt_body]    (html/set-attr :value body)
-      [:#inp_tags]    (html/set-attr :value tags))
+      [authors categories]
+;      [:#inp_title]       (html/set-attr :value title)
+;      [:#txt_body]        (html/set-attr :value body)
+;      [:#inp_tags]        (html/set-attr :value tags)
+      [:#cbx_authors]     (html/html-content (reduce str (map #(str "<input type=\"checkbox\" id=\"authid" (:uid %) "\">" (:name %) "</input><br/>") authors)))
+      [:#cbx_categories]  (html/html-content (reduce str (map #(str "<input type=\"checkbox\" id=\"catid" (:uid %) "\">" (:label %) "</input><br/>") categories)))
+      [:#btn_add_article] (html/content "test"))
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]
