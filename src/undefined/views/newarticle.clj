@@ -7,8 +7,9 @@
                               select_authors authors_by_article]]
         [noir.fetch.remotes]))
 
-(defn new-article-page [name id]
+(defn new-article-page []
   (page "Add a new post" 
-        (newarticle (select_authors) (select_categories))))
+        (newarticle (select_authors) (select_categories))
+        {:metadata {:data-init-page "newpage"}}))
 
 (add-page-init! "newarticle" new-article-page)
