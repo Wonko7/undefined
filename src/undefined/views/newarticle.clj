@@ -14,6 +14,6 @@
 (defn  new-article-page [name id]
   (page "Add a new post" 
         (newarticle (select_authors) (select_categories))
-        {:metadata {:data-init-page "newpage"}}))
+        {:metadata {:data-init-page "newarticle"}}))
 
-  (add-page-init! "newarticle" new-article-page)
+(add-page-init! "newarticle" new-article-page)
