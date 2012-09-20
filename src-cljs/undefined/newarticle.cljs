@@ -7,7 +7,8 @@
 
 
 (defn newarticlepage [href & [args]]
- ; (fm/letrem [user (get-text)]
-    (em/at js/document [:#btn_add_article] (em/listen :click #(js/alert "test"))))
+  ;(fm/letrem [user (get-text)]
+  (js/console.log "called")
+  (em/at js/document [:#btn_add_article] (em/listen :click #(js/alert "test"))))
 
 (add-page-init! "newarticle" newarticlepage)
