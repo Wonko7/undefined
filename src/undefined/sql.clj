@@ -19,39 +19,50 @@
                                     :fields string/upper-case}}))
 
 ;TODO joins with cats, tags, authors
-(defentity articles
-  (table :articles)
-  (entity-fields :uid :title :body :birth)
-  (database undef-db))
 
 (defentity tags
   (table :tags)
+  (pk :uid)
   (entity-fields :id :label)
   (database undef-db))
 
 (defentity authors
   (table :authors)
+  (pk :uid)
   (entity-fields :name)
   (database undef-db))
 
 (defentity categories
   (table :categories)
+  (pk :uid)
   (entity-fields :label)
   (database undef-db))
 
 (defentity article_tags
   (table :article_tags)
+  (pk :tagid)
+  (has-many tags {:fk :uid})
   (entity-fields :artid :tagid)
   (database undef-db))
 
 (defentity article_categories
   (table :article_categories)
+  (pk :catid)
+  (has-many categories {:fk :uid})
   (entity-fields :artid :catid)
   (database undef-db))
 
 (defentity article_authors
   (table :article_authors)
+  (pk :authid)
+  (has-many authors {:fk :uid})
   (entity-fields :artid :authid)
+  (database undef-db))
+
+(defentity articles
+  (table :articles)
+  (pk :uid)
+  (entity-fields :uid :title :body :birth)
   (database undef-db))
 
 ;TODO pre-weed out duplicate tags, get new tags id to link to article.
@@ -70,6 +81,16 @@
 ;            (values {:artid newid :tagid tags}))
 ;    (insert article_categories
 ;            (values {:artid newid :catid categories}))))
+
+(defn select_articles_full [off n]
+  (select articles
+          (fields :title :body :birth :article_tags.tagid :article_categories.catid :article_authors.authid)
+          (join article_tags)
+          (join article_categories)
+          (join article_authors)
+          (limit n)
+          (offset off)
+          (order :birth :DESC)))
 
 ;TODO authors, cat, tags
 (defn insert_article [title body] (insert articles
@@ -93,6 +114,8 @@
 
 (defn tags_by_article [id]
   (select article_tags
+          (fields :tags.label)
+          (join tags)
           (where {:artid id})))
 
 (defn tags_by_label [label]
@@ -105,6 +128,8 @@
 
 (defn categories_by_article [id]
   (select article_categories
+          (fields :categories.label)
+          (join categories)
           (where {:artid id})))
 
 ;authors
@@ -113,6 +138,8 @@
 
 (defn authors_by_article [id]
   (select article_authors
+          (fields :authors.name)
+          (join authors)
           (where {:artid id})))
 
 ;INSERT

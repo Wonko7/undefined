@@ -18,13 +18,22 @@
         article-prev (if (pos? article-prev) article-prev 0)
         blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
                       {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]]
+
   (page title (concat (map 
                         #(article (:title %) (str (:birth %)) (:body %)
-                                  (tags_by_article (:uid %))
-                                  (categories_by_article (:uid %))
-                                  (authors_by_article (:uid %)))
+                                  (str "Tag: "(tags_by_article (:uid %)))
+                                  (str "Categories: " (categories_by_article (:uid %)))
+                                  (str "Authors: " (authors_by_article (:uid %)))
+                                  %)
                         (select_articles article-id nb-articles))
-                      blognav))))
+                      blognav))))    
+;  (page title (concat (map 
+;                        #(article (:title %) (str (:birth %)) (:body %)
+;                                  (tags_by_article (:uid %))
+;                                  (categories_by_article (:uid %))
+;                                  (authors_by_article (:uid %)))
+;                        (select_articles article-id nb-articles))
+;                      blognav))))
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)

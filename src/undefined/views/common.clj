@@ -9,13 +9,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-      [title date article tags categories authors]
+      [title date article tags categories authors debug]
       [:.article-title] (html/content title)
       [:.article-date]  (html/content date)
       [:.article]       (html/html-content article)
       [:.tags]          (html/content tags)
       [:.categories]    (html/content categories)
-      [:.authors]       (html/content authors))
+      [:.authors]       (html/content authors)
+      [:.debug]         (html/content debug))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
       [title link article sc]
