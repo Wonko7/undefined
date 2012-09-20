@@ -4,10 +4,9 @@
      )
   (:require [net.cgrand.enlive-html :as html]))
 
-(html/deftemplate base "templates/index.html"
-      [content]
-      [:title] (html/content "Undefined Development")
-      [:#page-wrapper]  (html/append content))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page composition:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
       [title date article tags categories authors]
@@ -24,15 +23,40 @@
       [:.product-desc]       (html/content article)
       [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
 
+(html/defsnippet login "templates/login.html" [:form]
+  [])
+
+(html/defsnippet metadata "templates/metadata.html" [:#metadata]
+  [data]
+  [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page skeleton:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(html/deftemplate base "templates/index.html"
+  [content]
+  [:title] (html/content "Undefined Development")
+  [:#page-wrapper]  (html/append content))
+
 (html/defsnippet page "templates/page.html" [:#page]
-      [title content]
-      [:#title]   (html/content title)
-      [:#content] (html/append content))
+  [title content & [optional]]
+  [:#title]   (html/content title)
+  [:#content] (html/do-> (html/append content)
+                         (html/append (metadata (:metadata optional))))
+  [:#bottom]  (html/append (:bottom optional)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Page loading:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def page-inits {})
 
 ;; used by index.clj:
-(def page-404 (page "404" {:tag :center :content [{:tag :img :attrs {:src "/img/404.jpg"}}]}))
+(def page-404 (page "404"
+                    {:tag :center :content [{:tag :img :attrs {:src "/img/404.jpg"}}]}
+                    {:metadata {:data-init-page "404"}}))
 
 (defremote get-page [href & [args]]
   (apply str (html/emit* (if-let [f (page-inits href)]

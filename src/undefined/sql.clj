@@ -71,13 +71,6 @@
 ;    (insert article_categories
 ;            (values {:artid newid :catid categories}))))
 
-
-;TODO transaction, adding all the NEW tags, means I have to weed out pre-existing tags
-;(defn add_tag [tag] (insert tags
-;                            (values {:label tag})))
-
-
-
 ;TODO authors, cat, tags
 (defn insert_article [title body] (insert articles
                                           (values {:title title :body body})))
