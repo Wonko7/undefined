@@ -15,11 +15,11 @@
                                                                   categories (zipmap
                                                                                (em/from (em/select [".cbx_cat"]) (em/get-prop :value))
                                                                                (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))]
-                                                         ;     (js/alert (str "Title: " title
-                                                         ;                 "\nBody: " body
-                                                         ;                 "\nTags: " tags
-                                                         ;                 "\nAuthors: " authors
-                                                         ;                 "\nCategories: " categories))))))
+                                                    ;          (js/alert (str "Title: " title
+                                                    ;                      "\nBody: " body
+                                                    ;                      "\nTags: " tags
+                                                    ;                      "\nAuthors: " authors
+                                                    ;                      "\nCategories: " categories))))))
                                                               (fm/letrem [res (insert_article title body tags authors categories)] (js/alert res))))))
 
 (add-page-init! "newarticle" newarticlepage)
