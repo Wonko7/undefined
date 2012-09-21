@@ -7,7 +7,6 @@
 
 
 (defn login-page [href & [args]]
-  (js/console.log "hello, login page before remote")
   (fm/letrem [user (get-user)]
     (if user
       (em/at js/document

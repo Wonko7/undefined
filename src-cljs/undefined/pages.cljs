@@ -49,7 +49,7 @@
   ;; call with an event (used through em/listen)
   ([e]
    (let [a    (.-currentTarget e)
-         href (em/from a (em/get-attr :href))
+         href (em/from a (em/get-attr :data-href))
          ext  (em/from a (em/get-attr :data-ext))
          args (em/from a (em/get-attr :data-args))]
      (when (not= ext "true")
