@@ -7,8 +7,20 @@
 
 (defn newarticlepage [href & [args]]
   ;(js/console.log "called")
-  (em/at js/document [:#btn_add_article] (em/listen :click #(let [title (em/from (em/select ["#inp_title"]) (em/get-prop :value))
-                                                                  body  (em/from (em/select ["#txt_body"]) (em/get-prop :value))]
-                                                              (fm/letrem [res (insert_article title body)] (js/alert res))))))
+  (em/at js/document [:#btn_add_article] (em/listen :click #(let [title      (em/from (em/select ["#inp_title"]) (em/get-prop :value))
+                                                                  body       (em/from (em/select ["#txt_body"]) (em/get-prop :value))
+                                                                  tags       (em/from (em/select ["#inp_tags"]) (em/get-prop :value))
+                                                                  authors    (zipmap
+                                                                               (em/from (em/select [".cbx_auth"]) (em/get-prop :value))
+                                                                               (em/from (em/select [".cbx_auth"]) (em/get-prop :checked)))
+                                                                  categories (zipmap
+                                                                               (em/from (em/select [".cbx_cat"]) (em/get-prop :value))
+                                                                               (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))]
+                                                              (js/alert (str "Title: " title
+                                                                          "\nBody: " body
+                                                                          "\nTags: " tags
+                                                                          "\nAuthors: " authors
+                                                                          "\nCategories: " categories))))))
+;                                                              (fm/letrem [res (insert_article title body)] (js/alert res))))))
 
 (add-page-init! "newarticle" newarticlepage)
