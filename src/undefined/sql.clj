@@ -87,6 +87,7 @@
           (where {:categories.label cat})
           (order :articles.birth :DESC)))
 
+;; FIXME: cyrille check this please.
 (defn select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
