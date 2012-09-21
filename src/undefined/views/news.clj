@@ -1,7 +1,7 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article]]
-     [undefined.sql :only [select_articles select_articles2
+     [undefined.sql :only [select_articles
                            select_tags tags_by_article tags_by_label
                            select_categories categories_by_article
                            select_authors authors_by_article]]
@@ -20,8 +20,8 @@
                       {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]
         get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))
         articles     (if (= name "blog")
-                       (select_articles2 article-id nb-articles "Technical")
-                       (select_articles2 article-id nb-articles "Promotional"))]
+                       (select_articles article-id nb-articles "Technical")
+                       (select_articles article-id nb-articles "Promotional"))]
 
     (page title (concat (map 
                           #(article (:title %) (str (:birth %)) (:body %)

@@ -76,13 +76,8 @@
 ;SELECT
 
 ;articles
-(defn select_articles [off n]
-  (select articles
-          (limit n)
-          (offset off)
-          (order :birth :DESC)))
 
-(defn select_articles2 [off n cat]
+(defn select_articles [off n cat]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
           (join articles (= :article_categories.artid :articles.uid))
@@ -128,12 +123,18 @@
 
 ;INSERT
 
-(defremote insert_article [title body]
+(defremote insert_article_bak [title body]
   (insert articles
           (values {:title title :body body})))
 
-(defremote insert_article2 [title body tags authors categories]
-  (str title " " body " " authors))
+(defremote insert_article [title body tags authors categories]
+;  (transaction
+    (let [artid (dry-run (insert articles (values {:title title :body body})))]
+    (dry-run (insert article_categories
+            (values {:artid artid :catid 1})))
+    (dry-run (insert article_authors
+            (values {:artid artid :authid 1})))
+  artid))
 
 ;UPDATE
 
