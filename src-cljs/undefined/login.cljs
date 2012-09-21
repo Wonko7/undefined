@@ -17,6 +17,7 @@
                                                       (js/console.log res)
                                                       (page-click "news" nil)))))
       (em/at js/document
+         ; [:.user] (em/focus)
              [:form] (em/listen :submit (fn [e]
                                           (.preventDefault e)
                                           (let [id (em/from js/document
