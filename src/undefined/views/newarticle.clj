@@ -10,7 +10,7 @@
      [noir.core :only [defpage pre-route]]))
 
 (defn new-article-page [name id]
-  (if true;(is-admin?)
+  (if (is-admin?)
     (page "Add a new post" 
           (newarticle (select_authors) (select_categories))
           {:metadata {:data-init-page "newarticle"}})

@@ -41,8 +41,7 @@
     (init-page)))
 
 
-
-(def history (hist/history (fn [{:keys [token navigation?]}]
+(def history (hist/history (fn [{:keys [type token navigation?]}]
                              (when navigation?
                                (page-click token nil :no-hist)))))
 
