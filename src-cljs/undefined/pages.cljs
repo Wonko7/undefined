@@ -41,7 +41,6 @@
     (init-page)))
 
 
-(declare page-click)
 
 (def history (hist/history (fn [{:keys [token navigation?]}]
                              (when navigation?

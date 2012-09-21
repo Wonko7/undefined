@@ -6,7 +6,6 @@
      [enfocus.macros :as em]))
 
 (defn newarticlepage [href & [args]]
-  ;(js/console.log "called")
   (em/at js/document [:#btn_add_article] (em/listen :click #(let [title      (em/from (em/select ["#inp_title"]) (em/get-prop :value))
                                                                   body       (em/from (em/select ["#txt_body"]) (em/get-prop :value))
                                                                   tags       (em/from (em/select ["#inp_tags"]) (em/get-prop :value))

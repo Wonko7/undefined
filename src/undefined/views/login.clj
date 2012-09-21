@@ -5,6 +5,6 @@
 
 ;; FIXME: add-page-init! finally.
 (defpage "/login" []
-  (base (page "Log In:"
+   (base (page "Log In:"
               (login)
               {:metadata {:data-init-page "login"}})))
