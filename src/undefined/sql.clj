@@ -82,6 +82,16 @@
           (offset off)
           (order :birth :DESC)))
 
+(defn select_articles2 [off n cat]
+  (select article_categories
+          (fields :articles.title :articles.body :articles.birth :articles.uid)
+          (join articles (= :article_categories.artid :articles.uid))
+          (join categories (= :categories.uid :article_categories.catid))
+          (limit n)
+          (offset off)
+          (where {:categories.label cat})
+          (order :articles.birth :DESC)))
+
 ;tags
 (defn select_tags []
   (select tags))
@@ -118,11 +128,11 @@
 
 ;INSERT
 
-(defremote insert_article [title body]; (str "Title: " title "\nBody: " body)); (insert_article title body))
+(defremote insert_article [title body]
   (insert articles
           (values {:title title :body body})))
 
-(defn insert_article2 [title body authors]
+(defremote insert_article2 [title body tags authors categories]
   (str title " " body " " authors))
 
 ;UPDATE

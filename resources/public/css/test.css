@@ -1,3 +1,4 @@
+::selection{background-color: #77DD55;}
 
 body {
 	background: #393;
@@ -116,6 +117,36 @@ a:hover {
 	box-shadow: 5px 5px 5px #444;
 }
 
+/**************/
+/* Login page */
+/**************/
+
+#login input[type=text], input[type=password] {
+	margin-top: 10px;
+	width: 150px;
+	background-color: #88CC77;
+	border: 4px solid #449933;
+	border-radius: 3px;
+}
+
+#login input[type=text], input[type=password], label {display: inline-block;}
+
+#login input[type=submit] {
+	margin-left: 220px;
+	margin-top: 20px;
+}
+
+#login label {width: 100px;}
+
+#login {
+	margin: 50px auto;
+	padding: 10px;
+	width: 300px;
+	border: 4px solid grey;
+	border-radius: 5px 5px 5px 5px;
+	box-shadow: 20px 20px 20px #335522;
+}
+
 /********************/
 /* Add article page */
 /********************/
@@ -141,12 +172,12 @@ a:hover {
 
 #inp_tags { width: 80%; font-style: italic;}
 
-#txt_body { width: 65%; height: 100px;}
+#txt_body { width: 65%; height: 150px;}
 
 .newarticle {
 	margin: 50px auto;
 	padding: 10px;
-	width: 400px;
+	width: 600px;
 	border: 4px solid grey;
 	border-radius: 5px 5px 5px 5px;
 	box-shadow: 20px 20px 20px #335522;

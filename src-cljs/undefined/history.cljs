@@ -43,9 +43,3 @@
       (.setUseFragment h false)
       (.setEnabled h true)
       h)))
-
-(defn set-token
-  "Sets the `history` state. The URL fragment will be set to the
-  provided token."
-  [history token]
-  (.setToken history (name token)))
