@@ -6,7 +6,7 @@
                  [enlive "1.0.0"]
                  [korma "0.3.0-beta9"]
                  [clj-time "0.4.4"]
-                 [com.cemerick/friend "0.1.0"]
+                 [com.cemerick/friend "0.1.0" :exclusions [ring/ring-core]]
                  ;; clj & cljs:
                  [fetch "0.1.0-alpha2"]
                  ;; cljs:
