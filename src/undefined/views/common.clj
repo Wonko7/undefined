@@ -76,20 +76,11 @@
                            page-404))))
 
 ;; WARNING: not thread safe.
-(defn add-page-init! [name func]
-  (println "register " name)
+(defn register-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;  Static page urls:
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defmacro add-defpages [hrefs] ;; fixme, use given function when merged into add-page-init!
-  `(do 
-    ~@(for [href hrefs]
-        `(defpage ~(str "/" href) []
-           (base ((page-inits ~href) ~href nil))))))
-
-(add-defpages ["news" "products" "blog"])
+(defmacro add-page-init! [name fun]
+  `(do
+     (register-page-init! ~name ~fun)
+     (defpage ~(str "/" name) []
+       (base (~fun ~name nil)))))

@@ -1,7 +1,6 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article base]]
-        [noir.core :only [defpage]]
         [undefined.sql :only [select_articles
                               select_tags tags_by_article tags_by_label
                               select_categories categories_by_article
@@ -39,8 +38,4 @@
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
 
-(defpage "/blog/:page" {:keys [page]}
-  (base (news-page "blog" page)))
-
-(defpage "/article/:id" {:keys [id]}
-  (base (news-page "blog" id 1)))
+;(add-page-init! "blog-article" #(news-page %1 1) {:keys [page]}) --> implies a condp for title 
