@@ -18,7 +18,8 @@
         article-prev (if (pos? article-prev) article-prev 0)
         blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
                       {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]
-        get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))]
+        get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))
+        articles     (if (= name "blog") (select_articles2 article-id nb-articles ""))]
 
   (page title (concat (map 
                         #(article (:title %) (str (:birth %)) (:body %)
