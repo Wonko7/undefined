@@ -1,7 +1,8 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
-     [undefined.auth :only [is-admin?]]
-     ;[undefined.misc :only [doall-recur]]
+        [undefined.auth :only [is-admin?]]
+        [noir.core :only [defpage]]
+        ;[undefined.misc :only [doall-recur]]
      )
   (:require [net.cgrand.enlive-html :as html]))
 
@@ -76,4 +77,19 @@
 
 ;; WARNING: not thread safe.
 (defn add-page-init! [name func]
+  (println "register " name)
   (def page-inits (into page-inits {name func})))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Static page urls:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defmacro add-defpages [hrefs] ;; fixme, use given function when merged into add-page-init!
+  `(do 
+    ~@(for [href hrefs]
+        `(defpage ~(str "/" href) []
+           (base ((page-inits ~href) ~href nil))))))
+
+(add-defpages ["news" "products" "blog"])

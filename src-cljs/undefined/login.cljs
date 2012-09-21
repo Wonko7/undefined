@@ -7,7 +7,6 @@
 
 
 (defn login-page [href & [args]]
-  (js/console.log "hello, login page before remote")
   (fm/letrem [user (get-user)]
     (if user
       (em/at js/document
@@ -24,7 +23,6 @@
                                           (let [id (em/from js/document
                                                             :user [:form :input.user] (em/get-prop :value)
                                                             :pass [:form :input.pass] (em/get-prop :value))]
-                                            (js/console.log (str "try to log with: " id))
                                             (fm/letrem [user (auth-login id)]
                                               (if user
                                                 (page-click "newarticle" nil)
