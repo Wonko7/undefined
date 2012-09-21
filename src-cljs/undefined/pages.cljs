@@ -44,8 +44,9 @@
 (declare page-click)
 
 (def history (hist/history (fn [{:keys [token navigation?]}]
+                             (js/console.log token)
                              (when navigation?
-                               (page-click (apply str (next (str token))) nil :no-hist)))))
+                               (page-click token nil :no-hist)))))
 
 ;; FIXME this should work. check css-select.
 ;(js/console.log (str (em/from a
@@ -64,7 +65,7 @@
   ;; can be called directly:
   ([href args & [no-hist]]
    (when (nil? no-hist)
-     (hist/set-token history href))
+     (.setToken history href))
    (em/at js/document
           [:#page] (em/chain
                      (em/fade-out 100)

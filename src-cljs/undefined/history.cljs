@@ -34,13 +34,15 @@
   (let [h (if (history5/isSupported)
             (goog.history.Html5History.)
             (goog.History.))]
-    (do (event/listen h "navigate"
-                      (fn [e]
-                        (callback {:token (keyword (.-token e))
-                                   :type (.-type e)
-                                   :navigation? (.-isNavigation e)})))
-        (.setEnabled h true)
-        h)))
+    (do
+      (event/listen h "navigate"
+                    (fn [e]
+                      (callback {:token (.-token e)
+                                 :type (.-type e)
+                                 :navigation? (.-isNavigation e)})))
+      (.setUseFragment h false)
+      (.setEnabled h true)
+      h)))
 
 (defn set-token
   "Sets the `history` state. The URL fragment will be set to the

@@ -16,18 +16,19 @@
         article-stop (+ article-id 10)
         article-prev (- article-id 10)
         article-prev (if (pos? article-prev) article-prev 0)
-        blognav      [{:tag :a :attrs {:href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
-                      {:tag :a :attrs {:href name :data-args article-stop :style "float: right"} :content "Next"}]
+        blognav      [{:tag :a :attrs {:href (str name "/" article-prev) :data-href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
+                      {:tag :a :attrs {:href (str name "/" article-stop) :data-href name :data-args article-stop :style "float: right"} :content "Next"}]
         get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))]
 
-  (page title (concat (map 
-                        #(article (:title %) (str (:birth %)) (:body %)
-                                  (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
-                                  (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
-                                  (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
-                                  %)
-                        (select_articles article-id nb-articles))
-                      blognav))))    
+  (page title
+        (map
+          #(article (:title %) (str (:birth %)) (:body %)
+                    (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
+                    (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
+                    (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
+                    %)
+          (select_articles article-id nb-articles))
+        {:bottom blognav})))
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
