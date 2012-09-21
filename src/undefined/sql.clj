@@ -127,16 +127,17 @@
   (insert articles
           (values {:title title :body body})))
 
-;(doseq [x auths] (insert article_categories (values {:artid artid :catid x})))
 
 ;TODO transaction
+;TODO tags
+;TODO beautify doseq
 (defremote insert_article [title body tags authors categories]
   (let [artid     (:uid (insert articles (values {:title title :body body})))
         get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
         auths     (get_keys authors)
         cats      (get_keys categories)]
-    (insert article_categories (values {:artid artid :catid 2}))
-    (insert article_authors (values {:artid artid :authid 1}))
+    (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})));(insert article_categories (values {:artid artid :catid 2}))
+    (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})));(insert article_authors (values {:artid artid :authid 1}))
    artid))
 
 ;UPDATE
