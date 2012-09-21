@@ -6,12 +6,13 @@
      )
   (:require [net.cgrand.enlive-html :as html]))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page composition:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-      [title date article tags categories authors debug]
+      [uid title date article tags categories authors debug]
       [:.article-title] (html/html-content (str title (if (is-admin?) "<span style=\"float:right; margin-right: 20px;\"><button>Edit</button><button>Delete</button></span>")))
       [:.article-date]  (html/content date)
       [:.article]       (html/html-content article)
@@ -41,6 +42,7 @@
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]
   [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page skeleton:
@@ -79,8 +81,11 @@
 (defn register-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
-(defmacro add-page-init! [name fun]
+(defmacro add-page-init! [name fun & [arg]]
   `(do
      (register-page-init! ~name ~fun)
-     (defpage ~(str "/" name) []
-       (base (~fun ~name nil)))))
+     ~(if arg
+        `(defpage ~(str "/" name "/:" arg ) {:keys [~(symbol arg)]}
+           (base (~fun ~name ~(symbol arg))))
+        `(defpage ~(str "/" name) []
+           (base (~fun ~name nil))))))

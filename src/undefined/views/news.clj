@@ -9,24 +9,27 @@
 
 
 (defn news-page [name article-id & [nb-articles]]
-  (let [title        (if (= name "blog")
+  (let [category     (if (= (take 4 name) "blog") :blog :news)
+        single-art   (= 1 nb-articles)
+        title        (when (not single-art)
+                       (if (= :blog category)
                        "Undefined's Technical Blog"
-                       "Undefined's Latest News")
+                       "Undefined's Latest News"))
         nb-articles  (if nb-articles nb-articles 10)
         article-id   (if article-id (Integer. article-id) 0) ;; FIXME add contracts on this. people can feed whatever here
         article-stop (+ article-id 10)
         article-prev (- article-id 10)
         article-prev (if (pos? article-prev) article-prev 0)
-        blognav      (when (> nb-articles 1)
+        blognav      (when (not single-art)
                        [{:tag :a :attrs {:href (str name "/" article-prev) :data-href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
                         {:tag :a :attrs {:href (str name "/" article-stop) :data-href name :data-args article-stop :style "float: right"} :content "Next"}])
         get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))
-        articles     (if (= name "blog")
+        articles     (if (= :blog category)
                        (select_articles article-id nb-articles "Technical")
                        (select_articles article-id nb-articles "Promotional"))]
     (page title
           (map
-            #(article (:title %) (str (:birth %)) (:body %)
+            #(article (:uid %) (:title %) (str (:birth %)) (:body %)
                       (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                       (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                       (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
@@ -38,4 +41,8 @@
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
 
-;(add-page-init! "blog-article" #(news-page %1 1) {:keys [page]}) --> implies a condp for title 
+ ;--> implies a condp for title 
+(add-page-init! "blog-article" #(news-page %1 %2 1) id)
+(add-page-init! "news-article" #(news-page %1 %2 1) id)
+(add-page-init! "news" #(news-page %1 %2) page)
+(add-page-init! "blog" #(news-page %1 %2) page)
