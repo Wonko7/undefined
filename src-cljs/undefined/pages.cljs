@@ -64,7 +64,6 @@
   ;; can be called directly:
   ([href args & [no-hist]]
    (when (nil? no-hist)
-     (js/console.log "add" href)
      (hist/set-token history href))
    (em/at js/document
           [:#page] (em/chain
