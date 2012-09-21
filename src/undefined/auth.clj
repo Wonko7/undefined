@@ -1,7 +1,12 @@
 (ns undefined.auth
-  (:use [noir.fetch.remotes]) 
+  (:use [noir.fetch.remotes]
+        [noir.response :only [redirect]]
+        [noir.request :only [ring-request]]
+        [noir.core :only [pre-route]])
   (:require [net.cgrand.enlive-html :as html]
             [cemerick.friend :as friend]))
+
+(def ssl-port 8084)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -17,6 +22,11 @@
 
 (defremote auth-logout [] nil)
 
+(pre-route "/login" []
+           (let [req    (ring-request)
+                 https-url (str "https://" (:server-name req) (str ":" ssl-port) (:uri req)) ]
+             (when (= :http (:scheme req))
+               (redirect https-url))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wrappers for undefined:

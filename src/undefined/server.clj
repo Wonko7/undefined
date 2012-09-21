@@ -59,13 +59,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; FIXME make different ports for test build and release builds.
+(def ssl-port 8084)
+
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
         port (Integer. (get (System/getenv) "PORT" "8000"))]
     (server/start port {:mode mode
                         :ns 'undefined
                         :jetty-options {:ssl? true
-                                        :ssl-port 8084
+                                        :ssl-port ssl-port
                                         ;; gen with: keytool -keystore keystore -alias jetty -genkey -keyalg RSA
                                         :keystore "keystore"
                                         :key-password "123456"}})))
