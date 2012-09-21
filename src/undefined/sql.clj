@@ -87,6 +87,14 @@
           (where {:categories.label cat})
           (order :articles.birth :DESC)))
 
+(defn select_article [id]
+  (select article_categories
+          (fields :articles.title :articles.body :articles.birth :articles.uid)
+          (join articles (= :article_categories.artid :articles.uid))
+          (join categories (= :categories.uid :article_categories.catid))
+          (where {:artid id})
+          (order :articles.birth :DESC)))
+
 ;tags
 (defn select_tags []
   (select tags))

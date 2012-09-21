@@ -1,7 +1,7 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article base]]
-        [undefined.sql :only [select_articles
+        [undefined.sql :only [select_articles select_article
                               select_tags tags_by_article tags_by_label
                               select_categories categories_by_article
                               select_authors authors_by_article]]
@@ -24,12 +24,12 @@
                        [{:tag :a :attrs {:href (str name "/" article-prev) :data-href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
                         {:tag :a :attrs {:href (str name "/" article-stop) :data-href name :data-args article-stop :style "float: right"} :content "Next"}])
         get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))
-        articles     (if (= :blog category)
-                       (select_articles article-id nb-articles "Technical")
-                       (select_articles article-id nb-articles "Promotional"))]
+        articles     (cond single-art         (select_article article-id)
+                           (= :blog category) (select_articles article-id nb-articles "Technical")
+                           :else              (select_articles article-id nb-articles "Promotional"))]
     (page title
           (map
-            #(article (:uid %) (:title %) (str (:birth %)) (:body %)
+            #(article (:uid %) category (:title %) (str (:birth %)) (:body %)
                       (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                       (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                       (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
@@ -40,8 +40,6 @@
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
-
- ;--> implies a condp for title 
 (add-page-init! "blog-article" #(news-page %1 %2 1) id)
 (add-page-init! "news-article" #(news-page %1 %2 1) id)
 (add-page-init! "news" #(news-page %1 %2) page)
