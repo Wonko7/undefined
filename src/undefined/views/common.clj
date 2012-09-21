@@ -11,14 +11,13 @@
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
       [title date article tags categories authors debug]
-      [:.article-title] (html/content title)
+      [:.article-title] (html/html-content (str title (if (is-admin?) "<span style=\"float:right; margin-right: 20px;\"><button>Edit</button><button>Delete</button></span>")))
       [:.article-date]  (html/content date)
       [:.article]       (html/html-content article)
       [:.tags]          (html/content tags)
       [:.categories]    (html/content categories)
       [:.authors]       (html/content authors)
-      [:.debug]         (html/content debug)
-      (if (is-admin?) ([:.article-title] (html/append "<button>Edit</button><button>Delete</button>"))))
+      [:.debug]         (html/content debug))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
       [title link article sc]
