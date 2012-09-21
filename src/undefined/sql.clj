@@ -82,7 +82,7 @@
           (offset off)
           (order :birth :DESC)))
 
-(defn select_article2 [off n cat]
+(defn select_articles2 [off n cat]
   (select articles
           (join article_categories)
           (limit n)

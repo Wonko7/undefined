@@ -1,7 +1,7 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article]]
-        [undefined.sql :only [select_articles
+        [undefined.sql :only [select_articles select_articles2
                               select_tags tags_by_article tags_by_label
                               select_categories categories_by_article
                               select_authors authors_by_article]]
