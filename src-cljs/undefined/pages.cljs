@@ -1,6 +1,7 @@
 (ns undef.pages
   (:use [undef.init :only [add-init!]])
   (:require [fetch.remotes :as remotes]
+            [undef.history :as hist]
             [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
                    [enfocus.macros :as em]))
@@ -40,11 +41,16 @@
     (init-page)))
 
 
+(declare page-click)
+
+(def history (hist/history (fn [{:keys [token navigation?]}]
+                             (when navigation?
+                               (page-click (apply str (next (str token))) nil :no-hist)))))
+
 ;; FIXME this should work. check css-select.
 ;(js/console.log (str (em/from a
 ;                              :href [:a] (em/get-attr :href)
 ;                              :args [:a] (em/get-attr :data-args))))
-
 (defn page-click
   ;; call with an event (used through em/listen)
   ([e]
@@ -56,7 +62,10 @@
        (.preventDefault e)
        (page-click href args))))
   ;; can be called directly:
-  ([href args]
+  ([href args & [no-hist]]
+   (when (nil? no-hist)
+     (js/console.log "add" href)
+     (hist/set-token history href))
    (em/at js/document
           [:#page] (em/chain
                      (em/fade-out 100)
