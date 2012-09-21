@@ -8,7 +8,6 @@
 (defn by-id [id] (.getElementById js/document id))
 
 (defn newarticlepage [href & [args]]
-<<<<<<< HEAD
   (let [title (.-value (by-id "inp_title"));(em/from (by-id "#inp_title") (em/get-prop :value))
         body  (em/from js/document [:textarea#txt_body] (em/get-prop :value))]
     (js/console.log "called")
