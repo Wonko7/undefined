@@ -83,12 +83,14 @@
           (order :birth :DESC)))
 
 (defn select_articles2 [off n cat]
-  (select articles
-          (join article_categories)
+  (select article_categories
+          (fields :articles.title :articles.body :articles.birth :articles.uid)
+          (join articles (= :article_categories.artid :articles.uid))
+          (join categories (= :categories.uid :article_categories.catid))
           (limit n)
           (offset off)
-          (where {:article_categories.catid cat})
-          (order :birth :DESC)))
+          (where {:categories.label cat})
+          (order :articles.birth :DESC)))
 
 ;tags
 (defn select_tags []
