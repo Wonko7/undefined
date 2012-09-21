@@ -44,7 +44,6 @@
 (declare page-click)
 
 (def history (hist/history (fn [{:keys [token navigation?]}]
-                             (js/console.log token)
                              (when navigation?
                                (page-click token nil :no-hist)))))
 
