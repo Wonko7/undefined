@@ -25,4 +25,6 @@
              :srv-prod {:dependencies [[postgresql "8.4-702.jdbc4"]]} ;; FIXME; adapt port settings
              :c        {:dependencies [[postgresql "9.1-901-1.jdbc4"]]}
              :w        {:dependencies [[postgresql "9.1-901-1.jdbc4"]]}}
+  :aliases {"runc" ["with-profile" "c" "run"]
+            "runw" ["with-profile" "w" "run"]}
   :main undefined.server)
