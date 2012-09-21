@@ -1,5 +1,6 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
+     [undefined.auth :only [is-admin?]]
      ;[undefined.misc :only [doall-recur]]
      )
   (:require [net.cgrand.enlive-html :as html]))
@@ -16,7 +17,8 @@
       [:.tags]          (html/content tags)
       [:.categories]    (html/content categories)
       [:.authors]       (html/content authors)
-      [:.debug]         (html/content debug))
+      [:.debug]         (html/content debug)
+      (if (is-admin?) ([:.article-title] (html/append "<button>Edit</button><button>Delete</button>"))))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
       [title link article sc]

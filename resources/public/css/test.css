@@ -90,7 +90,7 @@ body {
 #title {
 	text-align: center;
 	font-size: 20px;
-	text-weight: bold;
+	font-weight: bold;
 }
 
 a, a:visited {
