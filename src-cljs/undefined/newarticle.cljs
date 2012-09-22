@@ -15,7 +15,6 @@
                                                                   categories (zipmap
                                                                                (em/from (em/select [".cbx_cat"]) (em/get-prop :value))
                                                                                (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))]
-                                                              (fm/letrem [res (weed-tags tags)] (js/alert res))))))
-                                                          ;    (fm/letrem [res (insert_article title body tags authors categories)] (js/Console.log res))))))
+                                                              (fm/letrem [res (insert_article title body tags authors categories)] (js/console.log (str "Inserted article: " res)))))))
 
 (add-page-init! "newarticle" newarticlepage)

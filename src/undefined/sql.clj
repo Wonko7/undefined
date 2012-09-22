@@ -122,11 +122,16 @@
           (where {:artid id})))
 
 ;INSERT
-
-(defremote insert_article_bak [title body tags authors categories]
-  (insert articles
-          (values {:title title :body body})))
-
+;TODO this has to be prettyfiable
+(defn weed_tags [tag_input artid]
+  (let [tag_array       (distinct (clojure.string/split tag_input #" "))
+        existing_tags   (map #(:label %) (select_tags))
+        filtered_tags   (clojure.set/difference (set tag_array) (set existing_tags))
+        get_tagid       (fn [x] (str (:uid ((select tags
+                                                    (fields :uid :label)
+                                                    (where {:label x})) 0))))]
+    (doseq [x filtered_tags] (insert tags (values {:label x})))
+    (doseq [x tag_array] (insert article_tags (values {:artid artid :tagid (Integer/parseInt (get_tagid x))})))))
 
 ;TODO transaction
 ;TODO tags
@@ -136,17 +141,11 @@
         get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
         auths     (get_keys authors)
         cats      (get_keys categories)]
-    (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})));(insert article_categories (values {:artid artid :catid 2}))
-    (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})));(insert article_authors (values {:artid artid :authid 1}))
+    (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
+    (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})))
+    (weed_tags tags artid)
     artid))
 
-;TODO now that tags are inserted, need to link them to the article...
-(defremote weed-tags [tag_input]
-  (let [tag_array      (distinct (clojure.string/split tag_input #" "))
-        existing_tags  (map #(:label %) (select_tags))
-        filtered_tags  (clojure.set/difference (set tag_array) (set existing_tags))]
-    (doseq [x filtered_tags] (insert tags (values {:label x})))
-    (select_tags)))
 
 ;UPDATE
 
