@@ -132,18 +132,22 @@
 
 ;INSERT
 
-(defremote insert_article_bak [title body]
+(defremote insert_article_bak [title body tags authors categories]
   (insert articles
           (values {:title title :body body})))
 
+
+;TODO transaction
+;TODO tags
+;TODO beautify doseq
 (defremote insert_article [title body tags authors categories]
-;  (transaction
-    (let [artid (dry-run (insert articles (values {:title title :body body})))]
-    (dry-run (insert article_categories
-            (values {:artid artid :catid 1})))
-    (dry-run (insert article_authors
-            (values {:artid artid :authid 1})))
-  artid))
+  (let [artid     (:uid (insert articles (values {:title title :body body})))
+        get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
+        auths     (get_keys authors)
+        cats      (get_keys categories)]
+    (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})));(insert article_categories (values {:artid artid :catid 2}))
+    (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})));(insert article_authors (values {:artid artid :authid 1}))
+   artid))
 
 ;UPDATE
 
