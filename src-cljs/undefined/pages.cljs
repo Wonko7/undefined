@@ -42,6 +42,24 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; floating menu:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def scroll {:dir :up :pos 0})
+
+(defn show-fixed-menu [e]
+  (let [pos       js/window.pageYOffset
+        direction (if (> pos (:pos scroll)) :down :up)]
+    (when (not= direction (:dir scroll))
+      (em/at js/document
+             [:#nav] (if (= :up direction)
+                       (em/fade-in 100)
+                       (em/fade-out 100))))
+    (def scroll {:dir direction :pos pos})))
+
+(set! (.-onscroll js/window) show-fixed-menu)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page loading:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
