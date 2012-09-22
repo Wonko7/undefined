@@ -1,5 +1,6 @@
 (ns undef.pages
-  (:use [undef.init :only [add-init!]])
+  (:use [undef.init :only [add-init!]]
+        [clojure.string :only [split]])
   (:require [fetch.remotes :as remotes]
             [undef.history :as hist]
             [enfocus.core :as ef])
@@ -75,9 +76,10 @@
     (init-page)))
 
 
-(def history (hist/history (fn [{:keys [type token navigation?]}]
+(def history (hist/history (fn [{:keys [token navigation?]}]
                              (when navigation?
-                               (page-click token nil :no-hist)))))
+                               (let [[href arg] (split token #"[/]")]
+                                 (page-click href arg :no-hist))))))
 
 ;; FIXME this should work. check css-select.
 ;(js/console.log (str (em/from a

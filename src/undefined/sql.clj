@@ -88,12 +88,12 @@
           (order :articles.birth :DESC)))
 
 ;; FIXME: cyrille check this please.
-(defn select_article [id]
+(defn select_article [id cat]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
           (join articles (= :article_categories.artid :articles.uid))
           (join categories (= :categories.uid :article_categories.catid))
-          (where {:artid id})
+          (where {:categories.label cat :artid id})
           (order :articles.birth :DESC)))
 
 ;tags
