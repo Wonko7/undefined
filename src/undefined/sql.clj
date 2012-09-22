@@ -138,7 +138,15 @@
         cats      (get_keys categories)]
     (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})));(insert article_categories (values {:artid artid :catid 2}))
     (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})));(insert article_authors (values {:artid artid :authid 1}))
-   artid))
+    artid))
+
+;TODO now that tags are inserted, need to link them to the article...
+(defremote weed-tags [tag_input]
+  (let [tag_array      (distinct (clojure.string/split tag_input #" "))
+        existing_tags  (map #(:label %) (select_tags))
+        filtered_tags  (clojure.set/difference (set tag_array) (set existing_tags))]
+    (doseq [x filtered_tags] (insert tags (values {:label x})))
+    (select_tags)))
 
 ;UPDATE
 
