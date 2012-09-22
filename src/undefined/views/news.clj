@@ -28,14 +28,14 @@
                                  [arts nx] (if (> (count arts) nb-articles)
                                              [(drop-last arts) (+ article-id nb-articles)]
                                              [arts nil])
-                                 pv (- article-id nb-articles)]
-                             [(when (pos? pv) pv) nx arts]))]
+                                 pv (- article-id nb-articles)
+                                 pv (if (neg? pv) 0 pv)]
+                             [(when (> article-id 0) pv) nx arts]))]
     (page title
           (map #(article (:uid %) category (:title %) (str (:birth %)) (:body %)
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
-                         (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
-                         %)
+                         (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
                articles)
           {:bottom (blog-nav name pv nx)})))
 

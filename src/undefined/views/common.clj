@@ -12,7 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-  [uid category title date article tags categories authors debug]
+  [uid category title date article tags categories authors]
   [:.article-title :a] (html/do-> (html/content title)
                                   (html/set-attr :href (str (name category) "-article/" uid))
                                   (html/set-attr :data-href (str (name category) "-article"))
@@ -22,7 +22,6 @@
   [:.tags]             (html/content tags)
   [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
-  [:.debug]            (html/content debug)
   [:.admin]            (html/append (if (is-admin?)
                                       [{:tag :a :attrs {:data-href "delete-link" :data-args (str uid) } :content "Edit"}
                                        {:tag :span :content " "} ;; just for spacing
