@@ -68,13 +68,14 @@
 
 (declare page-click)
 
-(defn load-page [href & [args]]
+(defn load-page [href args em-args em-fx]
   (fm/letrem [page (get-page href args)]
     (.scrollTo js/window 0 0)
     (em/at js/document
            [:#page-wrapper] (em/content page))
     (em/at js/document
            [:#page-wrapper :a] (em/listen :click page-click))
+    (em-fx em-args)
     (init-page)))
 
 
@@ -107,7 +108,7 @@
    (em/at js/document
           [:#page] (em/chain
                      (em/fade-out 100)
-                     (ef/chainable-standard #(load-page href args)) ;; if you want synch, this is where it should be done, chainable.
+                     #(load-page href args %1 %2)
                      (em/fade-in 100)))))
 
 (add-init! #(em/at js/document
