@@ -62,7 +62,9 @@
   ;; can be called directly:
   ([href args & [no-hist]]
    (when (nil? no-hist)
-     (.setToken history href))
+     (if args
+       (.setToken history (str href "/" args)) ;; check if args is a seq. if so, reduce it.
+       (.setToken history href)))
    (em/at js/document
           [:#page] (em/chain
                      (em/fade-out 100)
