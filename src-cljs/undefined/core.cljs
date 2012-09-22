@@ -1,6 +1,6 @@
 (ns undef.core
   (:use [undef.init :only [add-init!]]
-        [undef.pages :only [page-click init-page add-page-init!]])
+        [undef.pages :only [page-click init-page add-page-init! add-future-page-action!]])
   (:require [fetch.remotes :as remotes]
             [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
@@ -13,7 +13,7 @@
       (init-page))))
 
 (defn p404 [& [args]] ;; FIXME: trigger click?
-  (js/setTimeout #(page-click "news" nil) 3000))
+  (add-future-page-action! :timeout (js/setTimeout #(page-click "news" nil) 3000)))
 
 (add-page-init! "404" p404)
 

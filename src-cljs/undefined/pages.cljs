@@ -13,7 +13,6 @@
 
 (def page-inits {})
 
-;; WARNING: not thread safe.
 (defn add-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
@@ -24,6 +23,23 @@
     (when (:init data)
       (if-let [f ((:init data) page-inits)]
         (f (:args data))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; page actions:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def page-actions nil)
+
+(defn add-future-page-action! [fun & args]
+  (def page-actions (cons [fun args] page-actions)))
+
+(defn clear-future-actions! []
+  (doseq [[type id] page-actions]
+    (cond (= type :timeout) (js/clearTimeout id)
+          :else             (js/console.log (str "don't know how to clear " type))))
+  (def page-actions nil))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page loading:
@@ -61,6 +77,7 @@
        (page-click href args))))
   ;; can be called directly:
   ([href args & [no-hist]]
+   (clear-future-actions!)
    (when (nil? no-hist)
      (if args
        (.setToken history (str href "/" args)) ;; check if args is a seq. if so, reduce it.
