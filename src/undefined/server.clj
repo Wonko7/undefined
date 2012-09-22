@@ -1,5 +1,6 @@
 (ns undefined.server
 (:import org.mindrot.jbcrypt.BCrypt)
+  (:use [undefined.auth :only [ssl-port]])
   (:require [noir.server :as server]
             [noir.fetch.remotes :as remotes]
             [cemerick.friend :as friend]
@@ -59,8 +60,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; FIXME make different ports for test build and release builds.
-(def ssl-port 8084)
-
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
         port (Integer. (get (System/getenv) "PORT" "8000"))]
