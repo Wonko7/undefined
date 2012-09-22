@@ -1,5 +1,6 @@
 (ns undef.pages
-  (:use [undef.init :only [add-init!]])
+  (:use [undef.init :only [add-init!]]
+        [clojure.string :only [split]])
   (:require [fetch.remotes :as remotes]
             [undef.history :as hist]
             [enfocus.core :as ef])
@@ -13,7 +14,6 @@
 
 (def page-inits {})
 
-;; WARNING: not thread safe.
 (defn add-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
@@ -24,6 +24,41 @@
     (when (:init data)
       (if-let [f ((:init data) page-inits)]
         (f (:args data))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; page actions:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def page-actions nil)
+
+(defn add-future-page-action! [fun & args]
+  (def page-actions (cons [fun args] page-actions)))
+
+(defn clear-future-actions! []
+  (doseq [[type id] page-actions]
+    (cond (= type :timeout) (js/clearTimeout id)
+          :else             (js/console.log (str "don't know how to clear " type))))
+  (def page-actions nil))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; floating menu:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def scroll {:dir :up :pos 0})
+
+(defn show-fixed-menu [e]
+  (let [pos       js/window.pageYOffset
+        direction (if (> pos (:pos scroll)) :down :up)]
+    (when (not= direction (:dir scroll))
+      (em/at js/document
+             [:#nav] (if (= :up direction)
+                       (em/fade-in 100)
+                       (em/fade-out 100))))
+    (def scroll {:dir direction :pos pos})))
+
+(set! (.-onscroll js/window) show-fixed-menu)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page loading:
@@ -41,9 +76,10 @@
     (init-page)))
 
 
-(def history (hist/history (fn [{:keys [type token navigation?]}]
+(def history (hist/history (fn [{:keys [token navigation?]}]
                              (when navigation?
-                               (page-click token nil :no-hist)))))
+                               (let [[href arg] (split token #"[/]")]
+                                 (page-click href arg :no-hist))))))
 
 ;; FIXME this should work. check css-select.
 ;(js/console.log (str (em/from a
@@ -61,8 +97,11 @@
        (page-click href args))))
   ;; can be called directly:
   ([href args & [no-hist]]
+   (clear-future-actions!)
    (when (nil? no-hist)
-     (.setToken history href))
+     (if args
+       (.setToken history (str href "/" args)) ;; check if args is a seq. if so, reduce it.
+       (.setToken history href)))
    (em/at js/document
           [:#page] (em/chain
                      (em/fade-out 100)

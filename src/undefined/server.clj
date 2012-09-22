@@ -1,5 +1,6 @@
 (ns undefined.server
 (:import org.mindrot.jbcrypt.BCrypt)
+  (:use [undefined.auth :only [ssl-port]])
   (:require [noir.server :as server]
             [noir.fetch.remotes :as remotes]
             [cemerick.friend :as friend]
@@ -65,7 +66,7 @@
     (server/start port {:mode mode
                         :ns 'undefined
                         :jetty-options {:ssl? true
-                                        :ssl-port 8084
+                                        :ssl-port ssl-port
                                         ;; gen with: keytool -keystore keystore -alias jetty -genkey -keyalg RSA
                                         :keystore "keystore"
                                         :key-password "123456"}})))
