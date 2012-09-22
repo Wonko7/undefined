@@ -37,7 +37,7 @@
 
 (defn clear-future-actions! []
   (doseq [[type id] page-actions]
-    (cond (= type :timeout) (js/clearTimeout id)
+    (cond (= type :timeout) (js/clearTimeout (first id)) 
           :else             (js/console.log (str "don't know how to clear " type))))
   (def page-actions nil))
 
