@@ -36,14 +36,13 @@
 (html/defsnippet login "templates/login.html" [:form]
   [])
 
-(html/defsnippet newarticle "templates/new_article.html" [:div.newarticle]
+(html/defsnippet newarticle "templates/new_article.html" [:form.newarticle]
   [authors categories]
   ;      [:#inp_title]       (html/set-attr :value title)
   ;      [:#txt_body]        (html/set-attr :value body)
   ;      [:#inp_tags]        (html/set-attr :value tags)
   [:#cbx_authors]     (html/html-content (reduce str (map #(str "<input type=\"checkbox\" class=\"cbx_auth\" value=\"" (:uid %) "\">" (:name %) "</input><br/>") authors)))
-  [:#cbx_categories]  (html/html-content (reduce str (map #(str "<input type=\"checkbox\" class=\"cbx_cat\" value=\"" (:uid %) "\">" (:label %) "</input><br/>") categories)))
-  [:#btn_add_article] (html/content "test"))
+  [:#cbx_categories]  (html/html-content (reduce str (map #(str "<input type=\"checkbox\" class=\"cbx_cat\" value=\"" (:uid %) "\">" (:label %) "</input><br/>") categories))))
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]

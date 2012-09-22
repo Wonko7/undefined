@@ -1,3 +1,28 @@
+<form class="newarticle">
+	<div>
+		<label for="inp_title">Title: </label><input id="inp_title" type="text"></input>
+	</div>
+	<div>
+		<label for="txt_body">Body: </label><textarea id="txt_body"></textarea>
+	</div>
+	<div>
+		<label for="inp_tags">Tags: </label><input id="inp_tags" type="text"></input>
+		<small>TAGS SHOULD BE SEPERATED BY SPACES.</small>
+	</div>
+	<fieldset>
+		<legend>Authors</legend>
+		<div id="cbx_authors"></div>
+	</fieldset>
+	<fieldset>
+		<legend>Categories</legend>
+		<div id="cbx_categories"></div>
+	</fieldset>
+	<div style="height: 60px;">
+		<button type="submit" id="btn_add_article">Submit</button>
+		<button type="reset" id="btn_rst">Reset</button>
+	</div>
+</form>
+<!--
 <div class="newarticle">
 	<input id="inp_title" type="text"></input><span>Title</span><br/>
 	<textarea id="txt_body"></textarea><span>Body</span><br/>
