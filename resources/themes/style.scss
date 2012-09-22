@@ -1,0 +1,15 @@
+$base-color: #393;
+$base-dark: #363;
+
+@import "recipes/ui";
+@import "recipes/background";
+
+body {
+	@include background-blueprint-grid( $base-color);
+	//@include background-image( background_noise($size: 60, $opacity: .07), bevel-gradient($base-color));
+}
+
+#nav {
+	background: #363;
+	//@include background-gradient($base-dark, recessed);
+}
