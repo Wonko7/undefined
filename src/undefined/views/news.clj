@@ -8,25 +8,28 @@
         [noir.fetch.remotes]))
 
 
+(defn blog-nav [link prev next]
+  [(when prev
+     {:tag :a :attrs {:href (str link "/" prev) :data-href link :data-args prev} :content "Previous"}) ;; FIXME: make something more generic
+   (when next
+     {:tag :a :attrs {:href (str link "/" next) :data-href link :data-args next :style "float: right"} :content "Next"})])
+
 (defn news-page [name article-id & [nb-articles]]
-  (let [category     (if (= (take 4 name) "blog") :blog :news)
-        single-art   (= 1 nb-articles)
-        title        (when (not single-art)
-                       (if (= :blog category)
-                       "Undefined's Technical Blog"
-                       "Undefined's Latest News"))
-        nb-articles  (if nb-articles nb-articles 10)
-        article-id   (if article-id (Integer. article-id) 0) ;; FIXME add contracts on this. people can feed whatever here
-        article-stop (+ article-id 10)
-        article-prev (- article-id 10)
-        article-prev (if (pos? article-prev) article-prev 0)
-        blognav      (when (not single-art)
-                       [{:tag :a :attrs {:href (str name "/" article-prev) :data-href name :data-args article-prev} :content "Previous"} ;; FIXME: make something more generic
-                        {:tag :a :attrs {:href (str name "/" article-stop) :data-href name :data-args article-stop :style "float: right"} :content "Next"}])
-        get_labels   (fn [x field] (reduce str (map #(str (field %) " ") x)))
-        articles     (cond single-art         (select_article article-id)
-                           (= :blog category) (select_articles article-id nb-articles "Technical")
-                           :else              (select_articles article-id nb-articles "Promotional"))]
+  (let [category         (if (= (take 4 name) "blog") :blog :news)
+        single-art?      (= 1 nb-articles)
+        title            (when (not single-art?)
+                           (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News"))
+        nb-articles      (if nb-articles nb-articles 10)
+        article-id       (if article-id (Integer. article-id) 0) ;; FIXME add contracts on this. people can feed whatever here
+        get_labels       #(apply str (interpose " " (map %2 %1)))
+        [pv nx articles] (if single-art?
+                           [nil nil (select_article article-id)]
+                           (let [arts      (select_articles article-id (inc nb-articles) (if (= :blog category) "Technical" "Promotional"))
+                                 [arts nx] (if (> (count arts) nb-articles)
+                                             [(drop-last arts) (+ article-id nb-articles)]
+                                             [arts nil])
+                                 pv (- article-id nb-articles)]
+                             [(when (pos? pv) pv) nx arts]))]
     (page title
           (map
             #(article (:uid %) category (:title %) (str (:birth %)) (:body %)
@@ -35,7 +38,7 @@
                       (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
                       %)
             articles)
-          {:bottom blognav})))
+          {:bottom (blog-nav name pv nx)})))
 
 
 (add-page-init! "news" news-page)
