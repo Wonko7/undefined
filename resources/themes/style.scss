@@ -155,9 +155,9 @@ body {
 	padding-top: 15px;
 	padding-bottom: 5px;
 	// deco:
-	@extend .visible-border;
-	@extend .rounded-bottom;
-	border-top: 0px;
+	//@extend .visible-border;
+	//@extend .rounded-bottom;
+	//border-top: 0px;
 	color: $dark-grey;
 	// stuff;
 	overflow: hidden;
