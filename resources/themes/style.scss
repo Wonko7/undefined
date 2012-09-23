@@ -130,7 +130,7 @@ body {
 }
 
 #nav a:hover {
-	color: $base-lighter;
+	color: $dark-grey;
 }
 
 #loading {
@@ -155,9 +155,6 @@ body {
 	padding-top: 15px;
 	padding-bottom: 5px;
 	// deco:
-	//@extend .visible-border;
-	//@extend .rounded-bottom;
-	//border-top: 0px;
 	color: $dark-grey;
 	// stuff;
 	overflow: hidden;
@@ -179,12 +176,13 @@ body {
 
 // links in page:
 a, a:visited {
-	color: $base-lighter;
+	color: $base-light;
+	font-weight: bold;
 	text-decoration: none;
 }
 
 a:hover {
-	color: #353;
+	color: $dark-grey;
 }
 
 
