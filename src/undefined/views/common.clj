@@ -18,7 +18,7 @@
                                   (html/set-attr :data-href (str (name category) "-article"))
                                   (html/set-attr :data-args (str uid)))
   [:.article-date]     (html/content date)
-  [:.article]          (html/html-content article)
+  [:.article]          (html/append article)
   [:.tags]             (html/content tags)
   [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
