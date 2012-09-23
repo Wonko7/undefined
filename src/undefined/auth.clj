@@ -14,13 +14,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defremote get-user []
-  (let [{:keys [username role]} (friend/current-authentication)]
-    [username role]))
+  (let [{:keys [username roles] :as d} (friend/current-authentication)]
+    [username roles]))
 
 (defremote auth-login [auth]
-  (let [{:keys [username role]} (friend/current-authentication)]
+  (let [{:keys [username roles]} (friend/current-authentication)]
     (friend/authorize #{:undefined.server/admin :undefined.server/user}
-                      [username role])))
+                      [username roles])))
 
 (defremote auth-logout [] nil)
 
