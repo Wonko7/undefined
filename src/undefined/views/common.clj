@@ -74,7 +74,8 @@
 
 ;; used by index.clj:
 (def page-404 (page "404"
-                    {:tag :center :content [{:tag :img :attrs {:src "/img/404.jpg"}}]}
+                    {:tag :div :attrs {:class "whole-article"}
+                     :content [{:tag :center :content [{:tag :img :attrs {:src "/img/404.jpg"}}]}]}
                     {:metadata {:data-init-page "404"}}))
 
 (defremote get-page [href & [args]]

@@ -1,6 +1,7 @@
 (ns undefined.views.products
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page product]]
+        [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
 
 (defn products-page [name product-id]
@@ -13,7 +14,7 @@
                          )
         link        "/products/budget-splitter/index.html"
         screenshot  "FIXME ADD SCREENSHOT"
-        product-id       (str-to-int product-id 0) ;; Will be needed.
+        product-id  (str-to-int product-id 0) ;; Will be needed.
         ]
     (page title (product "Budget Splitter" link fb-desc screenshot))))
 
