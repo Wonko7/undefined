@@ -3,20 +3,18 @@ For a balanced breakfast
 * build:
 	- better cljs compilation with https://github.com/ibdknox/noir-cljs
 * ui:
-	- rss
-	- css template
-	- blog admin -> htaccess? bcrypt?
-	- add arg data to history to accept all pages
+	- rss / atom
 * misc:
 	- domain name
 	- setup a real web architecture, maybe nginx: http://grokbase.com/t/gg/clj-noir/119ysw9vf0/noir-how-do-i-serve-static-files
 	- blop markup: __underline__ **bold** [h1] [h2] [h3] -> titles with automatic numbering; h3 = 1.2.a
 	+ [code=js|clj|sh] for code. [a] for links, [img]. anything else?
-	- hardenning -> check values that comme from webpage and inforce correctness.
+	- hardenning
+		- check values that comme from webpage and inforce correctness.
+		- catch errors, log, redirect user.
+		- BACKUPS.
 	- about: think about thank yous and links for what was used on the site.
 * sql:
-	- blog articles have types: 0 news, 1 tech blog, 2 both. tags, article body, date, title
 	- produtcs: platform list (web, ios, android, pc (for java)). title, desc, link & screenshot
 	- about page?
-	- BACKUPS.
 	- creation script
