@@ -5,6 +5,7 @@
                               select_tags tags_by_article tags_by_label
                               select_categories categories_by_article
                               select_authors authors_by_article]]
+        [undefined.misc :only [date-format]]
         [noir.fetch.remotes]))
 
 
@@ -32,7 +33,7 @@
                                  pv (if (neg? pv) 0 pv)]
                              [(when (> article-id 0) pv) nx arts]))]
     (page title
-          (map #(article (:uid %) category (:title %) (str (:birth %)) (:body %)
+          (map #(article (:uid %) category (:title %)  (:body %) (date-format (:birth %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))

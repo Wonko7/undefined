@@ -18,3 +18,7 @@ For a balanced breakfast
 	- produtcs: platform list (web, ios, android, pc (for java)). title, desc, link & screenshot
 	- about page?
 	- creation script
+* tests
+	http://corfield.org/blog/post.cfm/automated-browser-based-testing-with-clojure
+	https://github.com/semperos/clj-webdriver
+	https://github.com/jaycfields/expectations
