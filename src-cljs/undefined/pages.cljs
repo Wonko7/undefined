@@ -68,13 +68,14 @@
 
 (declare page-click)
 
-(defn load-page [href & [args]]
+(defn load-page [href args em-args em-fx]
   (fm/letrem [page (get-page href args)]
     (.scrollTo js/window 0 0)
     (em/at js/document
            [:#page-wrapper] (em/content page))
     (em/at js/document
            [:#page-wrapper :a] (em/listen :click page-click))
+    (em-fx em-args)
     (init-page)))
 
 
@@ -105,10 +106,12 @@
        (.setToken history (str href "/" args)) ;; check if args is a seq. if so, reduce it.
        (.setToken history href)))
    (em/at js/document
+          [:#page-wrapper] (em/before "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
           [:#page] (em/chain
                      (em/fade-out 100)
-                     (ef/chainable-standard #(load-page href args)) ;; if you want synch, this is where it should be done, chainable.
-                     (em/fade-in 100)))))
+                     #(load-page href args %1 %2)
+                     (em/fade-in 100)
+                     #(em/at js/document [:#loading] (em/remove-node))))))
 
 (add-init! #(em/at js/document
                    [:#nav :a] (em/listen :click page-click)))

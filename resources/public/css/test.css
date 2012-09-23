@@ -31,7 +31,7 @@ body {
 	/*
 	position: fixed;
 	top: 0;
-	*/
+	 */
 }
 
 #nav a {
@@ -55,11 +55,13 @@ body {
 	background: #2a2;
 }
 
-#loading img {
-	padding-top: 5px;
-	padding-right: 15px;
-	float: right;
+#loading {
+	padding-top: 50px;
 	vertical-align:middle;
+	text-align: center;
+	width: 100%;
+	position: fixed;
+	z-index: -1;
 }
 
 .hidden {
@@ -156,16 +158,22 @@ a:hover {
 /* Add article page */
 /********************/
 
-.newarticle div {
+.newarticle form {
 	margin: 10px;
 }
 
-.newarticle span {
-	float: right;
-	padding-top: 12px;
+.newarticle label {width: 70px;}
+
+.newarticle small {
+	margin-left: 85px;
 }
 
-.newarticle input, textarea {
+.newarticle div {
+	display: block;
+	vertical-align: middle;
+}
+
+.newarticle input, textarea, button {
 	padding: 5px;
 	margin: 5px;
 	background-color: #88CC77;
@@ -179,10 +187,16 @@ a:hover {
 
 #txt_body { width: 65%; height: 150px;}
 
+.newarticle fieldset {
+	margin-top: 10px;
+}
+
+.newarticle button { margin-top: 20px; float: right;}
+
 .newarticle {
 	margin: 50px auto;
 	padding: 10px;
-	width: 600px;
+	width: 500px;
 	border: 4px solid grey;
 	border-radius: 5px 5px 5px 5px;
 	box-shadow: 20px 20px 20px #335522;
