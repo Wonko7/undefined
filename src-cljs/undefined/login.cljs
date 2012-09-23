@@ -5,9 +5,12 @@
   (:require-macros [fetch.macros :as fm]
      [enfocus.macros :as em]))
 
+ (defn show-admin-stuff []
+   (em/at js/document
+          [:.admin] (em/remove-class "hidden")))
 
 (defn login-page [href & [args]]
-  (fm/letrem [user (get-user)]
+  (fm/letrem [[user role] (get-user)]
       (if user
         (em/at js/document
             [:#page] (em/html-content (str "Logged in as: " user "<br><a href=\"/logout\" class=\"logout\">Log Out</a>"))
@@ -23,9 +26,11 @@
                                          (let [id (em/from js/document
                                                       :user [:form :input.user] (em/get-prop :value)
                                                       :pass [:form :input.pass] (em/get-prop :value))]
-                                           (fm/letrem [user (auth-login id)]
+                                           (fm/letrem [[user role] (auth-login id)]
                                                (if user
-                                                 (page-click "newarticle" nil)
+                                                 (do
+                                                   (show-admin-stuff)
+                                                   (page-click "newarticle" nil))
                                                  (js/alert (str "log in failed. ")))))))))))
 
 (add-page-init! "login" login-page)

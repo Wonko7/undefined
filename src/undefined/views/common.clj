@@ -55,8 +55,9 @@
 
 (html/deftemplate base "templates/index.html"
   [content]
-  [:title] (html/content "Undefined Development")
-  [:#page-wrapper]  (html/append content))
+  [:.admin]        (html/add-class "hidden")
+  [:title]         (html/content "Undefined Development")
+  [:#page-wrapper] (html/append content))
 
 (html/defsnippet page "templates/page.html" [:#page]
   [title content & [optional]]

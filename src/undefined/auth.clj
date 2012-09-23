@@ -14,16 +14,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defremote get-user []
-  (:username (friend/current-authentication)))
+  (let [{:keys [username role]} (friend/current-authentication)]
+    [username role]))
 
 (defremote auth-login [auth]
-  (friend/authorize #{:undefined.server/admin :undefined.server/user}
-                    (:username (friend/current-authentication))))
+  (let [{:keys [username role]} (friend/current-authentication)]
+    (friend/authorize #{:undefined.server/admin :undefined.server/user}
+                      [username role])))
 
 (defremote auth-logout [] nil)
 
 (pre-route "/login" []
-           (let [req    (ring-request)
+           (let [req       (ring-request)
                  https-url (str "https://" (:server-name req) (str ":" ssl-port) (:uri req)) ]
              (when (= :http (:scheme req))
                (redirect https-url))))

@@ -6,7 +6,7 @@
   [article]
   [:div.empty] (html/html-content article))
 
-(def safe-tags #{:a :div :span :section :p :article :br})
+(def safe-tags #{:a :div :span :section :p :article :br :big :small})
 
 (defn remove-unsafe-tags [article]
   (html/transform (as-tree article)
