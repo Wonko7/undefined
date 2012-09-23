@@ -217,7 +217,15 @@ a:hover {
 		color: $light-grey;
 	}
 
+	.excerpt {
+		//background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, transparent),color-stop(1, black));
+		//@include background-image(+linear-gradient(color-stops(transparent, white), bottom));
+		//max-height: 100px; 
+	}
+
 	.article {
+		padding-top: 10px;
+		padding-bottom: 10px;
 		text-align: justify;
 		.code {
 			font-family: 'Courier New', monospace;
@@ -226,6 +234,7 @@ a:hover {
 			margin-bottom: 10px;
 			padding: 1%;
 			background: $lighter-grey;
+			//@extend .shadow-small;
 		}
 		.bold { font-weight: bold; }
 		.it   { font-style: italic; }

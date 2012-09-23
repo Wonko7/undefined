@@ -190,11 +190,13 @@ a:hover {
   font-size: 13px;
   color: #666666;
 }
-/* line 220, ../../themes/style.scss */
+/* line 226, ../../themes/style.scss */
 .whole-article .article {
+  padding-top: 10px;
+  padding-bottom: 10px;
   text-align: justify;
 }
-/* line 222, ../../themes/style.scss */
+/* line 230, ../../themes/style.scss */
 .whole-article .article .code {
   font-family: 'Courier New', monospace;
   white-space: pre-wrap;
@@ -203,82 +205,82 @@ a:hover {
   padding: 1%;
   background: #dddddd;
 }
-/* line 230, ../../themes/style.scss */
+/* line 239, ../../themes/style.scss */
 .whole-article .article .bold {
   font-weight: bold;
 }
-/* line 231, ../../themes/style.scss */
+/* line 240, ../../themes/style.scss */
 .whole-article .article .it {
   font-style: italic;
 }
-/* line 232, ../../themes/style.scss */
+/* line 241, ../../themes/style.scss */
 .whole-article .article .underline {
   text-decoration: underline;
 }
 
-/* line 242, ../../themes/style.scss */
+/* line 251, ../../themes/style.scss */
 .product-desc {
   width: 60%;
   float: right;
   text-align: justify;
 }
 
-/* line 248, ../../themes/style.scss */
+/* line 257, ../../themes/style.scss */
 .product-screenshot {
   width: 40%;
   float: left;
 }
 
-/* line 260, ../../themes/style.scss */
+/* line 269, ../../themes/style.scss */
 #login input[type=text], #login input[type=password] {
   margin-top: 10px;
   width: 150px;
   font-weight: bold;
 }
-/* line 267, ../../themes/style.scss */
+/* line 276, ../../themes/style.scss */
 #login input[type=submit] {
   margin-left: 220px;
   margin-top: 20px;
   font-weight: bold;
 }
-/* line 274, ../../themes/style.scss */
+/* line 283, ../../themes/style.scss */
 #login input[type=text], #login input[type=password], #login label {
   display: inline-block;
 }
-/* line 275, ../../themes/style.scss */
+/* line 284, ../../themes/style.scss */
 #login label {
   width: 100px;
 }
 
-/* line 286, ../../themes/style.scss */
+/* line 295, ../../themes/style.scss */
 .newarticle {
   width: 80%;
 }
-/* line 287, ../../themes/style.scss */
+/* line 296, ../../themes/style.scss */
 .newarticle #inp_title {
   width: 50%;
   font-weight: bold;
 }
-/* line 288, ../../themes/style.scss */
+/* line 297, ../../themes/style.scss */
 .newarticle #inp_tags {
   width: 80%;
   font-style: italic;
 }
-/* line 289, ../../themes/style.scss */
+/* line 298, ../../themes/style.scss */
 .newarticle #txt_body {
   width: 65%;
   height: 150px;
 }
-/* line 290, ../../themes/style.scss */
+/* line 299, ../../themes/style.scss */
 .newarticle fieldset {
   margin-top: 10px;
 }
-/* line 291, ../../themes/style.scss */
+/* line 300, ../../themes/style.scss */
 .newarticle button {
   margin-top: 20px;
   float: right;
 }
-/* line 293, ../../themes/style.scss */
+/* line 302, ../../themes/style.scss */
 .newarticle input, .newarticle textarea, .newarticle button {
   padding: 5px;
   margin: 5px;
