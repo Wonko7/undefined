@@ -7,12 +7,11 @@ For a balanced breakfast
 * misc:
 	- domain name
 	- setup a real web architecture, maybe nginx: http://grokbase.com/t/gg/clj-noir/119ysw9vf0/noir-how-do-i-serve-static-files
-	- blop markup: __underline__ **bold** [h1] [h2] [h3] -> titles with automatic numbering; h3 = 1.2.a
-	+ [code=js|clj|sh] for code. [a] for links, [img]. anything else?
 	- hardenning
 		- check values that comme from webpage and inforce correctness.
 		- catch errors, log, redirect user.
 		- BACKUPS.
+		- http://grokbase.com/t/gg/clj-noir/1229j1xres/noir-avoiding-xss-attacks
 	- about: think about thank yous and links for what was used on the site.
 * sql:
 	- produtcs: platform list (web, ios, android, pc (for java)). title, desc, link & screenshot

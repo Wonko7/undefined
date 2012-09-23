@@ -17,7 +17,7 @@
                         :source-path "src-cljs"
                         :compiler {
                                    :output-to "resources/public/js/main.js"
-                                   :optimizations :whitespace
+                                   :optimizations :advanced
                                    ;:externs ["web/js-static/jquery-min.js"]
                                    ; :optimizations :advanced
                                    :pretty-print true}}]}

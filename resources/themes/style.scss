@@ -216,6 +216,10 @@ a:hover {
 		font-size: 13px;
 		color: $light-grey;
 	}
+
+	.article {
+		text-align: justify;
+	}
 }
 
 
@@ -227,6 +231,7 @@ a:hover {
 .product-desc {
 	width: 60%;
 	float: right;
+	text-align: justify;
 }
 
 .product-screenshot {
