@@ -160,13 +160,15 @@ body {
 	overflow: hidden;
 }
 
-#title {
+#title { 
 	@extend .text-shadow;
-	text-align: center;
+	 text-align: center;
 	font-size: 20px;
 	font-weight: bold;
 	//color: $base-contrast-dark;
 	color: $base-lighter;
+	width: 98%;
+	padding: 1%;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	@extend .visible-border;

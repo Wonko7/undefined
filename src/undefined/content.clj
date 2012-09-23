@@ -11,3 +11,13 @@
 (defn remove-unsafe-tags [article]
   (html/transform (as-tree article)
                   [(html/pred #(not ((:tag %) safe-tags)))] (html/substitute "")))
+
+(defn str-to-int [s & [fallback]]
+  (let [fallback (or fallback 0)]
+   (if (integer? s)
+     s
+     (if (string? s)
+       (if-let [digits (re-find #"\d+" s)]
+         (Integer/parseInt s)
+         fallback)
+       fallback))))

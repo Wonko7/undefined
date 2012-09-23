@@ -151,23 +151,25 @@ body {
   font-size: 20px;
   font-weight: bold;
   color: #22aa22;
+  width: 98%;
+  padding: 1%;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
-/* line 178, ../../themes/style.scss */
+/* line 180, ../../themes/style.scss */
 a, a:visited {
   color: #339933;
   font-weight: bold;
   text-decoration: none;
 }
 
-/* line 184, ../../themes/style.scss */
+/* line 186, ../../themes/style.scss */
 a:hover {
   color: #555555;
 }
 
-/* line 194, ../../themes/style.scss */
+/* line 196, ../../themes/style.scss */
 .whole-article {
   width: 98%;
   padding: 1%;
@@ -175,7 +177,7 @@ a:hover {
   margin-top: 20px;
   overflow: hidden;
 }
-/* line 204, ../../themes/style.scss */
+/* line 206, ../../themes/style.scss */
 .whole-article .article-title {
   text-align: center;
   font-size: 18px;
@@ -183,74 +185,74 @@ a:hover {
   color: #22aa22;
   margin-top: 5px;
 }
-/* line 213, ../../themes/style.scss */
+/* line 215, ../../themes/style.scss */
 .whole-article .article-date, .whole-article .tags, .whole-article .categories, .whole-article .authors {
   font-size: 13px;
   color: #666666;
 }
 
-/* line 225, ../../themes/style.scss */
+/* line 227, ../../themes/style.scss */
 .product-desc {
   width: 60%;
   float: right;
 }
 
-/* line 230, ../../themes/style.scss */
+/* line 232, ../../themes/style.scss */
 .product-screenshot {
   width: 40%;
   float: left;
 }
 
-/* line 242, ../../themes/style.scss */
+/* line 244, ../../themes/style.scss */
 #login input[type=text], #login input[type=password] {
   margin-top: 10px;
   width: 150px;
   font-weight: bold;
 }
-/* line 249, ../../themes/style.scss */
+/* line 251, ../../themes/style.scss */
 #login input[type=submit] {
   margin-left: 220px;
   margin-top: 20px;
   font-weight: bold;
 }
-/* line 256, ../../themes/style.scss */
+/* line 258, ../../themes/style.scss */
 #login input[type=text], #login input[type=password], #login label {
   display: inline-block;
 }
-/* line 257, ../../themes/style.scss */
+/* line 259, ../../themes/style.scss */
 #login label {
   width: 100px;
 }
 
-/* line 268, ../../themes/style.scss */
+/* line 270, ../../themes/style.scss */
 .newarticle {
   width: 80%;
 }
-/* line 269, ../../themes/style.scss */
+/* line 271, ../../themes/style.scss */
 .newarticle #inp_title {
   width: 50%;
   font-weight: bold;
 }
-/* line 270, ../../themes/style.scss */
+/* line 272, ../../themes/style.scss */
 .newarticle #inp_tags {
   width: 80%;
   font-style: italic;
 }
-/* line 271, ../../themes/style.scss */
+/* line 273, ../../themes/style.scss */
 .newarticle #txt_body {
   width: 65%;
   height: 150px;
 }
-/* line 272, ../../themes/style.scss */
+/* line 274, ../../themes/style.scss */
 .newarticle fieldset {
   margin-top: 10px;
 }
-/* line 273, ../../themes/style.scss */
+/* line 275, ../../themes/style.scss */
 .newarticle button {
   margin-top: 20px;
   float: right;
 }
-/* line 275, ../../themes/style.scss */
+/* line 277, ../../themes/style.scss */
 .newarticle input, .newarticle textarea, .newarticle button {
   padding: 5px;
   margin: 5px;
