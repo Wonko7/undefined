@@ -13,6 +13,7 @@
                          )
         link        "/products/budget-splitter/index.html"
         screenshot  "FIXME ADD SCREENSHOT"
+        product-id       (str-to-int product-id 0) ;; Will be needed.
         ]
     (page title (product "Budget Splitter" link fb-desc screenshot))))
 
