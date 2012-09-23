@@ -219,6 +219,17 @@ a:hover {
 
 	.article {
 		text-align: justify;
+		.code {
+			font-family: 'Courier New', monospace;
+			white-space: pre-wrap;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			padding: 1%;
+			background: $lighter-grey;
+		}
+		.bold { font-weight: bold; }
+		.it   { font-style: italic; }
+		.underline { text-decoration: underline; }
 	}
 }
 
@@ -268,7 +279,7 @@ a:hover {
 
 
 ///////////////////////////////////////////////////////////
-// Login:
+// new article:
 ///////////////////////////////////////////////////////////
 
 
