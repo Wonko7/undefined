@@ -1,5 +1,4 @@
 (ns undefined.sql
-  ;(:require [net.cgrand.enlive-html :as html])
   (:require  [clojure.string :as string])
   (:use [noir.fetch.remotes]
      [korma.db]
@@ -162,9 +161,10 @@
 ;UPDATE
 
 (defremote update_article [uid title body]
-  (update articles
-          (set-fields {:title title :body body})
-          (where {:uid uid})))
+  (if (is-admin?)
+    (update articles
+            (set-fields {:title title :body body})
+            (where {:uid uid}))))
 
 ;DELETE
 

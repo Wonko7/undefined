@@ -2,9 +2,9 @@
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page article base]]
         [undefined.sql :only [select_articles select_article
-                              select_tags tags_by_article tags_by_label
-                              select_categories categories_by_article
-                              select_authors authors_by_article]]
+                              tags_by_article 
+                              categories_by_article
+                              authors_by_article]]
         [undefined.misc :only [format-date]]
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
@@ -38,7 +38,8 @@
                          (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
                articles)
-          {:bottom (blog-nav name pv nx)})))
+          {:bottom (blog-nav name pv nx)}
+          {:metadata {:data-init-page "news"}})))
 
 
 (add-page-init! "news" news-page)
