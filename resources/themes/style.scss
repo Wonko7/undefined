@@ -1,0 +1,310 @@
+@import "recipes/ui";
+@import "recipes/background";
+@import "compass/css3/border-radius";
+@import "compass/css3/box-shadow";
+@import "compass/css3/text-shadow";
+
+$base-dark: #363;
+$base-light: #393;
+$base-lighter: #2a2;
+$base-contrast-dark: #a22;
+$base-dark-bg: #8c7;
+
+$dark-grey: #555;
+$light-grey: #666;
+$lighter-grey: #DDD;
+
+$margin-size: 20px;
+
+$rounded-big: 15px;
+$rounded-small: 5px;
+$rounded-smaller: 3px;
+
+$shadow-col: #444;
+$shadow-big: 10px;
+$shadow-small: 5px;
+
+
+///////////////////////////////////////////////////////////
+// Helper classes:
+///////////////////////////////////////////////////////////
+
+
+.rounded-big {
+	@include border-radius($rounded-big, $rounded-big);
+}
+
+.rounded-small {
+	@include border-radius($rounded-small, $rounded-small);
+}
+
+.rounded-smaller {
+	@include border-radius($rounded-smaller, $rounded-smaller);
+}
+
+.rounded-bottom {
+	@include border-bottom-left-radius($rounded-big);
+	@include border-bottom-right-radius($rounded-big);
+}
+
+.shadow-small {
+	@include box-shadow($shadow-col 2px 2px 10px);
+}
+
+.shadow-big {
+	@include box-shadow($shadow-col 4px 4px 20px);
+}
+
+.text-shadow {
+	//@include single-text-shadow($base-lighter);
+	@include single-text-shadow($dark-grey);
+}
+
+.padding-horiz {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.visible-border {
+	border: 2px solid $base-light;
+}
+
+.visible-border-top {
+	border-top: 2px solid $base-light;
+}
+
+.visible-border-bottom {
+	border-bottom: 2px solid $base-light;
+}
+
+.hidden {
+	display: none;
+}
+
+.visible {
+	display: inline;
+}
+
+.small-center-dialog {
+	margin: 50px auto;
+	padding: 10px;
+	width: 300px;
+	@extend .visible-border;
+	@extend .rounded-small;
+	border: 4px solid grey;
+	@extend .shadow-big;
+}
+
+.input-light {
+	color: $base-lighter;
+	background-color: $white;
+	border-color: $light-grey;
+	@extend .visible-border;
+	@extend .rounded-smaller;
+}
+
+
+///////////////////////////////////////////////////////////
+// Udefined:
+///////////////////////////////////////////////////////////
+
+
+body {
+	color: $base-dark;
+}
+
+#nav {
+	@extend .visible-border-bottom;
+	width: 100%;
+}
+
+#nav a, #nav a:visited {
+	padding: 3px;
+	@extend .padding-horiz;
+	color: $base-light;
+	line-height: 44px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	margin-left: 20px; // FIXME
+}
+
+#nav a:hover {
+	color: $dark-grey;
+}
+
+#loading {
+	width: 100%;
+	padding-top: 50px;
+	vertical-align:middle;
+	text-align: center;
+	position: fixed;
+	z-index: -1;
+}
+
+#page {
+	// horiz spacing:
+	width: 92%;
+	margin-left: 2%;
+	padding-left: 2%;
+	margin-right: 2%;
+	padding-right: 2%;
+	// vert spacing:
+	min-height: 50px;
+	margin-bottom: 2%;
+	padding-top: 15px;
+	padding-bottom: 5px;
+	// deco:
+	color: $dark-grey;
+	// stuff;
+	overflow: hidden;
+}
+
+#title { 
+	@extend .text-shadow;
+	 text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	//color: $base-contrast-dark;
+	color: $base-lighter;
+	width: 98%;
+	padding: 1%;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	@extend .visible-border;
+	@extend .shadow-small;
+	@extend .rounded-small;
+}
+
+// links in page:
+a, a:visited {
+	color: $base-light;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	color: $dark-grey;
+}
+
+
+///////////////////////////////////////////////////////////
+// Articles:
+///////////////////////////////////////////////////////////
+
+
+.whole-article {
+	@extend .visible-border;
+	@extend .rounded-small;
+	@extend .shadow-small;
+	width: 98%;
+	padding: 1%;
+	margin-bottom: 20px;
+	margin-top: 20px;
+	overflow: hidden;
+
+	.article-title {
+		@extend .text-shadow;
+		text-align: center;
+		font-size: 18px;
+		font-weight: bold;
+		color: $base-lighter;
+		margin-top: 5px;
+	}
+
+	.article-date, .tags, .categories, .authors {
+		font-size: 13px;
+		color: $light-grey;
+	}
+
+	.excerpt {
+		//background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, transparent),color-stop(1, black));
+		//@include background-image(+linear-gradient(color-stops(transparent, white), bottom));
+		//max-height: 100px; 
+	}
+
+	.article {
+		padding-top: 10px;
+		padding-bottom: 10px;
+		text-align: justify;
+		.code {
+			font-family: 'Courier New', monospace;
+			white-space: pre-wrap;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			padding: 1%;
+			background: $lighter-grey;
+			//@extend .shadow-small;
+		}
+		.bold { font-weight: bold; }
+		.it   { font-style: italic; }
+		.underline { text-decoration: underline; }
+	}
+}
+
+
+///////////////////////////////////////////////////////////
+// Products:
+///////////////////////////////////////////////////////////
+
+
+.product-desc {
+	width: 60%;
+	float: right;
+	text-align: justify;
+}
+
+.product-screenshot {
+	width: 40%;
+	float: left;
+}
+
+
+///////////////////////////////////////////////////////////
+// Login:
+///////////////////////////////////////////////////////////
+
+
+#login {
+	input[type=text], input[type=password] {
+		margin-top: 10px;
+		width: 150px;
+		font-weight: bold;
+		@extend .input-light;
+	}
+
+	input[type=submit] {
+		margin-left: 220px;
+		margin-top: 20px;
+		font-weight: bold;
+		@extend .input-light;
+	}
+
+	input[type=text], input[type=password], label {display: inline-block;}
+	label {width: 100px;}
+
+	@extend .small-center-dialog;
+}
+
+
+///////////////////////////////////////////////////////////
+// new article:
+///////////////////////////////////////////////////////////
+
+
+.newarticle {
+	#inp_title { width: 50%; font-weight: bold;}
+	#inp_tags { width: 80%; font-style: italic;}
+	#txt_body { width: 65%; height: 150px;}
+	fieldset { margin-top: 10px; }
+	button { margin-top: 20px; float: right;}
+
+	input, textarea, button {
+		padding: 5px;
+		margin: 5px;
+		@extend .input-light;
+	}
+
+	@extend .small-center-dialog;
+	width: 80%;
+}

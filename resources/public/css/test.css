@@ -1,7 +1,7 @@
 ::selection{background-color: #77DD55;}
 
 body {
-	background: #393;
+	/* background: #393; */
 	color: #a22;
 	padding: 0;
 	margin: 0;
@@ -55,11 +55,13 @@ body {
 	background: #2a2;
 }
 
-#loading img {
-	padding-top: 5px;
-	padding-right: 15px;
-	float: right;
+#loading {
+	padding-top: 50px;
 	vertical-align:middle;
+	text-align: center;
+	width: 100%;
+	position: fixed;
+	z-index: -1;
 }
 
 .hidden {

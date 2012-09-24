@@ -18,7 +18,7 @@
                                   (html/set-attr :data-href (str (name category) "-article"))
                                   (html/set-attr :data-args (str uid)))
   [:.article-date]     (html/content date)
-  [:.article]          (html/html-content article)
+  [:.article]          (html/append article)
   [:.tags]             (html/content tags)
   [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
@@ -55,8 +55,9 @@
 
 (html/deftemplate base "templates/index.html"
   [content]
-  [:title] (html/content "Undefined Development")
-  [:#page-wrapper]  (html/append content))
+  [:.admin]        (html/add-class "hidden")
+  [:title]         (html/content "Undefined Development")
+  [:#page-wrapper] (html/append content))
 
 (html/defsnippet page "templates/page.html" [:#page]
   [title content & [optional]]
@@ -74,7 +75,8 @@
 
 ;; used by index.clj:
 (def page-404 (page "404"
-                    {:tag :center :content [{:tag :img :attrs {:src "/img/404.jpg"}}]}
+                    {:tag :div :attrs {:class "whole-article"}
+                     :content [{:tag :center :content [{:tag :img :attrs {:src "/img/deadlink.png"}}]}]}
                     {:metadata {:data-init-page "404"}}))
 
 (defremote get-page [href & [args]]

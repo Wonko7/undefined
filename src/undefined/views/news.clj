@@ -5,6 +5,8 @@
                               select_tags tags_by_article tags_by_label
                               select_categories categories_by_article
                               select_authors authors_by_article]]
+        [undefined.misc :only [format-date]]
+        [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
 
 
@@ -17,10 +19,9 @@
 (defn news-page [name article-id & [nb-articles]]
   (let [category         (if (= (take 4 name) (seq "blog")) :blog :news)
         single-art?      (= 1 nb-articles)
-        title            (when (not single-art?)
-                           (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News"))
-        nb-articles      (if nb-articles nb-articles 10)
-        article-id       (if article-id (Integer. article-id) 0) ;; FIXME add contracts on this. people can feed whatever here
+        title            (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News")
+        nb-articles      (str-to-int nb-articles 10)
+        article-id       (str-to-int article-id 0)
         get_labels       #(apply str (interpose " " (map %2 %1)))
         [pv nx articles] (if single-art?
                            [nil nil (select_article article-id (if (= :blog category) "Technical" "Promotional"))]
@@ -32,7 +33,7 @@
                                  pv (if (neg? pv) 0 pv)]
                              [(when (> article-id 0) pv) nx arts]))]
     (page title
-          (map #(article (:uid %) category (:title %) (str (:birth %)) (:body %)
+          (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))

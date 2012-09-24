@@ -145,6 +145,7 @@
 ;TODO transaction
 ;TODO tags
 ;TODO beautify doseq
+;I might be missing something, but we need to check is-admin? here, no? FIXME
 (defremote insert_article [title body tags authors categories]
   (let [artid     (:uid (insert articles (values {:title title :body body})))
         get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
