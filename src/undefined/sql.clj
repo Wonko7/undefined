@@ -3,7 +3,8 @@
   (:require  [clojure.string :as string])
   (:use [noir.fetch.remotes]
      [korma.db]
-     [korma.core]))
+     [korma.core]
+     [undefined.auth :only [is-admin?]]))
 
 
 (defdb undef-db (postgres {:db "undefined"
@@ -147,16 +148,27 @@
 ;TODO beautify doseq
 ;I might be missing something, but we need to check is-admin? here, no? FIXME
 (defremote insert_article [title body tags authors categories]
-  (let [artid     (:uid (insert articles (values {:title title :body body})))
-        get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
-        auths     (get_keys authors)
-        cats      (get_keys categories)]
-    (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
-    (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})))
-    (weed_tags tags artid)
-    artid))
+  (if (is-admin?)
+    (let [artid     (:uid (insert articles (values {:title title :body body})))
+          get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
+          auths     (get_keys authors)
+          cats      (get_keys categories)]
+      (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
+      (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})))
+      (weed_tags tags artid)
+      artid)))
 
 
 ;UPDATE
 
+(defremote update_article [uid title body]
+  (update articles
+          (set-fields {:title title :body body})
+          (where {:uid uid})))
+
 ;DELETE
+
+(defremote delete_article [uid]
+  (if (is-admin?)
+    (delete articles
+            (where {:uid uid}))))
