@@ -16,8 +16,8 @@
    (when next
      {:tag :a :attrs {:href (str link "/" next) :data-href link :data-args next :style "float: right"} :content "Next"})])
 
-(defn news-page [name article-id & [nb-articles]]
-  (let [category         (if (= (take 4 name) (seq "blog")) :blog :news)
+(defn news-page [href article-id & [nb-articles]]
+  (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
         single-art?      (= 1 nb-articles)
         title            (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News")
         nb-articles      (str-to-int nb-articles 10)
@@ -38,7 +38,7 @@
                          (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
                articles)
-          {:bottom (blog-nav name pv nx)
+          {:bottom (blog-nav href pv nx)
            :metadata {:data-href "news"
                       :data-args (name category)}})))
 
