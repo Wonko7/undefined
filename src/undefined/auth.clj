@@ -14,7 +14,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defremote get-user []
-  (let [{:keys [username roles] :as d} (friend/current-authentication)]
+  (let [{:keys [username roles]} (friend/current-authentication)]
     [username roles]))
 
 (defremote auth-login [auth]

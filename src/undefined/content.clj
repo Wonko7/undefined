@@ -2,15 +2,17 @@
   (:use [undefined.views.common])
   (:require [net.cgrand.enlive-html :as html]))
 
-(html/defsnippet as-tree "templates/article.html" [:div.empty]
+(html/defsnippet as-tree "templates/article.html" [:div.content]
   [article]
-  [:div.empty] (html/html-content article))
+  [:div.content] (html/html-content article))
 
-(def safe-tags #{:a :div :span :section :p :article :br :big :small})
+(def unsafe
+  (let [safe-tags #{:a :div :span :section :p :article :br :big :small}]
+    (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
   (html/transform (as-tree article)
-                  [(html/pred #(not ((:tag %) safe-tags)))] (html/substitute "")))
+                  [unsafe] (html/substitute "")))
 
 (defn str-to-int [s & [fallback]]
   (let [fallback (or fallback 0)]
