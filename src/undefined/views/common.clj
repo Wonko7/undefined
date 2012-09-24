@@ -23,8 +23,8 @@
   [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
   [:.admin]            (html/append (if (is-admin?)
-                                      [{:tag :button :attrs {:id "btn_upd"} :content "Edit"}
-                                       {:tag :button :attrs {:id "btn_del"} :content "Delete"}])))
+                                      [{:tag :button :attrs {:id "btn_upd" :value (str uid)} :content "Edit"}
+                                       {:tag :button :attrs {:id "btn_del" :value (str uid)} :content "Delete"}])))
                                      ; [{:tag :a :attrs {:data-href "edit-link" :data-args (str uid) } :content "Edit"}
                                      ;  {:tag :span :content " "} ;; just for spacing
                                      ;  {:tag :a :attrs {:data-href "delete-link" :data-args (str uid) } :content "Delete"}])))
