@@ -39,8 +39,7 @@
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
                articles)
           {:bottom (blog-nav name pv nx)
-           :metadata {:data-href "news"
-                      :data-args (name category)}})))
+           :metadata {:data-init-page "news"}})))
 
 
 (add-page-init! "news" news-page)

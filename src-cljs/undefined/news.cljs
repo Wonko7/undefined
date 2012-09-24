@@ -6,9 +6,8 @@
      [enfocus.macros :as em]))
 
 (defn news [href & [args]]
-  (js/console.log "TEST__"))
-;  (em/at js/document
-;      [:#btn_del] (em/listen :click #(js/alert "Delete"))
-;      [:#btn_upd] (em/listen :click #(js/alert "Update"))))
+  (em/at js/document
+      [:#btn_del] (em/listen :click #(js/alert "Delete"))
+      [:#btn_upd] (em/listen :click #(js/alert "Update"))))
 
 (add-page-init! "news" news)
