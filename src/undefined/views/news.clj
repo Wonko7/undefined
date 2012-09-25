@@ -24,7 +24,7 @@
         article-id       (str-to-int article-id 0)
         get_labels       #(apply str (interpose " " (map %2 %1)))
         [pv nx articles] (if single-art?
-                           [nil nil (select_article article-id (if (= :blog category) "Technical" "Promotional"))]
+                           [nil nil (select_article article-id)]
                            (let [arts      (select_articles article-id (inc nb-articles) (if (= :blog category) "Technical" "Promotional"))
                                  [arts nx] (if (> (count arts) nb-articles)
                                              [(drop-last arts) (+ article-id nb-articles)]

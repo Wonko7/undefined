@@ -87,13 +87,23 @@
           (where {:categories.label cat})
           (order :articles.birth :DESC)))
 
-;; FIXME: cyrille check this please.
-(defn select_article [id cat]
+;TODO stop using fn and use remote, always
+(defremote select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
           (join articles (= :article_categories.artid :articles.uid))
           (join categories (= :categories.uid :article_categories.catid))
-          (where {:categories.label cat :artid id})
+          (modifier "distinct")
+          (where {:artid (Integer/parseInt id)})
+          (order :articles.birth :DESC)))
+
+(defn select_article [id]
+  (select article_categories
+          (fields :articles.title :articles.body :articles.birth :articles.uid)
+          (join articles (= :article_categories.artid :articles.uid))
+          (join categories (= :categories.uid :article_categories.catid))
+          (modifier "distinct")
+          (where {:artid id})
           (order :articles.birth :DESC)))
 
 ;tags
@@ -171,4 +181,4 @@
 (defremote delete_article [uid]
   (if (is-admin?)
     (delete articles
-            (where {:uid uid}))))
+            (where {:uid (Integer/parseInt uid)}))))
