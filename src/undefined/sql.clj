@@ -6,7 +6,6 @@
         [korma.db]
         [korma.core]))
 
-
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
                            :password "password" ;droptableusers"
@@ -18,7 +17,21 @@
                                     ;; set map keys to lower
                                     :fields string/upper-case}}))
 
-;TODO joins with cats, tags, authors
+(declare undef-db)
+(defn init-db-connection
+  "Defines the database connection to use from within Clojure."
+  [config]
+  (def undef-db (create-db (postgres {:db (:database config)
+                                      :user "web"
+                                      :password "password" ;droptableusers"
+                                      ;;OPTIONAL KEYS
+                                      :host "127.0.0.1"
+                                      :port "5432"
+                                      :delimiters "" ;; remove delimiters
+                                      :naming {:keys string/lower-case
+                                               ;; set map keys to lower
+                                               :fields string/upper-case}})))
+  (default-connection undef-db))
 
 (defentity tags
   (table :tags)

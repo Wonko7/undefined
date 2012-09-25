@@ -7,8 +7,6 @@
   (:require [net.cgrand.enlive-html :as html]
             [cemerick.friend :as friend]))
 
-(def ssl-port 8084)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; auth remotes:

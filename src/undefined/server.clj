@@ -1,6 +1,7 @@
 (ns undefined.server
 (:import org.mindrot.jbcrypt.BCrypt)
-  (:use [undefined.config :only [set-config!]])
+  (:use [undefined.config :only [set-config!]]
+        [undefined.sql :only [init-db-connection]])
   (:require [noir.server :as server]
             [noir.fetch.remotes :as remotes]
             [cemerick.friend :as friend]
@@ -63,6 +64,7 @@
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
         conf (set-config! mode)]
+    (init-db-connection conf)
     (server/start (:port conf) {:mode mode
                                 :ns 'undefined
                                 :jetty-options {:ssl? true
