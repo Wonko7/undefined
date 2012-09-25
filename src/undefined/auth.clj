@@ -2,7 +2,8 @@
   (:use [noir.fetch.remotes]
         [noir.response :only [redirect]]
         [noir.request :only [ring-request]]
-        [noir.core :only [pre-route]])
+        [noir.core :only [pre-route]]
+        [undefined.config :only [get-config]])
   (:require [net.cgrand.enlive-html :as html]
             [cemerick.friend :as friend]))
 
@@ -26,7 +27,7 @@
 
 (pre-route "/login" []
            (let [req       (ring-request)
-                 https-url (str "https://" (:server-name req) (str ":" ssl-port) (:uri req)) ]
+                 https-url (str "https://" (:server-name req) (str ":" (:ssl-port (get-config))) (:uri req)) ]
              (when (= :http (:scheme req))
                (redirect https-url))))
 

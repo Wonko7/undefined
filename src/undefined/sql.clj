@@ -1,9 +1,10 @@
 (ns undefined.sql
   ;(:require [net.cgrand.enlive-html :as html])
   (:require  [clojure.string :as string])
-  (:use [noir.fetch.remotes]
-     [korma.db]
-     [korma.core]))
+  (:use [undefined.config :only [get-config]]
+        [noir.fetch.remotes]
+        [korma.db]
+        [korma.core]))
 
 
 (defdb undef-db (postgres {:db "undefined"
