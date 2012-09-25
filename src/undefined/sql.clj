@@ -175,10 +175,10 @@
 ;UPDATE
 
 (defremote update_article_rem [uid title body]
-  ;   (if true (is-admin?)
-  (update articles
-          (set-fields {:articles.title title :articles.body body})
-          (where {:articles.uid (Integer/parseInt uid)})))
+  (if true ;(is-admin?)
+    (update articles
+            (set-fields {:title title :body body})
+            (where {:articles.uid uid}))))
 
 ;DELETE
 

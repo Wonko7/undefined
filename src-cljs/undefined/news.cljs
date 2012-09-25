@@ -5,6 +5,8 @@
      [enfocus.macros :as em])
   (:use [undef.pages :only [add-page-init! page-click]]))
 
+;FIXME this probably doesn't work if there are 2 update divs open
+
 (defn reset_div [sel uid]
   (em/at js/document [sel] (em/html-content (str "Reset #" uid " content or update"))))
 
@@ -16,14 +18,14 @@
     (fm/letrem [tags   (tags_by_article_rem uid)]
         (em/at js/document
             [sel] (em/html-content
-                      (str "<form class=\"newarticle\" style=\"width: 800px; margin: 0px;\">
+                      (str "<form class=\"newarticle\" style=\"width: 95%; height: 100%; margin: 0px;background-color:#EEFFEE;\">
                            <div>
-                           <label for=\"inp_title\">Title: </label><input id=\"inp_title\" type=\"text\" value=\""
+                           <label for=\"inp_title\">Title: </label><input id=\"inp_title_" uid "\" type=\"text\" value=\""
                         title 
-                        "\"></input>
+                        "\"></input><span style=\"float: right; color: red;\">Editing post</post>
                         </div>
                         <div>
-                        <label for=\"txt_body\">Body: </label><textarea id=\"txt_body\">"
+                        <label for=\"txt_body\">Body: </label><textarea id=\"txt_body_" uid "\" style=\"height: 50%\">"
                         body
                         "</textarea>
                         </div>
@@ -52,20 +54,24 @@
             ;                                                   (fm/letrem [res (update_article uid newtitle newbody)]
             ;                                                     (do (js/alert tags) (page-click "news" nil)))))
             [:form] (em/listen :submit (fn [e]
-                                           (.preventDefault e)
-                                           (reset_div sel uid)))))))
+                                         (.preventDefault e)
+                                         (let [newtitle (em/from (em/select [(str "#inp_title_" uid)])  (em/get-prop :value))
+                                               newbody  (em/from (em/select [(str "#txt_body_" uid)])   (em/get-prop :value))]
+                                           (fm/letrem [res (update_article_rem uid newtitle newbody)]
+                                               (js/console.log res)))))))))
+                                                 ;(page-click "news" nil))))))))))
 
-  ;TODO remove page click and remove the div instead
-  (defn newspage [href & [args]]
-    (em/at js/document
-        [:.btn_del] (em/listen :click (fn [e]
-                                        (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
-                                          (if (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
-                                            (fm/letrem [res (delete_article_rem uid)] (page-click "news" nil))))));FIXME don't reload, just delete the div
-        [:.btn_upd] (em/listen :click (fn [e]
-                                        (let [uid       (int (em/from (.-currentTarget e) (em/get-attr :value)))
-                                              artSel    (str ":#article_" uid)]
-                                          (fm/letrem [article (select_article_rem uid)]
-                                              (update_div artSel (first article))))))))
+;TODO remove page click and remove the div instead
+(defn newspage [href & [args]]
+  (em/at js/document
+      [:.btn_del] (em/listen :click (fn [e]
+                                      (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
+                                        (if (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
+                                          (fm/letrem [res (delete_article_rem uid)] (page-click "news" nil))))));FIXME don't reload, just delete the div
+      [:.btn_upd] (em/listen :click (fn [e]
+                                      (let [uid       (int (em/from (.-currentTarget e) (em/get-attr :value)))
+                                            artSel    (str ":#article_" uid)]
+                                        (fm/letrem [article (select_article_rem uid)]
+                                            (update_div artSel (first article))))))))
 
-  (add-page-init! "news" newspage)
+(add-page-init! "news" newspage)
