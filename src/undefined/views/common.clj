@@ -13,6 +13,7 @@
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
   [uid category title date article tags categories authors]
+  [:div.whole-article] (html/set-attr :data-arg (str uid))
   [:.article-title :a] (html/do-> (html/content title)
                                   (html/set-attr :href (str (name category) "-article/" uid))
                                   (html/set-attr :data-href (str (name category) "-article"))
@@ -22,12 +23,13 @@
   [:.tags]             (html/content tags)
   [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
-  [:.admin]            (html/append (if (is-admin?)
-                                      [{:tag :button :attrs {:id "btn_upd" :value (str uid)} :content "Edit"}
-                                       {:tag :button :attrs {:id "btn_del" :value (str uid)} :content "Delete"}])))
-                                     ; [{:tag :a :attrs {:data-href "edit-link" :data-args (str uid) } :content "Edit"}
-                                     ;  {:tag :span :content " "} ;; just for spacing
-                                     ;  {:tag :a :attrs {:data-href "delete-link" :data-args (str uid) } :content "Delete"}])))
+  [:.admin]            (html/append (if true; (is-admin?)
+                                      [{:tag :button :attrs {:id (str "btn_upd" uid)} :content "Edit"}
+                                       {:tag :button :attrs {:id (str "btn_del" uid)} :content "Delete"}])))
+
+(html/defsnippet article_update "templates/article_update.html" [:div.whole-article]
+      [uid category title date article tags categories authors]
+      [:.article-title :input] (html/content title))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
   [title link article sc]

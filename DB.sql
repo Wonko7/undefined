@@ -23,3 +23,4 @@ INSERT INTO article_tags VALUES (1, 1), (1, 4), (2, 2), (2, 1), (2, 4), (3, 3);
 INSERT INTO article_categories VALUES (1, 2), (2, 1), (2, 2), (3, 1), (4, 1), (4, 2);
 INSERT INTO article_authors VALUES (1, 1), (2, 1), (2, 2), (3, 2) (4, 1);
 
+GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors TO web;

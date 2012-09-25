@@ -22,8 +22,7 @@
                       :init [:#metadata] (em/get-attr :data-init-page)
                       :args [:#metadata] (em/get-attr :data-init-args))]
     (when (:init data)
-      (if-let [f ((:init data) page-inits)] (do (js/console.log "Testi")
-        (f (:args data)))))))
+      (if-let [f ((:init data) page-inits)] (f (:args data))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
