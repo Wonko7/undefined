@@ -30,7 +30,7 @@
                         "</textarea>
                         </div>
                         <div>
-                        <label for=\"inp_tags\">Tags: </label><input id=\"inp_tags\" type=\"text\" value=\""
+                        <label for=\"inp_tags\">Tags: </label><input id=\"inp_tags_" uid "\" type=\"text\" value=\""
                         (get_labels tags :label)
                         "\"></input>
                         <small>TAGS SHOULD BE SEPERATED BY SPACES.</small>
@@ -56,10 +56,10 @@
             [:form] (em/listen :submit (fn [e]
                                          (.preventDefault e)
                                          (let [newtitle (em/from (em/select [(str "#inp_title_" uid)])  (em/get-prop :value))
-                                               newbody  (em/from (em/select [(str "#txt_body_" uid)])   (em/get-prop :value))]
-                                           (fm/letrem [res (update_article_rem uid newtitle newbody)]
-                                               (js/console.log res)))))))))
-                                                 ;(page-click "news" nil))))))))))
+                                               newbody  (em/from (em/select [(str "#txt_body_" uid)])   (em/get-prop :value))
+                                               newtags  (em/from (em/select [(str "#inp_tags_" uid)])   (em/get-prop :value))]
+                                           (fm/letrem [res (update_article_rem uid newtitle newbody newtags)]
+                                               (page-click "news" nil)))))))))
 
 ;TODO remove page click and remove the div instead
 (defn newspage [href & [args]]

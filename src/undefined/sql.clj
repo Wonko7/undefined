@@ -65,18 +65,6 @@
   (entity-fields :uid :title :body :birth)
   (database undef-db))
 
-;DRAFT-->
-;TODO authors, cat, tags
-(defn insert_article [title body] (insert articles
-                                          (values {:title title :body body})))
-;-->DRAFT
-
-
-;Starts here
-;
-;SELECT
-
-;articles
 
 (defn select_articles [off n cat]
   (select article_categories
@@ -88,15 +76,6 @@
           (where {:categories.label cat})
           (order :articles.birth :DESC)))
 
-;TODO stop using fn and use remote, always
-(defremote select_article_rem [id]
-  (select article_categories
-          (fields :articles.title :articles.body :articles.birth :articles.uid)
-          (join articles (= :article_categories.artid :articles.uid))
-          (join categories (= :categories.uid :article_categories.catid))
-          (modifier "distinct")
-          (where {:artid  id})))
-
 (defn select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
@@ -106,15 +85,8 @@
           (where {:artid id})
           (order :articles.birth :DESC)))
 
-;tags
 (defn select_tags []
   (select tags))
-
-(defremote tags_by_article_rem [id]
-  (select article_tags
-          (fields :tags.label)
-          (join tags)
-          (where {:artid id})))
 
 (defn tags_by_article [id]
   (select article_tags
@@ -126,7 +98,6 @@
   (select tags
           (where {:label [like (str "%" label "%")]})))
 
-;categories
 (defn select_categories []
   (select categories))
 
@@ -136,7 +107,6 @@
           (join categories)
           (where {:artid id})))
 
-;authors
 (defn select_authors []
   (select authors))
 
@@ -146,7 +116,9 @@
           (join authors)
           (where {:artid id})))
 
-;INSERT
+;;
+;; Remotes
+;;
 ;TODO this has to be prettyfiable
 (defn weed_tags [tag_input artid]
   (let [tag_array       (distinct (clojure.string/split tag_input #" "))
@@ -171,16 +143,31 @@
       (weed_tags tags artid)
       artid)))
 
-
-;UPDATE
-
-(defremote update_article_rem [uid title body]
+;TODO don't delete/re-insert tags
+(defremote update_article_rem [uid title body tags]
   (if true ;(is-admin?)
-    (update articles
-            (set-fields {:title title :body body})
-            (where {:articles.uid uid}))))
+    (transaction
+      (update articles
+              (set-fields {:title title :body body})
+              (where {:articles.uid uid}))
+      (delete article_tags
+              (where {:artid uid}))
+      (weed_tags tags uid))))
 
-;DELETE
+(defremote tags_by_article_rem [id]
+  (select article_tags
+          (fields :tags.label)
+          (join tags)
+          (where {:artid id})))
+
+;TODO stop using fn and use remote, always
+(defremote select_article_rem [id]
+  (select article_categories
+          (fields :articles.title :articles.body :articles.birth :articles.uid)
+          (join articles (= :article_categories.artid :articles.uid))
+          (join categories (= :categories.uid :article_categories.catid))
+          (modifier "distinct")
+          (where {:artid  id})))
 
 (defremote delete_article_rem [uid]
   (if (is-admin?)
