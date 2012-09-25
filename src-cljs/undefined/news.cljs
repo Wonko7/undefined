@@ -5,17 +5,18 @@
      [enfocus.macros :as em])
   (:use [undef.pages :only [add-page-init! page-click]]))
 
-;FIXME this probably doesn't work if there are 2 update divs open
-
 (defn reset_div [sel uid]
-  (em/at js/document [sel] (em/html-content (str "Reset #" uid " content or update"))))
+  (em/at js/document [sel] (em/substitute (str "Reset #" uid " content or update"))))
 
+;TODO find a better way
 (defn update_div [sel article]
   (let [title   (:title article)
         body    (:body article)
         uid     (int (:uid article))
         get_labels #(apply str (interpose " " (map %2 %1)))]
-    (fm/letrem [tags   (tags_by_article_rem uid)]
+    (fm/letrem [tags        (tags_by_article_rem uid)
+                authors     (select_authors_rem)
+                categories  (select_categories_rem)]
         (em/at js/document
             [sel] (em/html-content
                       (str "<form class=\"newarticle\" style=\"width: 95%; height: 100%; margin: 0px;background-color:#EEFFEE;\">
@@ -37,11 +38,15 @@
                         </div>
                         <fieldset>
                         <legend>Authors[<b>Coming soon</b>]</legend>
-                        <div id=\"cbx_authors\"></div>
+                        <div id=\"cbx_authors\">"
+                        (reduce str (map #(str "<input type=\"checkbox\" class=\"cbx_auth\" value=\"" (:uid %) "\">" (:name %) "</input><br/>") authors))
+                        "</div>
                         </fieldset>
                         <fieldset>
                         <legend>Categories[<b>Coming soon</b>]</legend>
-                        <div id=\"cbx_categories\"></div>
+                        <div id=\"cbx_categories\">"
+                        (reduce str (map #(str "<input type=\"checkbox\" class=\"cbx_cat\" value=\"" (:uid %) "\">" (:label %) "</input><br/>") categories))
+                        "</div>
                         </fieldset>
                         <div style=\"height: 60px;\">
                         <button type=\"submit\">Update</button>
@@ -49,10 +54,6 @@
                         </div>
                         </form>
                         "))
-            ;            [:#btn_live_update] (em/listen :click #(let [newtitle (em/from (em/select ["#inp_title"]) (em/get-prop :value))
-            ;                                                        newbody  (em/from (em/select ["#txt_body"]) (em/get-prop :value))]
-            ;                                                   (fm/letrem [res (update_article uid newtitle newbody)]
-            ;                                                     (do (js/alert tags) (page-click "news" nil)))))
             [:form] (em/listen :submit (fn [e]
                                          (.preventDefault e)
                                          (let [newtitle (em/from (em/select [(str "#inp_title_" uid)])  (em/get-prop :value))

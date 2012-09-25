@@ -173,3 +173,6 @@
   (if (is-admin?)
     (delete articles
             (where {:uid (Integer/parseInt uid)}))))
+
+(defremote select_authors_rem [] (select authors))
+(defremote select_categories_rem [] (select categories))
