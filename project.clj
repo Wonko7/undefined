@@ -10,7 +10,9 @@
                  ;; clj & cljs:
                  [fetch "0.1.0-alpha2"]
                  ;; cljs:
-                 [enfocus "1.0.0-alpha3"]]
+                 [enfocus "1.0.0-alpha3"]
+                 ;; tests:
+                 [clj-webdriver "0.6.0-alpha11"]]
   :plugins [[lein-cljsbuild "0.2.6"]]
   :cljsbuild {
               :builds [{
