@@ -23,7 +23,7 @@
   [:.tags]             (html/content tags)
   [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
-  [:.admin]            (html/append (if true; (is-admin?)
+  [:.admin]            (html/append (if (is-admin?)
                                       [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
 

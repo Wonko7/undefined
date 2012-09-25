@@ -5,8 +5,23 @@
      [enfocus.macros :as em])
   (:use [undef.pages :only [add-page-init! page-click]]))
 
-(defn reset_div [sel uid]
-  (em/at js/document [sel] (em/substitute (str "Reset #" uid " content or update"))))
+(defn reset_div [sel uid title date body tags categories authors]
+  (em/at js/document [sel] (em/substitute
+                               (str "<div id=\"article_" uid "\" class=\"whole-article\">"
+                                 "<div class=\"article-title\">"
+                                 "<a data-args=\"" uid "\" data-ref=\"news-article\" href=\"new-article/" uid "\">" ;FIXME news/blog
+                                 title
+                                 "</a></div>"
+                                 "<div class=\"article-date\">" date "</div>"
+                                 "<div class=\"admin\">"
+                                 "<button class=\"btn_upd\" value=\"" uid "\"> Edit </button>"
+                                 "<button class=\"btn_del\" value=\""uid"\"> Delete </button>"
+                                 "</div>"
+                                 "<div class=\"article\"><div class=\"content\">" body "</div></div>"
+                                 "<div class=\"tags\">Tags: " tags "</div>"
+                                 "<div class=\"categories\">Categories: " categories "</div"
+                                 "<div class=\"authors\">Authors: " authors "</div></div>"))))
+;(str "Reset #" uid " content or update"))))
 
 ;TODO find a better way
 (defn update_div [sel article]
@@ -60,19 +75,20 @@
                                                newbody  (em/from (em/select [(str "#txt_body_" uid)])   (em/get-prop :value))
                                                newtags  (em/from (em/select [(str "#inp_tags_" uid)])   (em/get-prop :value))]
                                            (fm/letrem [res (update_article_rem uid newtitle newbody newtags)]
-                                               (page-click "news" nil)))))))))
+                                               (reset_div sel uid newtitle birth newbody (get_labels tags :label) nil nil )))))))));FIXME fetch cats/auths
+;(page-click "news" nil)))))))))
 
 ;TODO remove page click and remove the div instead
 (defn newspage [href & [args]]
-  (em/at js/document
-      [:.btn_del] (em/listen :click (fn [e]
-                                      (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
-                                        (if (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
-                                          (fm/letrem [res (delete_article_rem uid)] (page-click "news" nil))))));FIXME don't reload, just delete the div
-      [:.btn_upd] (em/listen :click (fn [e]
-                                      (let [uid       (int (em/from (.-currentTarget e) (em/get-attr :value)))
-                                            artSel    (str ":#article_" uid)]
-                                        (fm/letrem [article (select_article_rem uid)]
-                                            (update_div artSel (first article))))))))
+    (em/at js/document
+        [:.btn_del] (em/listen :click (fn [e]
+                                        (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
+                                          (if (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
+                                            (fm/letrem [res (delete_article_rem uid)] (page-click "news" nil))))));FIXME don't reload, just delete the div
+        [:.btn_upd] (em/listen :click (fn [e]
+                                        (let [uid       (int (em/from (.-currentTarget e) (em/get-attr :value)))
+                                              artSel    (str ":#article_" uid)]
+                                          (fm/letrem [article (select_article_rem uid)]
+                                              (update_div artSel (first article))))))))
 
 (add-page-init! "news" newspage)
