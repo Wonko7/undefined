@@ -18,6 +18,7 @@
                                     :fields string/upper-case}}))
 
 ;TODO joins with cats, tags, authors
+;TODO sort by remotes/fns
 
 (defentity tags
   (table :tags)
@@ -88,14 +89,13 @@
           (order :articles.birth :DESC)))
 
 ;TODO stop using fn and use remote, always
-(defremote select_article [id]
+(defremote select_article_rem [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
           (join articles (= :article_categories.artid :articles.uid))
           (join categories (= :categories.uid :article_categories.catid))
           (modifier "distinct")
-          (where {:artid (Integer/parseInt id)})
-          (order :articles.birth :DESC)))
+          (where {:artid  id})))
 
 (defn select_article [id]
   (select article_categories
@@ -109,6 +109,12 @@
 ;tags
 (defn select_tags []
   (select tags))
+
+(defremote tags_by_article_rem [id]
+  (select article_tags
+          (fields :tags.label)
+          (join tags)
+          (where {:artid id})))
 
 (defn tags_by_article [id]
   (select article_tags
@@ -153,9 +159,7 @@
     (doseq [x tag_array] (insert article_tags (values {:artid artid :tagid (Integer/parseInt (get_tagid x))})))))
 
 ;TODO transaction
-;TODO tags
 ;TODO beautify doseq
-;I might be missing something, but we need to check is-admin? here, no? FIXME
 (defremote insert_article [title body tags authors categories]
   (if (is-admin?)
     (let [artid     (:uid (insert articles (values {:title title :body body})))
@@ -170,15 +174,15 @@
 
 ;UPDATE
 
-(defremote update_article [uid title body]
-  (if (is-admin?)
-    (update articles
-            (set-fields {:title title :body body})
-            (where {:uid uid}))))
+(defremote update_article_rem [uid title body]
+  ;   (if true (is-admin?)
+  (update articles
+          (set-fields {:articles.title title :articles.body body})
+          (where {:articles.uid (Integer/parseInt uid)})))
 
 ;DELETE
 
-(defremote delete_article [uid]
+(defremote delete_article_rem [uid]
   (if (is-admin?)
     (delete articles
             (where {:uid (Integer/parseInt uid)}))))
