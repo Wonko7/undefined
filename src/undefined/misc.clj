@@ -7,3 +7,5 @@
 
 (defn format-date [sql-date]
   (time-format/unparse date-format (time-conv/from-sql-date sql-date)))
+
+(defn get_labels [x y] (apply str (interpose " " (map y x))))

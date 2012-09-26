@@ -65,6 +65,7 @@
   (entity-fields :uid :title :body :birth)
   (database undef-db))
 
+;SELECT
 
 (defn select_articles [off n cat]
   (select article_categories
@@ -116,9 +117,9 @@
           (join authors)
           (where {:artid id})))
 
-;;
-;; Remotes
-;;
+
+;INSERT
+
 ;TODO this has to be prettyfiable
 (defn weed_tags [tag_input artid]
   (let [tag_array       (distinct (clojure.string/split tag_input #" "))
@@ -130,9 +131,10 @@
     (doseq [x filtered_tags] (insert tags (values {:label x})))
     (doseq [x tag_array] (insert article_tags (values {:artid artid :tagid (Integer/parseInt (get_tagid x))})))))
 
+
 ;TODO transaction
 ;TODO beautify doseq
-(defremote insert_article [title body tags authors categories]
+(defn insert_article [title body tags authors categories]
   (if (is-admin?)
     (let [artid     (:uid (insert articles (values {:title title :body body})))
           get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
@@ -143,9 +145,11 @@
       (weed_tags tags artid)
       artid)))
 
+
+;UPDATE
 ;TODO don't delete/re-insert tags
-(defremote update_article_rem [uid title body tags]
-  (if true ;(is-admin?)
+(defn update_article [uid title body tags]
+  (if (is-admin?)
     (transaction
       (update articles
               (set-fields {:title title :body body})
@@ -154,25 +158,20 @@
               (where {:artid uid}))
       (weed_tags tags uid))))
 
-(defremote tags_by_article_rem [id]
-  (select article_tags
-          (fields :tags.label)
-          (join tags)
-          (where {:artid id})))
 
-;TODO stop using fn and use remote, always
-(defremote select_article_rem [id]
-  (select article_categories
-          (fields :articles.title :articles.body :articles.birth :articles.uid)
-          (join articles (= :article_categories.artid :articles.uid))
-          (join categories (= :categories.uid :article_categories.catid))
-          (modifier "distinct")
-          (where {:artid  id})))
-
-(defremote delete_article_rem [uid]
+;DELETE
+(defn delete_article [uid]
   (if (is-admin?)
     (delete articles
-            (where {:uid (Integer/parseInt uid)}))))
+            (where {:uid uid}))))
 
+
+;; Remotes
+
+(defremote insert_article_rem [title body tags authors categories] (insert_article title body tags authors categories))
+(defremote update_article_rem [uid title body tags] (update_article (int uid) title body tags))
+(defremote tags_by_article_rem [id] (tags_by_article (int id)))
+(defremote select_article_rem [id] (select_article (int id)))
+(defremote delete_article_rem [uid] (delete_article (int uid)))
 (defremote select_authors_rem [] (select authors))
 (defremote select_categories_rem [] (select categories))

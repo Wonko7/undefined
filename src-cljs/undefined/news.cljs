@@ -5,7 +5,6 @@
      [enfocus.macros :as em])
   (:use [undef.pages :only [add-page-init! page-click]]))
 
-;TODO remove page click and remove the div instead
 (defn newspage [href & [args]]
   (em/at js/document
       [:.btn_del] (em/listen :click (fn [e]
@@ -29,6 +28,6 @@
                                                                 (fm/letrem [res (update_article_rem uid newtitle newbody newtags)
                                                                             div (get-page "news-refresh-article-div" uid)]
                                                                     (em/at js/document [sel] (em/substitute div))
-                                                                    (newspage href args))))))))))))
+                                                                    (newspage href args))))))))))));FIXME only refresh the new buttons?
 
 (add-page-init! "news" newspage)

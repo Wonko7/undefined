@@ -5,7 +5,7 @@
                            tags_by_article 
                            categories_by_article
                            authors_by_article]]
-     [undefined.misc :only [format-date]]
+     [undefined.misc :only [format-date get_labels]]
      [undefined.content :only [remove-unsafe-tags str-to-int]]
      [noir.fetch.remotes]))
 
@@ -22,7 +22,6 @@
         title            (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News")
         nb-articles      (str-to-int nb-articles 10)
         article-id       (str-to-int article-id 0)
-        get_labels       #(apply str (interpose " " (map %2 %1)))
         [pv nx articles] (if single-art?
                            [nil nil (select_article article-id)]
                            (let [arts      (select_articles article-id (inc nb-articles) (if (= :blog category) "Technical" "Promotional"))
@@ -45,14 +44,12 @@
 
 ;FIXME add categories and authors
 (defn update-article-div [href uid]
-  (let [article       (first (select_article uid))
-        get_labels    #(apply str (interpose " " (map %2 %1)))]
+  (let [article       (first (select_article uid))]
   (newarticle (select_authors) (select_categories) (:title article) (:body article) (get_labels (tags_by_article (:uid article)) :label) (:uid article))))
 
 (defn refresh-article-div [href uid]
   (let [category          (if (= (take 4 href) (seq "blog")) :blog :news)
-        art               (first (select_article uid))
-        get_labels        #(apply str (interpose " " (map %2 %1)))]
+        art               (first (select_article uid))]
     (article (:uid art) category (:title art) (format-date (:birth art)) (remove-unsafe-tags (:body art))
              (str "Tags: " (get_labels (tags_by_article (:uid art)) :label))
              (str "Categories: " (get_labels (categories_by_article (:uid art)) :label))
