@@ -1,13 +1,13 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
-  (:use [undefined.views.common :only [add-page-init! page article base]]
-        [undefined.sql :only [select_articles select_article
-                              tags_by_article 
-                              categories_by_article
-                              authors_by_article]]
-        [undefined.misc :only [format-date]]
-        [undefined.content :only [remove-unsafe-tags str-to-int]]
-        [noir.fetch.remotes]))
+  (:use [undefined.views.common :only [add-page-init! page newarticle article base]]
+     [undefined.sql :only [select_articles select_article select_authors select_categories
+                           tags_by_article 
+                           categories_by_article
+                           authors_by_article]]
+     [undefined.misc :only [format-date]]
+     [undefined.content :only [remove-unsafe-tags str-to-int]]
+     [noir.fetch.remotes]))
 
 
 (defn blog-nav [link prev next]
@@ -40,10 +40,28 @@
                articles)
           {:bottom (blog-nav href pv nx)
            :metadata {:data-href "news"
-                      :data-args (name category)}})))
+                      :data-args (name category)
+                      :data-init-page "news"}})))
 
-(defremote update_div_rem [sel]
-  (html/transform article [sel] ([sel] (html/substitute "TEST"))))
+;FIXME add categories and authors
+(defn update-article-div [href uid]
+  (let [article       (first (select_article uid))
+        get_labels    #(apply str (interpose " " (map %2 %1)))]
+  (newarticle (select_authors) (select_categories) (:title article) (:body article) (get_labels (tags_by_article (:uid article)) :label) (:uid article))))
+
+(defn refresh-article-div [href uid]
+  (let [category          (if (= (take 4 href) (seq "blog")) :blog :news)
+        art               (first (select_article uid))
+        get_labels        #(apply str (interpose " " (map %2 %1)))]
+    (article (:uid art) category (:title art) (format-date (:birth art)) (remove-unsafe-tags (:body art))
+             (str "Tags: " (get_labels (tags_by_article (:uid art)) :label))
+             (str "Categories: " (get_labels (categories_by_article (:uid art)) :label))
+             (str "Authors: " (get_labels (authors_by_article (:uid art)) :name)))))
+
+(add-page-init! "news-update-article-div" update-article-div)
+(add-page-init! "blog-update-article-div" update-article-div)
+(add-page-init! "news-refresh-article-div" refresh-article-div)
+(add-page-init! "blog-refresh-article-div" refresh-article-div)
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)

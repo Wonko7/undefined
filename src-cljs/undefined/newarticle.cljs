@@ -10,9 +10,9 @@
       [:#inp_title] (em/focus)
       [:form] (em/listen :submit (fn [e]
                                    (.preventDefault e)
-                                   (let [title      (em/from (em/select ["#inp_title"]) (em/get-prop :value))
-                                         body       (em/from (em/select ["#txt_body"]) (em/get-prop :value))
-                                         tags       (em/from (em/select ["#inp_tags"]) (em/get-prop :value))
+                                   (let [title      (em/from (em/select [".inp_title"]) (em/get-prop :value))
+                                         body       (em/from (em/select [".txt_body"]) (em/get-prop :value))
+                                         tags       (em/from (em/select [".inp_tags"]) (em/get-prop :value))
                                          authors    (zipmap
                                                       (em/from (em/select [".cbx_auth"]) (em/get-prop :value))
                                                       (em/from (em/select [".cbx_auth"]) (em/get-prop :checked)))

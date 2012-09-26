@@ -181,11 +181,11 @@ a:hover {
 	border-radius: 3px;
 }
 
-#inp_title { width: 50%; font-weight: bold;}
+.inp_title { width: 50%; font-weight: bold;}
 
-#inp_tags { width: 80%; font-style: italic;}
+.inp_tags { width: 80%; font-style: italic;}
 
-#txt_body { width: 65%; height: 150px;}
+.txt_body { width: 65%; height: 150px;}
 
 .newarticle fieldset {
 	margin-top: 10px;

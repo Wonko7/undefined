@@ -2,7 +2,7 @@
   (:use [noir.core :only [defpage]]
         [undefined.views.common :only [base page login metadata add-page-init!]]))
 
-
+;FIXME find a way to save password for chrome/safari
 (defn login-page [name & [args]]
   (page "Log In:"
         (login)
