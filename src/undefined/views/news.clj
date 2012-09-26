@@ -43,6 +43,7 @@
                       :data-init-page "news"}})))
 
 ;FIXME add categories and authors
+;FIXME use news/blog correctly
 (defn update-article-div [href uid]
   (let [article       (first (select_article uid))]
   (newarticle (select_authors) (select_categories) (:title article) (:body article) (get_labels (tags_by_article (:uid article)) :label) (:uid article))))

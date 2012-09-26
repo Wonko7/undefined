@@ -117,7 +117,13 @@
           (join authors)
           (where {:artid id})))
 
-
+(defn get_user [& {:keys [id name] :or {id nil name nil}}]
+  (if (is-admin?)
+    (let [col (if (nil? name) :uid :name)
+          val (if (nil? name) id name)]
+    (select authors
+            (fields :name :hash :salt)
+              (where {col val})))))
 ;INSERT
 
 ;TODO this has to be prettyfiable
@@ -175,3 +181,4 @@
 (defremote delete_article_rem [uid] (delete_article (int uid)))
 (defremote select_authors_rem [] (select authors))
 (defremote select_categories_rem [] (select categories))
+(defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
