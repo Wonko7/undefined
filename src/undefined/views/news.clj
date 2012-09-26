@@ -42,6 +42,9 @@
            :metadata {:data-href "news"
                       :data-args (name category)}})))
 
+(defremote update_div_rem [sel]
+  (html/transform article [sel] ([sel] (html/substitute "TEST"))))
+
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
 (add-page-init! "blog-article" #(news-page %1 %2 1) id)

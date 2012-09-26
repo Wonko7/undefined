@@ -57,7 +57,7 @@
                                                newbody  (em/from (em/select [(str "#txt_body_" uid)])   (em/get-prop :value))
                                                newtags  (em/from (em/select [(str "#inp_tags_" uid)])   (em/get-prop :value))]
                                            (fm/letrem [res (update_article_rem uid newtitle newbody newtags)]
-                                               (reset_div sel uid newtitle birth newbody (get_labels tags :label) nil nil )))))))));FIXME fetch cats/auths
+                                               (reset_div sel uid newtitle nil newbody (get_labels tags :label) nil nil )))))))));FIXME fetch cats/auths
 
 ;TODO remove page click and remove the div instead
 (defn newspage [href & [args]]
@@ -65,7 +65,7 @@
       [:.btn_del] (em/listen :click (fn [e]
                                       (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
                                         (if (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
-                                          (fm/letrem [res (delete_article_rem uid)] (delete_div (str ":#article_" uid)))))));(page-click "news" nil))))));FIXME don't reload, just delete the div
+                                          (fm/letrem [res (delete_article_rem uid)] (delete_div (str ":#article_" uid)))))))
       [:.btn_upd] (em/listen :click (fn [e]
                                       (let [uid       (int (em/from (.-currentTarget e) (em/get-attr :value)))
                                             artSel    (str ":#article_" uid)]
