@@ -4,11 +4,14 @@ For a balanced breakfast
 	- better cljs compilation with https://github.com/ibdknox/noir-cljs
 * ui:
 	- rss / atom
+	- mobile detection: mainly remove columns : products [screenshot|desc] -> desc & screenshot underneath. idem cloud tag
 * misc:
 	- domain name
 	- setup a real web architecture, maybe nginx: http://grokbase.com/t/gg/clj-noir/119ysw9vf0/noir-how-do-i-serve-static-files
+		http://www.bushidodesigns.net/blog/mobile-device-detection-css-without-user-agent/ (why avoid user agent?)
 	- hardenning
 		- check values that comme from webpage and inforce correctness.
+		- try injections, fuzzing
 		- catch errors, log, redirect user.
 		- BACKUPS.
 		- http://grokbase.com/t/gg/clj-noir/1229j1xres/noir-avoiding-xss-attacks

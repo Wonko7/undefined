@@ -20,6 +20,6 @@
      s
      (if (string? s)
        (if-let [digits (re-find #"\d+" s)]
-         (Integer/parseInt s)
+         (Integer/parseInt digits)
          fallback)
        fallback))))

@@ -3,6 +3,7 @@
 @import "compass/css3/border-radius";
 @import "compass/css3/box-shadow";
 @import "compass/css3/text-shadow";
+@import "compass/css3/user-interface";
 
 $base-dark: #363;
 $base-light: #393;
@@ -203,6 +204,12 @@ a:hover {
 	margin-top: 20px;
 	overflow: hidden;
 
+	button {
+		@extend .input-light; 
+		margin: 5px;
+		//padding: 5px;
+	}
+
 	.article-title {
 		@extend .text-shadow;
 		text-align: center;
@@ -293,9 +300,11 @@ a:hover {
 
 
 .newarticle {
-	#inp_title { width: 50%; font-weight: bold;}
-	#inp_tags { width: 80%; font-style: italic;}
-	#txt_body { width: 65%; height: 150px;}
+	.inp_title { font-weight: bold;}
+	.inp_tags { font-style: italic;}
+	width: 80%;
+	overflow: hidden;
+
 	fieldset { margin-top: 10px; }
 	button { margin-top: 20px; float: right;}
 
@@ -305,6 +314,11 @@ a:hover {
 		@extend .input-light;
 	}
 
+	textarea { height: 300px; }
+	input[type=text], textarea { width: 90%; margin-left: 5%; }
+
+	// FIXME: not yet supported, will have to add a compass mixin for this;
+	//input[placeholder], textarea[placeholder] { color: $light-grey; }
+
 	@extend .small-center-dialog;
-	width: 80%;
 }

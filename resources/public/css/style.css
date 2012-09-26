@@ -1,25 +1,25 @@
-/* line 33, ../../themes/style.scss */
+/* line 34, ../../themes/style.scss */
 .rounded-big {
   -webkit-border-radius: 15px 15px;
   -moz-border-radius: 15px / 15px;
   border-radius: 15px / 15px;
 }
 
-/* line 37, ../../themes/style.scss */
+/* line 38, ../../themes/style.scss */
 .rounded-small, .small-center-dialog, #login, .newarticle, #title, .whole-article {
   -webkit-border-radius: 5px 5px;
   -moz-border-radius: 5px / 5px;
   border-radius: 5px / 5px;
 }
 
-/* line 41, ../../themes/style.scss */
-.rounded-smaller, .input-light, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button {
+/* line 42, ../../themes/style.scss */
+.rounded-smaller, .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button {
   -webkit-border-radius: 3px 3px;
   -moz-border-radius: 3px / 3px;
   border-radius: 3px / 3px;
 }
 
-/* line 45, ../../themes/style.scss */
+/* line 46, ../../themes/style.scss */
 .rounded-bottom {
   -moz-border-radius-bottomleft: 15px;
   -webkit-border-bottom-left-radius: 15px;
@@ -29,57 +29,57 @@
   border-bottom-right-radius: 15px;
 }
 
-/* line 50, ../../themes/style.scss */
+/* line 51, ../../themes/style.scss */
 .shadow-small, #title, .whole-article {
   -webkit-box-shadow: #444444 2px 2px 10px;
   -moz-box-shadow: #444444 2px 2px 10px;
   box-shadow: #444444 2px 2px 10px;
 }
 
-/* line 54, ../../themes/style.scss */
+/* line 55, ../../themes/style.scss */
 .shadow-big, .small-center-dialog, #login, .newarticle {
   -webkit-box-shadow: #444444 4px 4px 20px;
   -moz-box-shadow: #444444 4px 4px 20px;
   box-shadow: #444444 4px 4px 20px;
 }
 
-/* line 58, ../../themes/style.scss */
+/* line 59, ../../themes/style.scss */
 .text-shadow, #title, .whole-article .article-title {
   text-shadow: 0px 0px 1px #555555;
 }
 
-/* line 63, ../../themes/style.scss */
+/* line 64, ../../themes/style.scss */
 .padding-horiz, #nav a, #nav a:visited {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-/* line 68, ../../themes/style.scss */
-.visible-border, .small-center-dialog, #login, .newarticle, .input-light, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button, #title, .whole-article {
+/* line 69, ../../themes/style.scss */
+.visible-border, .small-center-dialog, #login, .newarticle, .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button, #title, .whole-article {
   border: 2px solid #339933;
 }
 
-/* line 72, ../../themes/style.scss */
+/* line 73, ../../themes/style.scss */
 .visible-border-top {
   border-top: 2px solid #339933;
 }
 
-/* line 76, ../../themes/style.scss */
+/* line 77, ../../themes/style.scss */
 .visible-border-bottom, #nav {
   border-bottom: 2px solid #339933;
 }
 
-/* line 80, ../../themes/style.scss */
+/* line 81, ../../themes/style.scss */
 .hidden {
   display: none;
 }
 
-/* line 84, ../../themes/style.scss */
+/* line 85, ../../themes/style.scss */
 .visible {
   display: inline;
 }
 
-/* line 88, ../../themes/style.scss */
+/* line 89, ../../themes/style.scss */
 .small-center-dialog, #login, .newarticle {
   margin: 50px auto;
   padding: 10px;
@@ -87,24 +87,24 @@
   border: 4px solid grey;
 }
 
-/* line 98, ../../themes/style.scss */
-.input-light, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button {
+/* line 99, ../../themes/style.scss */
+.input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button {
   color: #22aa22;
   background-color: white;
   border-color: #666666;
 }
 
-/* line 112, ../../themes/style.scss */
+/* line 113, ../../themes/style.scss */
 body {
   color: #336633;
 }
 
-/* line 116, ../../themes/style.scss */
+/* line 117, ../../themes/style.scss */
 #nav {
   width: 100%;
 }
 
-/* line 121, ../../themes/style.scss */
+/* line 122, ../../themes/style.scss */
 #nav a, #nav a:visited {
   padding: 3px;
   color: #339933;
@@ -115,12 +115,12 @@ body {
   margin-left: 20px;
 }
 
-/* line 132, ../../themes/style.scss */
+/* line 133, ../../themes/style.scss */
 #nav a:hover {
   color: #555555;
 }
 
-/* line 136, ../../themes/style.scss */
+/* line 137, ../../themes/style.scss */
 #loading {
   width: 100%;
   padding-top: 50px;
@@ -130,7 +130,7 @@ body {
   z-index: -1;
 }
 
-/* line 145, ../../themes/style.scss */
+/* line 146, ../../themes/style.scss */
 #page {
   width: 92%;
   margin-left: 2%;
@@ -145,7 +145,7 @@ body {
   overflow: hidden;
 }
 
-/* line 163, ../../themes/style.scss */
+/* line 164, ../../themes/style.scss */
 #title {
   text-align: center;
   font-size: 20px;
@@ -157,19 +157,19 @@ body {
   padding-bottom: 2px;
 }
 
-/* line 180, ../../themes/style.scss */
+/* line 181, ../../themes/style.scss */
 a, a:visited {
   color: #339933;
   font-weight: bold;
   text-decoration: none;
 }
 
-/* line 186, ../../themes/style.scss */
+/* line 187, ../../themes/style.scss */
 a:hover {
   color: #555555;
 }
 
-/* line 196, ../../themes/style.scss */
+/* line 197, ../../themes/style.scss */
 .whole-article {
   width: 98%;
   padding: 1%;
@@ -177,7 +177,11 @@ a:hover {
   margin-top: 20px;
   overflow: hidden;
 }
-/* line 206, ../../themes/style.scss */
+/* line 207, ../../themes/style.scss */
+.whole-article button {
+  margin: 5px;
+}
+/* line 213, ../../themes/style.scss */
 .whole-article .article-title {
   text-align: center;
   font-size: 18px;
@@ -185,18 +189,18 @@ a:hover {
   color: #22aa22;
   margin-top: 5px;
 }
-/* line 215, ../../themes/style.scss */
+/* line 222, ../../themes/style.scss */
 .whole-article .article-date, .whole-article .tags, .whole-article .categories, .whole-article .authors {
   font-size: 13px;
   color: #666666;
 }
-/* line 226, ../../themes/style.scss */
+/* line 233, ../../themes/style.scss */
 .whole-article .article {
   padding-top: 10px;
   padding-bottom: 10px;
   text-align: justify;
 }
-/* line 230, ../../themes/style.scss */
+/* line 237, ../../themes/style.scss */
 .whole-article .article .code {
   font-family: 'Courier New', monospace;
   white-space: pre-wrap;
@@ -205,83 +209,86 @@ a:hover {
   padding: 1%;
   background: #dddddd;
 }
-/* line 239, ../../themes/style.scss */
+/* line 246, ../../themes/style.scss */
 .whole-article .article .bold {
   font-weight: bold;
 }
-/* line 240, ../../themes/style.scss */
+/* line 247, ../../themes/style.scss */
 .whole-article .article .it {
   font-style: italic;
 }
-/* line 241, ../../themes/style.scss */
+/* line 248, ../../themes/style.scss */
 .whole-article .article .underline {
   text-decoration: underline;
 }
 
-/* line 251, ../../themes/style.scss */
+/* line 258, ../../themes/style.scss */
 .product-desc {
   width: 60%;
   float: right;
   text-align: justify;
 }
 
-/* line 257, ../../themes/style.scss */
+/* line 264, ../../themes/style.scss */
 .product-screenshot {
   width: 40%;
   float: left;
 }
 
-/* line 269, ../../themes/style.scss */
+/* line 276, ../../themes/style.scss */
 #login input[type=text], #login input[type=password] {
   margin-top: 10px;
   width: 150px;
   font-weight: bold;
 }
-/* line 276, ../../themes/style.scss */
+/* line 283, ../../themes/style.scss */
 #login input[type=submit] {
   margin-left: 220px;
   margin-top: 20px;
   font-weight: bold;
 }
-/* line 283, ../../themes/style.scss */
+/* line 290, ../../themes/style.scss */
 #login input[type=text], #login input[type=password], #login label {
   display: inline-block;
 }
-/* line 284, ../../themes/style.scss */
+/* line 291, ../../themes/style.scss */
 #login label {
   width: 100px;
 }
 
-/* line 295, ../../themes/style.scss */
+/* line 302, ../../themes/style.scss */
 .newarticle {
   width: 80%;
+  overflow: hidden;
 }
-/* line 296, ../../themes/style.scss */
-.newarticle #inp_title {
-  width: 50%;
+/* line 303, ../../themes/style.scss */
+.newarticle .inp_title {
   font-weight: bold;
 }
-/* line 297, ../../themes/style.scss */
-.newarticle #inp_tags {
-  width: 80%;
+/* line 304, ../../themes/style.scss */
+.newarticle .inp_tags {
   font-style: italic;
 }
-/* line 298, ../../themes/style.scss */
-.newarticle #txt_body {
-  width: 65%;
-  height: 150px;
-}
-/* line 299, ../../themes/style.scss */
+/* line 308, ../../themes/style.scss */
 .newarticle fieldset {
   margin-top: 10px;
 }
-/* line 300, ../../themes/style.scss */
+/* line 309, ../../themes/style.scss */
 .newarticle button {
   margin-top: 20px;
   float: right;
 }
-/* line 302, ../../themes/style.scss */
+/* line 311, ../../themes/style.scss */
 .newarticle input, .newarticle textarea, .newarticle button {
   padding: 5px;
   margin: 5px;
+}
+/* line 317, ../../themes/style.scss */
+.newarticle textarea {
+  height: 300px;
+}
+/* line 318, ../../themes/style.scss */
+.newarticle input[type=text], .newarticle textarea {
+  width: 90%;
+  margin-left: 5%;
 }

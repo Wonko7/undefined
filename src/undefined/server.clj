@@ -1,11 +1,12 @@
 (ns undefined.server
 (:import org.mindrot.jbcrypt.BCrypt)
-  (:use [undefined.auth :only [ssl-port]])
+  (:use [undefined.config :only [set-config!]]
+        [undefined.sql :only [init-db-connection]])
   (:require [noir.server :as server]
             [noir.fetch.remotes :as remotes]
             [cemerick.friend :as friend]
             (cemerick.friend [workflows :as workflows]
-                             [credentials :as creds]) ))
+                             [credentials :as creds])))
 
 (server/load-views-ns 'undefined.views)
 
@@ -62,11 +63,12 @@
 ;; FIXME make different ports for test build and release builds.
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
-        port (Integer. (get (System/getenv) "PORT" "8000"))]
-    (server/start port {:mode mode
-                        :ns 'undefined
-                        :jetty-options {:ssl? true
-                                        :ssl-port ssl-port
-                                        ;; gen with: keytool -keystore keystore -alias jetty -genkey -keyalg RSA
-                                        :keystore "keystore"
-                                        :key-password "123456"}})))
+        conf (set-config! mode)]
+    (init-db-connection conf)
+    (server/start (:port conf) {:mode mode
+                                :ns 'undefined
+                                :jetty-options {:ssl? true
+                                                :ssl-port (:ssl-port conf)
+                                                ;; gen with: keytool -keystore keystore -alias jetty -genkey -keyalg RSA
+                                                :keystore "keystore"
+                                                :key-password "123456"}})))
