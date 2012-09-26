@@ -20,6 +20,12 @@
 ;TODO joins with cats, tags, authors
 ;TODO sort by remotes/fns
 
+(defentity products
+  (table :products)
+  (pk :uid)
+  (entity-fields :uid :title :description :link :screenshot :pin)
+  (database undef-db))
+
 (defentity tags
   (table :tags)
   (pk :uid)
@@ -86,8 +92,7 @@
           (where {:artid id})
           (order :articles.birth :DESC)))
 
-(defn select_tags []
-  (select tags))
+(defn select_tags [] (select tags))
 
 (defn tags_by_article [id]
   (select article_tags
@@ -99,8 +104,7 @@
   (select tags
           (where {:label [like (str "%" label "%")]})))
 
-(defn select_categories []
-  (select categories))
+(defn select_categories [] (select categories))
 
 (defn categories_by_article [id]
   (select article_categories
@@ -108,8 +112,7 @@
           (join categories)
           (where {:artid id})))
 
-(defn select_authors []
-  (select authors))
+(defn select_authors [] (select authors))
 
 (defn authors_by_article [id]
   (select article_authors
@@ -124,6 +127,9 @@
       (select authors
               (fields :name :hash :salt)
               (where {col val})))))
+
+(defn select_products [] (select products))
+
 ;INSERT
 
 ;TODO this has to be prettyfiable
@@ -182,3 +188,4 @@
 (defremote select_authors_rem [] (select authors))
 (defremote select_categories_rem [] (select categories))
 (defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
+(defremote select_products_rem [] (select_products))
