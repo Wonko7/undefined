@@ -23,8 +23,6 @@
                                                               (let [newtitle (em/from (em/select [(str sel " .inp_title" )])  (em/get-prop :value))
                                                                     newbody  (em/from (em/select [(str sel " .txt_body" )])   (em/get-prop :value))
                                                                     newtags  (em/from (em/select [(str sel " .inp_tags" )])   (em/get-prop :value))]
-                                                                (js/console.log (str "UID#" uid " SEL[" sel
-                                                                                  "]\nTitle: "newtitle"\nBody: "newbody"\nTags: " newtags))
                                                                 (fm/letrem [res (update_article_rem uid newtitle newbody newtags)
                                                                             div (get-page "news-refresh-article-div" uid)]
                                                                     (em/at js/document [sel] (em/substitute div))

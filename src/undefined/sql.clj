@@ -121,8 +121,8 @@
   (if (is-admin?)
     (let [col (if (nil? name) :uid :name)
           val (if (nil? name) id name)]
-    (select authors
-            (fields :name :hash :salt)
+      (select authors
+              (fields :name :hash :salt)
               (where {col val})))))
 ;INSERT
 
