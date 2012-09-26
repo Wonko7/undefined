@@ -4,6 +4,9 @@
         [clj-webdriver.taxi]
         [undefined.content :only [str-to-int remove-unsafe-tags]]))
 
+;; FIXME: for now database has to be prepared (empty) & lein run have to be done manually 
+;;        before starting tests.
+
 (def ^:private browser-count (atom 0))
 
 ;; http://corfield.org/blog/post.cfm/automated-browser-based-testing-with-clojure
@@ -24,11 +27,20 @@
   (do 
     (browser-up)
     (block)
-    (browser-down)))
+    (browser-down)
+    ))
 
-(use-fixtures :each add-browser)
+;;(use-fixtures :each add-browser)
 
+;; (deftest test-firefox []
+;;   (let [src (do
+;;               (to "http://localhost:8000")
+;;               (page-source))]
+;;     (html/ (as-tree ()))))
 
-(deftest test-firefox []
-  (is (do
-        (to "http://localhost:8000"))))
+(deftest test-page-titles []
+  (doseq [page ["news" "blog" "products" "about"]]
+    (is (nil? (re-find (re-pattern page)
+                       (first (map html/text
+                                   (html/select (html/html-resource (java.net.URL. (str "http://localhost:8000/" page)))
+                                                [:#title]))))))))
