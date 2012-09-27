@@ -33,6 +33,9 @@
       [:.product-desc]       (html/content article)
       [:.product-screenshot] (html/content sc))
 
+(html/defsnippet about "templates/about.html" [:.about]
+      [])
+
 (html/defsnippet login "templates/login.html" [:form]
       [])
 
