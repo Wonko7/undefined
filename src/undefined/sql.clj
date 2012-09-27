@@ -200,16 +200,26 @@
       artid)))
 
 ;UPDATE
-;TODO don't delete/re-insert tags
-(defn update_article [uid title body tags]
+;TODO don't delete/re-insert tags/cats/auths
+;TODO actually... would there be that much of a perf improvement..? isn't it worse to check for existing values?
+(defn update_article [uid title body tags authors categories]
   (if (is-admin?)
+    (let [get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
+          auths     (get_keys authors)
+          cats      (get_keys categories)]
     (transaction
       (update articles
               (set-fields {:title title :body body})
               (where {:articles.uid uid}))
       (delete article_tags
               (where {:artid uid}))
-      (weed_tags tags uid))))
+      (delete article_authors
+              (where {:artid uid}))
+      (delete article_categories
+              (where {:artid uid}))
+      (weed_tags tags uid)
+      (doseq [x auths]  (insert article_authors     (values {:artid uid :authid (Integer/parseInt x)})))
+      (doseq [x cats]   (insert article_categories  (values {:artid uid :catid (Integer/parseInt x)})))))))
 
 
 ;DELETE
@@ -222,7 +232,7 @@
 ;; Remotes
 
 (defremote insert_article_rem [title body tags authors categories] (insert_article title body tags authors categories))
-(defremote update_article_rem [uid title body tags] (update_article (int uid) title body tags))
+(defremote update_article_rem [uid title body tags authors categories] (update_article (int uid) title body tags authors categories))
 (defremote tags_by_article_rem [id] (tags_by_article (int id)))
 (defremote select_article_rem [id] (select_article (int id)))
 (defremote delete_article_rem [uid] (delete_article (int uid)))

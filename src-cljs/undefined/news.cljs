@@ -24,11 +24,16 @@
                                                               (.preventDefault e)
                                                               (let [newtitle (em/from (em/select [(str sel " .inp_title" )])  (em/get-prop :value))
                                                                     newbody  (em/from (em/select [(str sel " .txt_body" )])   (em/get-prop :value))
-                                                                    newtags  (em/from (em/select [(str sel " .inp_tags" )])   (em/get-prop :value))]
-                                                                (fm/letrem [res (update_article_rem uid newtitle newbody newtags)
+                                                                    newtags  (em/from (em/select [(str sel " .inp_tags" )])   (em/get-prop :value))
+                                                                    newauths (zipmap
+                                                                               (em/from (em/select [".cbx_auth"]) (em/get-prop :value))
+                                                                               (em/from (em/select [".cbx_auth"]) (em/get-prop :checked)))
+                                                                    newcats  (zipmap
+                                                                               (em/from (em/select [".cbx_cat"]) (em/get-prop :value))
+                                                                               (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))]
+                                                                (fm/letrem [res (update_article_rem uid newtitle newbody newtags newauths newcats) 
                                                                             div (get-page "news-refresh-article-div" uid)]
                                                                     (em/at js/document [sel] (em/substitute div))
                                                                     (newspage href args))))))))))));FIXME only refresh the new buttons?
 
-
-(add-page-init! "news" testing)
+(add-page-init! "news" newspage)

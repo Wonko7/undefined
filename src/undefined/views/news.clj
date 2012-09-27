@@ -46,7 +46,7 @@
 ;FIXME use news/blog correctly
 (defn update-article-div [href uid]
   (let [article       (first (select_article uid))]
-  (newarticle (select_authors) (select_categories) (:title article) (:body article) (get_labels (tags_by_article (:uid article)) :label) (:uid article))))
+  (newarticle  (categories_by_article (:uid %)) (authors_by_article (:uid %)) (:title article) (:body article) (get_labels (tags_by_article (:uid article)) :label) (:uid article))))
 
 (defn refresh-article-div [href uid]
   (let [category          (if (= (take 4 href) (seq "blog")) :blog :news)
