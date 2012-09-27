@@ -32,15 +32,18 @@
                                                                                          :auths-val [sel :.cbx_auth]  (em/get-prop :value)
                                                                                          :auths-c?  [sel :.cbx_auth]  (em/get-prop :checked)
                                                                                          :cats-val  [sel :.cbx_cat]   (em/get-prop :value)
-                                                                                         :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))]
-                                                                    (fm/letrem [res (update_article_rem uid
-                                                                                                        (:title article)
-                                                                                                        (:body article)
-                                                                                                        (:tags article)
-                                                                                                        (zipmap (:auths-val article) (:auths-c? article))
-                                                                                                        (zipmap (:cats-val article) (:cats-c? article)))
-                                                                                div (get-page "news-refresh-article-div" uid)]
-                                                                      (em/at js/document [sel] (em/substitute div))
-                                                                      (newspage href args)))))))))))));FIXME only refresh the new buttons?
+                                                                                         :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))
+                                                                        one-c?  (partial some identity)]
+                                                                    (if (and (one-c? (:cats-c? article)) (one-c? (:auths-c? article)))
+                                                                      (fm/letrem [res (update_article_rem uid
+                                                                                                          (:title article)
+                                                                                                          (:body article)
+                                                                                                          (:tags article)
+                                                                                                          (zipmap (:auths-val article) (:auths-c? article))
+                                                                                                          (zipmap (:cats-val article) (:cats-c? article)))
+                                                                                  div (get-page "news-refresh-article-div" uid)]
+                                                                        (em/at js/document [sel] (em/substitute div))
+                                                                        (newspage href args))
+                                                                      (js/alert "Check at least one author and category")))))))))))));FIXME only refresh the new buttons?
 
 (add-page-init! "news" newspage)
