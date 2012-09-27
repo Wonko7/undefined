@@ -7,6 +7,8 @@
 
 (defn newspage [href & [args]]
   (em/at js/document
+      [:.btn_del] (em/remove-listener :click)
+      [:.btn_upd] (em/remove-listener :click)
       [:.btn_del] (em/listen :click (fn [e]
                                       (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
                                         (if (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))

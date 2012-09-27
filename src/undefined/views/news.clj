@@ -17,7 +17,7 @@
      {:tag :a :attrs {:href (str link "/" next) :data-href link :data-args next :style "float: right"} :content "Next"})])
 
 (defn news-page [href article-id & [nb-articles]]
-  (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
+   (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
         single-art?      (= 1 nb-articles)
         title            (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News")
         nb-articles      (str-to-int nb-articles 10)

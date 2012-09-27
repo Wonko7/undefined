@@ -31,7 +31,7 @@
       [title link article sc]
       [:.article-title :a]   (html/do-> (html/content title) (html/set-attr :href link))
       [:.product-desc]       (html/content article)
-      [:.product-screenshot] (html/content "FIXME SCREENSHOT"))
+      [:.product-screenshot] (html/content sc))
 
 (html/defsnippet login "templates/login.html" [:form]
       [])

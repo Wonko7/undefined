@@ -7,7 +7,8 @@
 
 (defn products-page [name product-id]
   (let [title       "Undefined's Products"
-        products     (first (select_products))]
-    (page title (product (:title products) (:link products) (:description products) (:screenshot products)))))
+        products     (select_products)]
+    (page title 
+          (map #(product (:title %) (:link %) (:description %) (:screenshot %)) products))))
 
-    (add-page-init! "products" products-page)
+(add-page-init! "products" products-page)
