@@ -1,7 +1,7 @@
 (ns undefined.sql
   (:require  [clojure.string :as string])
   (:use [undefined.config :only [get-config]]
-    [noir.fetch.remotes]
+     [noir.fetch.remotes]
      [korma.db]
      [korma.core]
      [undefined.auth :only [is-admin?]]))
@@ -55,11 +55,23 @@
   (entity-fields :name)
   (database undef-db))
 
+(defentity roles
+  (table :roles)
+  (pk :uid)
+  (entity-fields :label)
+  (database undef-db))
+
 (defentity categories
   (table :categories)
   (pk :uid)
   (entity-fields :label)
   (database undef-db))
+
+(defentity author_roles
+  (table :author_roles)
+  (pk :roleid)
+  (has-many roles   {:fk :uid})
+  (entity-fields :roles.label))
 
 (defentity article_tags
   (table :article_tags)
@@ -147,6 +159,19 @@
 
 (defn select_products [] (select products))
 
+(defn get_user_roles [id]
+  (select author_roles
+          (fields :roles.label)
+          (join roles)
+          (where {:authid id})))
+
+(defn is_user_admin? [id]
+  (select author_roles
+          (join roles)
+          (where {:authid id
+                  :roles.label "Admin"})))
+
+
 ;INSERT
 
 ;TODO this has to be prettyfiable
@@ -173,7 +198,6 @@
       (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})))
       (weed_tags tags artid)
       artid)))
-
 
 ;UPDATE
 ;TODO don't delete/re-insert tags
@@ -206,3 +230,5 @@
 (defremote select_categories_rem [] (select categories))
 (defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
 (defremote select_products_rem [] (select_products))
+(defremote get_user_roles_rem [id] (get_user_roles id))
+(defremote is_user_admin_rem? [id] (is_user_admin? id))

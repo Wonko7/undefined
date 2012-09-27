@@ -30,4 +30,5 @@
                                                                     (em/at js/document [sel] (em/substitute div))
                                                                     (newspage href args))))))))))));FIXME only refresh the new buttons?
 
-(add-page-init! "news" newspage)
+
+(add-page-init! "news" testing)
