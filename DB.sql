@@ -1,13 +1,17 @@
-DROP TABLE IF EXISTS articles, categories, tags, authors, article_categories, article_tags, article_authors, products;
+DROP TABLE IF EXISTS article_categories, article_tags, article_authors, author_roles, articles, categories, tags, authors, products, roles;
 CREATE TABLE articles (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NOT NULL, birth TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE categories (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 CREATE TABLE tags (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 CREATE TABLE authors (uid SERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL, hash TEXT NOT NULL, salt TEXT NOT NULL);
 
+CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
+
 CREATE TABLE article_categories (artid INTEGER references articles(uid) ON DELETE CASCADE, catid INTEGER references categories(uid) ON DELETE CASCADE, PRIMARY KEY (artid, catid));
 CREATE TABLE article_tags (artid INTEGER references articles(uid) ON DELETE CASCADE, tagid INTEGER references tags(uid) ON DELETE CASCADE, PRIMARY KEY (artid, tagid));
 CREATE TABLE article_authors (artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid) ON DELETE CASCADE, PRIMARY KEY(artid, authid));
+
+CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE, roleid INTEGER references roles(uid) ON DELETE CASCADE);
 
 CREATE TABLE products (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL, link TEXT NOT NULL, screenshot TEXT NOT NULL, pin INTEGER UNIQUE NOT NULL);
 
@@ -24,4 +28,8 @@ INSERT INTO article_authors VALUES (1, 1), (2, 1), (2, 2), (3, 2), (4, 1);
 INSERT INTO products (title, description, link, screenshot, pin) VALUES ('Budget Splitter', 'Budget Splitter is an application designed to help you share a budget on outings with friends.Alice rented a car for the trip which cost her $75, Bob pays $50 for gas & Charlie $25 worth of pizzas.Bob paid $15 for two cinema tickets and popcorn. Alice didn''t go and won''t be participating in that expense.How do we equalise the expenses? Budget Splitter to the rescue!Budget Splitter targets WebKit browsers: Iphone, Android, Chrome & Safari.', '/products/budget-splitter/index.html', '/screenshot/ss.png', 42);
 INSERT INTO products (title, description, link, screenshot, pin) VALUES ('Smriti', 'Smriti is a task manager, That''s it', '/products/smriti/index.html', '/screenshot/ss.png', 23);
 
-GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, products TO web;
+INSERT INTO roles (label) VALUES ('Peon'), ('Admin'), ('Contributor');
+
+INSERT INTO author_roles VALUES (1, 2), (1, 3), (2, 2), (2, 1);
+
+GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, products, roles, author_roles TO web;
