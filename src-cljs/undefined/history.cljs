@@ -19,6 +19,8 @@
               v])
            (js->clj goog.history.EventType)))))
 
+(def first-call? true)
+
 (defn history
   "Create a new history object in user visible mode. This allows users
   to, for example, hit the browser's back button without leaving the
@@ -36,10 +38,17 @@
             (goog.History.))]
     (do
       (event/listen h "navigate"
-                    (fn [e]
-                      (callback {:token (.-token e)
-                                 :type (.-type e)
-                                 :navigation? (.-isNavigation e)})))
+                    (if goog.userAgent.WEBKIT
+                      (fn [e]
+                        (if first-call?
+                          (def first-call? (not (.-isNavigation e)))
+                          (callback {:token (.-token e)
+                                     :type (.-type e)
+                                     :navigation? (.-isNavigation e)})))
+                      (fn [e]
+                        (callback {:token (.-token e)
+                                   :type (.-type e)
+                                   :navigation? (.-isNavigation e)}))))
       (.setUseFragment h false)
       (.setEnabled h true)
       h)))
