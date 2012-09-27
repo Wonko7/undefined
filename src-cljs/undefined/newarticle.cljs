@@ -20,6 +20,6 @@
                                                       (em/from (em/select [".cbx_cat"]) (em/get-prop :value))
                                                       (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))]
                                      (fm/letrem [res (insert_article_rem title body tags authors categories)] 
-                                         (page-click "newarticle" nil)))))))
+                                       (page-click "newarticle" nil)))))))
 
 (add-page-init! "newarticle" newarticlepage)
