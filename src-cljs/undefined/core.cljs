@@ -12,7 +12,7 @@
       (page-click "news" nil)
       (init-page))))
 
-(defn p404 [& [args]]
+(defn p404 [& [args]] ;; FIXME; (add-future-page-action! js/clearTimeout (js/setTimeout #(page-click "news" nil) 3000)) [f & args] then apply.
   (add-future-page-action! :timeout (js/setTimeout #(page-click "news" nil) 3000)))
 
 (add-page-init! "404" p404)
