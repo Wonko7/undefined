@@ -13,7 +13,7 @@
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
       [uid category title date article tags categories authors]
-      [:div.whole-article] (if true (html/set-attr :id (str "article_" uid)) (html/set-attr :id nil))
+      [:div.whole-article] (html/set-attr :id (str "article_" uid))
       [:.article-title :a] (html/do-> (html/content title)
                                  (html/set-attr :href (str (name category) "-article/" uid))
                                  (html/set-attr :data-href (str (name category) "-article"))
@@ -65,7 +65,7 @@
       [title content & [optional]]
       [:#title]   (html/content title)
       [:#content] (html/do-> (html/append content)
-                        (html/append (metadata (:metadata optional))))
+                             (html/append (metadata (:metadata optional))))
       [:#bottom]  (html/append (:bottom optional)))
 
 

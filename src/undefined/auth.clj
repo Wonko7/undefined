@@ -25,7 +25,7 @@
 
 (pre-route "/login" []
            (let [req       (ring-request)
-                 https-url (str "https://" (:server-name req) (str ":" (:ssl-port (get-config))) (:uri req)) ]
+                 https-url (str "https://" (:server-name req) (str ":" (:ssl-port (get-config))) (:uri req))]
              (when (= :http (:scheme req))
                (redirect https-url))))
 
