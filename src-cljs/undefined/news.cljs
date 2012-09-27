@@ -5,6 +5,7 @@
      [enfocus.macros :as em])
   (:use [undef.pages :only [add-page-init! page-click]]))
 
+
 (defn newspage [href & [args]]
   (em/at js/document
       [:.btn_del] (em/do->
@@ -21,20 +22,23 @@
                                                 sel    (keyword (str "#article_" uid))]
                                             (fm/letrem [div (get-page "news-update-article-div" uid)]
                                                 (em/at js/document
-                                                    [sel]   (em/html-content div)
+                                                    [sel]   (em/chain
+                                                                (em/resize :curwidth 0 200)
+                                                                (em/html-content div)
+                                                                (em/resize :curwidth 500 200))
                                                     [:form] (em/listen :submit
                                                                 (fn [e]
                                                                   (.preventDefault e)
                                                                   (let [article (em/from js/document
-                                                                                         :title     [sel :.inp_title] (em/get-prop :value)
-                                                                                         :body      [sel :.txt_body]  (em/get-prop :value)
-                                                                                         :tags      [sel :.inp_tags]  (em/get-prop :value)
-                                                                                         :auths-val [sel :.cbx_auth]  (em/get-prop :value)
-                                                                                         :auths-c?  [sel :.cbx_auth]  (em/get-prop :checked)
-                                                                                         :cats-val  [sel :.cbx_cat]   (em/get-prop :value)
-                                                                                         :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))
+                                                                                    :title     [sel :.inp_title] (em/get-prop :value)
+                                                                                    :body      [sel :.txt_body]  (em/get-prop :value)
+                                                                                    :tags      [sel :.inp_tags]  (em/get-prop :value)
+                                                                                    :auths-val [sel :.cbx_auth]  (em/get-prop :value)
+                                                                                    :auths-c?  [sel :.cbx_auth]  (em/get-prop :checked)
+                                                                                    :cats-val  [sel :.cbx_cat]   (em/get-prop :value)
+                                                                                    :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))
                                                                         one-c?  (partial some identity)]
-                                                                    (if (and (one-c? (:cats-c? article)) (one-c? (:auths-c? article)))
+                                                                    (if (and (one-c? (:cats-c? article)) (one-c? (:auths-c? article)));TODO test title/body
                                                                       (fm/letrem [res (update_article_rem uid
                                                                                                           (:title article)
                                                                                                           (:body article)
@@ -42,8 +46,13 @@
                                                                                                           (zipmap (:auths-val article) (:auths-c? article))
                                                                                                           (zipmap (:cats-val article) (:cats-c? article)))
                                                                                   div (get-page "news-refresh-article-div" uid)]
-                                                                        (em/at js/document [sel] (em/substitute div))
-                                                                        (newspage href args))
+                                                                          (em/at js/document
+                                                                              [sel] (em/chain
+                                                                                        (em/fade-out 200)
+                                                                                        (em/substitute div)
+                                                                                        (em/fade-in 200)))
+                                                                          (newspage href args))
                                                                       (js/alert "Check at least one author and category")))))))))))));FIXME only refresh the new buttons?
 
 (add-page-init! "news" newspage)
+(add-page-init! "blog" newspage)

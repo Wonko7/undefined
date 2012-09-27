@@ -185,7 +185,6 @@
     (doseq [x filtered_tags] (insert tags (values {:label x})))
     (doseq [x tag_array] (insert article_tags (values {:artid artid :tagid (Integer/parseInt (get_tagid x))})))))
 
-
 ;TODO transaction
 ;TODO beautify doseq
 (defn insert_article [title body tags authors categories]
