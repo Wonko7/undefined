@@ -1,13 +1,13 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page newarticle article base]]
-     [undefined.sql :only [select_articles select_article select_authors select_categories
-                           tags_by_article 
-                           categories_by_article
-                           authors_by_article]]
-     [undefined.misc :only [format-date get_labels]]
-     [undefined.content :only [remove-unsafe-tags str-to-int]]
-     [noir.fetch.remotes]))
+        [undefined.sql :only [select_articles select_article select_authors select_categories
+                              tags_by_article 
+                              categories_by_article
+                              authors_by_article]]
+        [undefined.misc :only [format-date get_labels]]
+        [undefined.content :only [remove-unsafe-tags str-to-int]]
+        [noir.fetch.remotes]))
 
 
 (defn blog-nav [link prev next]
@@ -16,10 +16,14 @@
    (when next
      {:tag :a :attrs {:href (str link "/" next) :data-href link :data-args next :style "float: right"} :content "Next"})])
 
+(defn mk-blog-cat-title [category]
+  (if (= :blog category)
+    "Undefined's Technical Blog"
+    "Undefined's Latest News"))
+
 (defn news-page [href article-id & [nb-articles]]
    (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
          single-art?      (= 1 nb-articles)
-         title            (if (= :blog category) "Undefined's Technical Blog" "Undefined's Latest News")
          nb-articles      (str-to-int nb-articles 10)
          article-id       (str-to-int article-id 0)
          [pv nx articles] (if single-art?
@@ -31,7 +35,7 @@
                                   pv (- article-id nb-articles)
                                   pv (if (neg? pv) 0 pv)]
                               [(when (> article-id 0) pv) nx arts]))]
-     (page title
+     (page (mk-blog-cat-title category)
            (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                           (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                           (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
