@@ -10,5 +10,6 @@
         products    (select_products)]
     (page title 
           (map #(product (:title %) (:link %) (:description %) (:screenshot %)) products))))
+;; FIXME remove-unsafe-tags here too on desc
 
 (add-page-init! "products" products-page)

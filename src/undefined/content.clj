@@ -11,7 +11,7 @@
     (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
-  (html/transform (as-tree article)
+  (html/transform (:content (first (as-tree article)))
                   [unsafe] (html/substitute "")))
 
 (defn str-to-int [s & [fallback]]
