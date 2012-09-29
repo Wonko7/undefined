@@ -9,7 +9,6 @@
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
 
-
 (defn blog-nav [link prev next]
   [(when prev
      {:tag :a :attrs {:href (str link "/" prev) :data-href link :data-args prev} :content "Previous"}) ;; FIXME: make something more generic
@@ -22,29 +21,30 @@
     "Undefined's Latest News"))
 
 (defn news-page [href article-id & [nb-articles]]
-   (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
-         single-art?      (= 1 nb-articles)
-         nb-articles      (str-to-int nb-articles 10)
-         article-id       (str-to-int article-id 0)
-         [pv nx articles] (if single-art?
-                            [nil nil (select_article article-id)]
-                            (let [arts      (select_articles article-id (inc nb-articles) (if (= :blog category) "Technical" "Promotional"))
-                                  [arts nx] (if (> (count arts) nb-articles)
-                                              [(drop-last arts) (+ article-id nb-articles)]
-                                              [arts nil])
-                                  pv (- article-id nb-articles)
-                                  pv (if (neg? pv) 0 pv)]
-                              [(when (> article-id 0) pv) nx arts]))]
-     (page (mk-blog-cat-title category)
-           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
-                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
-                          (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
-                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
-                articles)
-           {:bottom (blog-nav href pv nx)
-            :metadata {:data-href "news"
-                       :data-args (name category)
-                       :data-init-page "news"}})))
+  (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
+        single-art?      (= 1 nb-articles)
+        nb-articles      (str-to-int nb-articles 10)
+        article-id       (str-to-int article-id 0)
+        [pv nx articles] (if single-art?
+                           [nil nil (select_article article-id)]
+                           (let [arts      (select_articles article-id (inc nb-articles) (if (= :blog category) "Technical" "Promotional"))
+                                 [arts nx] (if (> (count arts) nb-articles)
+                                             [(drop-last arts) (+ article-id nb-articles)]
+                                             [arts nil])
+                                 pv (- article-id nb-articles)
+                                 pv (if (neg? pv) 0 pv)]
+                             [(when (> article-id 0) pv) nx arts]))]
+    (page (mk-blog-cat-title category)
+          (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
+                         (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
+                         (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
+                         (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
+               articles)
+          {:bottom (blog-nav href pv nx)
+           :metadata {:data-href "news"
+                      :data-args (name category)
+                      :data-init-page "news"}})))
+
 
 ;FIXME add categories and authors
 ;FIXME use news/blog correctly

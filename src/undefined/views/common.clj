@@ -1,7 +1,8 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
         [undefined.auth :only [is-admin?]]
-        [noir.core :only [defpage]])
+        [noir.core :only [defpage]]
+        [undefined.misc :only [options_list]])
   (:require [net.cgrand.enlive-html :as html]))
 
 
@@ -37,20 +38,13 @@
 (html/defsnippet login "templates/login.html" [:form]
   [])
 
-(defn magic [x c k sel_x]
- (reduce str (map #(str "<input type=\"checkbox\" class=\"" c "\" value=\"" (:uid %) "\""
-                     (if (some (fn [y] (= (k %) (k y))) sel_x)
-                       "checked=\"CHECKED\"")
-                     ">" (k %) "</input><br/>")
-                 x)))
-
 (html/defsnippet newarticle "templates/new_article.html" [:form.newarticle]
   [authors categories title body tags uid sel_auths sel_cats]
   [:.inp_title]       (html/set-attr :value title)
   [:.txt_body]        (html/content body)
   [:.inp_tags]        (html/set-attr :value tags)
-  [:.cbx_authors]     (html/html-content (magic authors "cbx_auth" :name sel_auths))
-  [:.cbx_categories]  (html/html-content (magic categories "cbx_cat" :label sel_cats)) 
+  [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :name sel_auths))
+  [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats)) 
   [:.btn_add_article] (html/set-attr :value uid)
   [:.btn_rst]         (html/set-attr :value uid))
 
