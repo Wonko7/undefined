@@ -32,4 +32,4 @@ INSERT INTO roles (label) VALUES ('Peon'), ('Admin'), ('Contributor');
 
 INSERT INTO author_roles VALUES (1, 2), (1, 3), (2, 2), (2, 1);
 
-GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, products, roles, author_roles, tags_uid_seq TO web;
+GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, products, roles, author_roles, tags_uid_seq, articles_uid_seq TO web;

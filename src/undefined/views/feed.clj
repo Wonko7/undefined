@@ -12,7 +12,7 @@
 ;; FIXME: needs at least authors, maybe tags.
 ;; include css?
 (defn gen-feeds [category]
-  (let [[latest & as :as articles] (select_articles 0 100 (if (= :blog category) "Technical" "Promotional"))
+  (let [[latest & as :as articles] (select_articles 0 100 (name category))
         mk-link #(str url "/" (name category) "-article/" %)]
    (atom-feed (mk-blog-cat-title category)
               url
