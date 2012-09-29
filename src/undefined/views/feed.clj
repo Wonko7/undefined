@@ -7,11 +7,11 @@
         [noir.core :only [defpage]])
   (:require [net.cgrand.enlive-html :as html]))
 
-(def url "http://localhost:8000")
+(def url "http://localhost:8000") ;; get-config? FIXME
 
 ;; FIXME: needs at least authors, maybe tags.
 ;; include css?
-(defn gen-feeds [category]
+(defn gen-feed [category]
   (let [[latest & as :as articles] (select_articles 0 100 (name category))
         mk-link #(str url "/" (name category) "-article/" %)]
    (atom-feed (mk-blog-cat-title category)
@@ -29,7 +29,7 @@
           ["</feed>"]))
 
 (defpage "/news-feed" []
-    (xmlns-workaround (gen-feeds :news)))
+    (xmlns-workaround (gen-feed :news)))
 
 (defpage "/blog-feed" []
-    (xmlns-workaround (gen-feeds :blog)))
+    (xmlns-workaround (gen-feed :blog)))
