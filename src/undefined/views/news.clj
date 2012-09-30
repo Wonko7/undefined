@@ -9,7 +9,6 @@
      [undefined.content :only [remove-unsafe-tags str-to-int]]
      [noir.fetch.remotes]))
 
-(println (str "Admin: " (undefined.auth/is-admin?)))
 (defn blog-nav [link prev next]
   [(when prev
      {:tag :a :attrs {:href (str link "/" prev) :data-href link :data-args prev} :content "Previous"}) ;; FIXME: make something more generic
@@ -42,7 +41,6 @@
                       :data-args (name category)
                       :data-init-page "news"}})))
 
-;FIXME add categories and authors
 ;FIXME use news/blog correctly
 (defn update-article-div [href uid]
   (let [article (first (select_article uid))]
