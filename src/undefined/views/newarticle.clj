@@ -6,8 +6,8 @@
      [noir.fetch.remotes]
      [noir.core :only [defpage pre-route]]))
 
-(defn new-article-page [name id]
-  (if (is-admin?)
+(defn new-article-page [user-id name id]
+  (if (is-admin? user-id)
     (page "Add a new post" 
           (newarticle (select_authors) (select_categories) nil nil nil nil nil nil) ;TODO auto select current user with auth?
           {:metadata {:data-init-page "newarticle"}})

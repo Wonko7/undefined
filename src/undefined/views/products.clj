@@ -5,7 +5,7 @@
      [undefined.sql :only [select_products]]
      [noir.fetch.remotes]))
 
-(defn products-page [name product-id]
+(defn products-page [user-id name product-id]
   (let [title       "Undefined's Products"
         products    (select_products)]
     (page title 

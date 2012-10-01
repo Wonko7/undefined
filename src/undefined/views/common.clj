@@ -3,7 +3,8 @@
         [undefined.auth :only [is-admin?]]
         [noir.core :only [defpage]]
         [undefined.misc :only [options_list]])
-  (:require [net.cgrand.enlive-html :as html]))
+  (:require [net.cgrand.enlive-html :as html]
+            [noir.session :as session]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -11,7 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-  [uid category title date article tags authors]
+  [uid category title date article tags authors is-admin?]
   [:div.whole-article] (html/set-attr :id (str "article_" uid))
   [:.article-title :a] (html/do-> (html/content title)
                                   (html/set-attr :href (str (name category) "-article/" uid))
@@ -21,7 +22,7 @@
   [:.article]          (html/append article)
   [:.tags]             (html/content tags)
   [:.authors]          (html/content authors)
-  [:.admin]            (html/append (if (is-admin?)
+  [:.admin]            (html/append (if is-admin?
                                       [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
 
@@ -105,7 +106,7 @@
 
 (defremote get-page [href & [args]]
   (apply str (html/emit* (if-let [f (page-inits href)]
-                           (f href args)
+                           (f (session/get :id) href args)
                            page-404))))
 
 ;; WARNING: not thread safe.
@@ -117,6 +118,6 @@
      (register-page-init! ~name ~fun)
      ~(if arg
         `(defpage ~(str "/" name "/:" arg ) {:keys [~(symbol arg)]}
-           (base (~fun ~name ~(symbol arg))))
+           (base (~fun (session/get :id) ~name ~(symbol arg))))
         `(defpage ~(str "/" name) []
-           (base (~fun ~name nil))))))
+           (base (~fun (session/get :id) ~name nil))))))

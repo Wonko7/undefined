@@ -3,6 +3,7 @@
   (:use [undefined.config :only [set-config!]]
         [undefined.sql :only [init-db-connection]])
   (:require [noir.server :as server]
+            [noir.session :as session]
             [noir.fetch.remotes :as remotes]
             [cemerick.friend :as friend]
             (cemerick.friend [workflows :as workflows]
@@ -26,10 +27,11 @@
                      :roles #{::user}}})
 
 (defn fetch-workflow [request]
-  (if (= "/_fetch" (:uri request))
+  (session/put! :id (friend/identity request))
+  (when (= "/_fetch" (:uri request))
     (let [{:keys [remote params]} (:params request)
-          [{:keys [user pass]}] (remotes/safe-read params)]
-      (if (= remote "auth-login")
+          [{:keys [user pass]}]   (remotes/safe-read params)]
+      (when (= remote "auth-login")
         (if-let [user-record ((:credential-fn  (::friend/auth-config request))
                               ^{::friend/workflow :fetch-workflow}
                               {:username user :password pass})]
@@ -50,7 +52,9 @@
   (fn [request]
     (if (and (= "/_fetch" (:uri request))
              (= "auth-logout" (:remote (:params request))))
-      ((friend/logout handler) request)
+      (do
+        (session/put! :id nil)
+        ((friend/logout handler) request))
       (handler request))))
 
 (server/add-middleware fetch-logout)
