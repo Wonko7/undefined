@@ -14,10 +14,12 @@
 
 (defremote get-user []
   (let [{:keys [username roles]} (friend/current-authentication)]
+    (println "get " roles username)
     [username roles]))
 
 (defremote auth-login [auth]
   (let [{:keys [username roles]} (friend/current-authentication)]
+    (println "login " roles username)
     (friend/authorize #{:undefined.server/admin :undefined.server/user}
                       [username roles])))
 
@@ -34,5 +36,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn is-admin? []
-  (friend/authorized? #{:undefined.server/admin}
-                      friend/*identity*))
+  (let [{:keys [roles]} (friend/current-authentication)]
+    (println "is " roles)
+    (:undefined.server/admin roles)))
