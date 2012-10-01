@@ -38,3 +38,6 @@
 (defn is-admin? [id]
   (let [{:keys [roles]} (friend/current-authentication id)]
     (:undefined.server/admin roles)))
+
+(defn username [id]
+  (:username (friend/current-authentication id)))

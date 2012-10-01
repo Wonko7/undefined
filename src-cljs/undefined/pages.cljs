@@ -1,12 +1,12 @@
 (ns undef.pages
   (:use [undef.init :only [add-init!]]
+        [undef.misc :only [show-admin-stuff]]
         [clojure.string :only [split]])
   (:require [fetch.remotes :as remotes]
             [undef.history :as hist]
             [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
                    [enfocus.macros :as em]))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page inits:
@@ -22,7 +22,9 @@
                       :init [:#metadata] (em/get-attr :data-init-page)
                       :args [:#metadata] (em/get-attr :data-init-args))]
     (when (:init data)
-      (if-let [f ((:init data) page-inits)] (f (:args data))))))
+      (if-let [f ((:init data) page-inits)]
+        (f (:args data))))
+    (show-admin-stuff)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
