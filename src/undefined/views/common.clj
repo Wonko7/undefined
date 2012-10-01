@@ -11,7 +11,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-  [uid category title date article tags categories authors]
+  [uid category title date article tags authors]
   [:div.whole-article] (html/set-attr :id (str "article_" uid))
   [:.article-title :a] (html/do-> (html/content title)
                                   (html/set-attr :href (str (name category) "-article/" uid))
@@ -20,7 +20,6 @@
   [:.article-date]     (html/content date)
   [:.article]          (html/append article)
   [:.tags]             (html/content tags)
-  [:.categories]       (html/content categories)
   [:.authors]          (html/content authors)
   [:.admin]            (html/append (if (is-admin?)
                                       [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}

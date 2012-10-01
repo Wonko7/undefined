@@ -37,7 +37,6 @@
     (page (mk-blog-cat-title category)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
-                         (str "Categories: " (get_labels (categories_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name)))
                articles)
           {:bottom (blog-nav href pv nx)
@@ -59,7 +58,6 @@
         art      (first (select_article uid))]
     (article (:uid art) category (:title art) (format-date (:birth art)) (remove-unsafe-tags (:body art))
              (str "Tags: " (get_labels (tags_by_article (:uid art)) :label))
-             (str "Categories: " (get_labels (categories_by_article (:uid art)) :label))
              (str "Authors: " (get_labels (authors_by_article (:uid art)) :name)))))
 
 (add-page-init! "news-update-article-div" update-article-div)
