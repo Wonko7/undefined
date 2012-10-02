@@ -27,8 +27,10 @@
                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
-  [title link article sc]
-  [:.article-title :a]   (html/do-> (html/content title) (html/set-attr :href link))
+  [title link article sc restrictions] ;; FIXME this is probably temporary. we need more usecases on restrictions to realise.
+  [:.article-title :a]   (html/do-> (html/content title)
+                                    (html/set-attr :href link)
+                                    (html/set-attr :data-pre-exec restrictions))
   [:.product-desc]       (html/content article)
   [:.product-screenshot] (html/content sc))
 

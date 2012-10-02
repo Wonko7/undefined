@@ -19,7 +19,7 @@
                         :source-path "src-cljs"
                         :compiler {
                                    :output-to "resources/public/js/main.js"
-                                   ;:optimizations :advanced
+                                   :optimizations :advanced
                                    ;:externs ["web/js-static/jquery-min.js"]
                                    :pretty-print true}}]}
   :profiles {:srv-test {:dependencies [[postgresql "8.4-702.jdbc4"]]}

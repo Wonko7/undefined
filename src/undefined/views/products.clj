@@ -9,7 +9,8 @@
   (let [title       "Undefined's Products"
         products    (select_products)]
     (page title 
-          (map #(product (:title %) (:link %) (:description %) (:screenshot %)) products))))
-;; FIXME remove-unsafe-tags here too on desc
+          (map #(product (:title %) (:link %) (remove-unsafe-tags (:description %)) (:screenshot %) (when (re-find #"Budget" (:title %)) "restrict-webkit-only"))
+               products))))
+;; FIXME restrictions are hardcoded until we decide how to use platforms in db.
 
 (add-page-init! "products" products-page)

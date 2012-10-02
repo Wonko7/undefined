@@ -14,9 +14,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def page-inits {})
+(def pre-link-inits {})
 
 (defn add-page-init! [name func]
   (def page-inits (into page-inits {name func})))
+
+(defn add-pre-link-init! [name func]
+  (def pre-link-inits (into pre-link-inits {name func})))
 
 (defn init-page []
   (let [data (em/from js/document
@@ -26,6 +30,9 @@
       (if-let [f ((:init data) page-inits)]
         (f (:args data))))
     (show-admin-stuff)))
+
+(defn get-pre-link [name]
+  (pre-link-inits name))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -96,7 +103,10 @@
    (let [a    (.-currentTarget e)
          href (em/from a (em/get-attr :data-href))
          ext  (em/from a (em/get-attr :data-ext))
-         args (em/from a (em/get-attr :data-args))]
+         args (em/from a (em/get-attr :data-args))
+         pre  (em/from a (em/get-attr :data-pre-exec))]
+     (when-let [f (get-pre-link pre)]
+       (f e (em/from a (em/get-attr :data-pre-args))))
      (when (not= ext "true")
        (.preventDefault e)
        (page-click href args))))
