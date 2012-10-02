@@ -23,20 +23,15 @@
                                                  sel    (keyword (str "#article_" uid))]
                                              (fm/letrem [div (get-page "news-update-article-div" uid)]
                                                (em/at js/document
-                                                      [sel]  ; #(let [node %
-                                                             ;        size (style/getContentBoxSize node)
-                                                             ;        ]
-                                                             ;    (js/console.log size)
-                                                             ;    (
-                                                                  (em/chain
-                                                                    (em/resize :curwidth 0 200)
-                                                                    (em/html-content div)
-                                                                    #(let [ sz (em/from js/document
-                                                                                       :height [sel :form] (fn [& node]
-                                                                                                             (goog.style/getContentBoxSize node)
-                                                                                                             ))]
-                                                                       ;(js/console.log (str sz) (:height (.-height sz)))
-                                                                       ((em/resize :curwidth 500 200) %1 %2)))
+                                                      [sel]  (em/chain
+                                                               (em/resize :curwidth 0 200)
+                                                               (em/html-content div)
+                                                               #(let [ sz (em/from js/document
+                                                                                   :height [sel :form] (fn [node]
+                                                                                                         (goog.style/getContentBoxSize node)
+                                                                                                         ))]
+                                                                  ;(js/console.log (str sz) (:height (.-height sz)))
+                                                                  ((em/resize :curwidth 500 200) %1 %2)))
                                                       [:form] (em/listen :submit
                                                                          (fn [e]
                                                                            (.preventDefault e)
