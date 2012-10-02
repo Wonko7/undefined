@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS article_categories, article_tags, article_authors, author_roles, articles, categories, tags, authors, products, roles;
-CREATE TABLE articles (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NOT NULL, birth TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE articles (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NOT NULL, birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP);
 
 CREATE TABLE categories (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 CREATE TABLE tags (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);

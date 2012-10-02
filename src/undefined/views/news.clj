@@ -43,9 +43,7 @@
                          admin?)
                articles)
           {:bottom (blog-nav href pv nx)
-           :metadata {:data-href "news"
-                      :data-args (name category)
-                      :data-init-page "news"}})))
+           :metadata {:data-init-page "news"}})))
 
 
 ;FIXME add categories and authors
