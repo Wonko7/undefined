@@ -1,10 +1,10 @@
 (ns undef.news
   (:require [fetch.remotes :as remotes]
-            [enfocus.core :as ef]
-            [goog.style :as style])
+            [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
                    [enfocus.macros :as em])
-  (:use [undef.pages :only [add-page-init! page-click]]))
+  (:use [undef.pages :only [add-page-init! page-click]]
+        [undef.misc :only [restore-height]]))
 
 
 (defn newspage [href & [args]]
@@ -26,17 +26,7 @@
                                                       [sel]  (em/chain
                                                                (em/resize :curwidth 0 200)
                                                                (em/html-content div)
-                                                               #(let [h (:size (em/from js/document
-                                                                                        :size [sel :form] (fn [node]
-                                                                                                            (let [padd ((ef/extr-multi-node style/getMarginBox) node)
-                                                                                                                  marg ((ef/extr-multi-node style/getPaddingBox) node)
-                                                                                                                  bord ((ef/extr-multi-node style/getBorderBox) node)
-                                                                                                                  size ((ef/extr-multi-node style/getSize) node)]
-                                                                                                              (+ (.-top padd) (.-bottom padd) (.-top marg) (.-bottom marg) (.-top bord) (.-bottom bord) (.-height size))) 
-                                                                                                            )))]
-                                                                  ;(js/console.log (str sz) (:height (.-height sz)))
-                                                                  (js/console.log h )
-                                                                  (apply (em/resize :curwidth h 200) %&)))
+                                                               (restore-height 200))
                                                       [:form] (em/listen :submit
                                                                          (fn [e]
                                                                            (.preventDefault e)
