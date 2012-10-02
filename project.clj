@@ -11,16 +11,15 @@
                  [fetch "0.1.0-alpha2"]
                  ;; cljs:
                  [enfocus "1.0.0-alpha3"]
-                 ;; tests:
+                 ;; tests: FIXME can we specify dependencies for tests only? what does :scope do?
                  [clj-webdriver "0.6.0-alpha11"]]
   :plugins [[lein-cljsbuild "0.2.6"]]
   :cljsbuild {
               :builds [{
                         :source-path "src-cljs"
-                        :compiler {
-                                   :output-to "resources/public/js/main.js"
+                        :compiler {:output-to "resources/public/js/main.js"
                                    :optimizations :advanced
-                                   ;:externs ["web/js-static/jquery-min.js"]
+                                   ;:externs ["lol.js"]
                                    :pretty-print true}}]}
   :profiles {:srv-test {:dependencies [[postgresql "8.4-702.jdbc4"]]}
              :srv-prod {:dependencies [[postgresql "8.4-702.jdbc4"]]} ;; FIXME; adapt port settings
