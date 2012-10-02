@@ -1,6 +1,7 @@
 (ns undef.news
   (:require [fetch.remotes :as remotes]
-            [enfocus.core :as ef])
+            [enfocus.core :as ef]
+            [goog.style :as style])
   (:require-macros [fetch.macros :as fm]
                    [enfocus.macros :as em])
   (:use [undef.pages :only [add-page-init! page-click]]))
@@ -22,10 +23,20 @@
                                                  sel    (keyword (str "#article_" uid))]
                                              (fm/letrem [div (get-page "news-update-article-div" uid)]
                                                (em/at js/document
-                                                      [sel]   (em/chain
-                                                                (em/resize :curwidth 0 200)
-                                                                (em/html-content div)
-                                                                (em/resize :curwidth 500 200))
+                                                      [sel]  ; #(let [node %
+                                                             ;        size (style/getContentBoxSize node)
+                                                             ;        ]
+                                                             ;    (js/console.log size)
+                                                             ;    (
+                                                                  (em/chain
+                                                                    (em/resize :curwidth 0 200)
+                                                                    (em/html-content div)
+                                                                    #(let [ sz (em/from js/document
+                                                                                       :height [sel :form] (fn [& node]
+                                                                                                             (goog.style/getContentBoxSize node)
+                                                                                                             ))]
+                                                                       ;(js/console.log (str sz) (:height (.-height sz)))
+                                                                       ((em/resize :curwidth 500 200) %1 %2)))
                                                       [:form] (em/listen :submit
                                                                          (fn [e]
                                                                            (.preventDefault e)
@@ -38,7 +49,7 @@
                                                                                                   :cats-val  [sel :.cbx_cat]   (em/get-prop :value)
                                                                                                   :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))
                                                                                  one-c?  (partial some identity)]
-                                                                             (if (and (one-c? (:cats-c? article)) (one-c? (:auths-c? article)));TODO test title/body
+                                                                             (if (and false (one-c? (:cats-c? article)) (one-c? (:auths-c? article)));TODO test title/body
                                                                                (fm/letrem [res (update_article_rem uid
                                                                                                                    (:title article)
                                                                                                                    (:body article)
@@ -52,7 +63,9 @@
                                                                                                 (em/substitute div)
                                                                                                 (em/fade-in 200)))
                                                                                  (newspage href args))
-                                                                               (js/alert "Check at least one author and category")))))))))))));FIXME only refresh the new buttons?
+                                                                               (js/console.log (str "auths: " (zipmap (:auths-val article) (:auths-c? article)) "cats: " (zipmap (:cats-val article) (:cats-c? article))) )
+                                                                               ;(js/alert "Check at least one author and category")
+                                                                               ))))))))))));FIXME only refresh the new buttons?
 
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)
