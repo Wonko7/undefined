@@ -26,12 +26,17 @@
                                                       [sel]  (em/chain
                                                                (em/resize :curwidth 0 200)
                                                                (em/html-content div)
-                                                               #(let [ sz (em/from js/document
-                                                                                   :height [sel :form] (fn [node]
-                                                                                                         (goog.style/getContentBoxSize node)
-                                                                                                         ))]
+                                                               #(let [h (:size (em/from js/document
+                                                                                        :size [sel :form] (fn [node]
+                                                                                                            (let [padd ((ef/extr-multi-node style/getMarginBox) node)
+                                                                                                                  marg ((ef/extr-multi-node style/getPaddingBox) node)
+                                                                                                                  bord ((ef/extr-multi-node style/getBorderBox) node)
+                                                                                                                  size ((ef/extr-multi-node style/getSize) node)]
+                                                                                                              (+ (.-top padd) (.-bottom padd) (.-top marg) (.-bottom marg) (.-top bord) (.-bottom bord) (.-height size))) 
+                                                                                                            )))]
                                                                   ;(js/console.log (str sz) (:height (.-height sz)))
-                                                                  ((em/resize :curwidth 500 200) %1 %2)))
+                                                                  (js/console.log h )
+                                                                  (apply (em/resize :curwidth h 200) %&)))
                                                       [:form] (em/listen :submit
                                                                          (fn [e]
                                                                            (.preventDefault e)
