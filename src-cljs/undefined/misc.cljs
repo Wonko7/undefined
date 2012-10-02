@@ -26,6 +26,5 @@
                                                          (+ %1 (.-top padd) (.-bottom padd) (.-top marg) (.-bottom marg) (.-top bord) (.-bottom bord) (.-height size)))
                                                       0
                                                       (if (seq? children) children [children])))))]
-        ((em/chain
-           (em/resize :curwidth h speed)
-           (em/remove-style :height :width)) node)))))
+        ((em/chain (em/resize :curwidth h speed)
+                   (em/remove-style :height :width)) node)))))

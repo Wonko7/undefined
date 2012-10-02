@@ -29,13 +29,12 @@
                                                       (zipmap (:cats-val article) (:cats-c? article)))
                               div (get-page "news-refresh-article-div" uid)]
                     (em/at js/document
-                           [sel] (em/chain ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
-                                   (em/resize :curwidth 0 200)
-                                   (em/substitute div)
-                                   (ef/chainable-standard #(em/at %
-                                                                  [:.btn_del] (em/listen :click delete-button)
-                                                                  [:.btn_upd] (em/listen :click update-button)))
-                                   (restore-height 200))))
+                           [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
+                                           (em/substitute div)
+                                           (ef/chainable-standard #(em/at %
+                                                                          [:.btn_del] (em/listen :click delete-button)
+                                                                          [:.btn_upd] (em/listen :click update-button)))
+                                           (restore-height 200))))
                   (js/alert "Check at least one author and category")))))
 
           (delete-button [e]
@@ -49,14 +48,13 @@
                   sel    (keyword (str "#article_" uid))]
               (fm/letrem [div (get-page "news-update-article-div" uid)]
                 (em/at js/document
-                       [sel] (em/chain
-                               (em/resize :curwidth 0 200)
-                               (em/html-content div)
-                               (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit-article sel uid))))
-                               (restore-height 200))))))]
-      (em/at js/document
-             [:.btn_del] (em/listen :click delete-button)
-             [:.btn_upd] (em/listen :click update-button))))
+                       [sel] (em/chain (em/resize :curwidth 0 200)
+                                       (em/html-content div)
+                                       (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit-article sel uid))))
+                                       (restore-height 200))))))]
+    (em/at js/document
+      [:.btn_del] (em/listen :click delete-button)
+      [:.btn_upd] (em/listen :click update-button))))
 
 
 (add-page-init! "news" newspage)

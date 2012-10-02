@@ -109,11 +109,10 @@
        (.setToken history href)))
    (em/at js/document
           [:#page-wrapper] (em/before "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
-          [:#page] (em/chain
-                     (em/fade-out 100)
-                     #(load-page href args %1 %2)
-                     (em/fade-in 100)
-                     #(em/at js/document [:#loading] (em/remove-node)))))) ;; WARNING: this breaks em/chain
+          [:#page] (em/chain (em/fade-out 100)
+                             #(load-page href args %1 %2)
+                             (em/fade-in 100)
+                             #(em/at js/document [:#loading] (em/remove-node)))))) ;; WARNING: this breaks em/chain
 
 (add-init! #(em/at js/document
                    [:#nav :a] (em/listen :click page-click)))
