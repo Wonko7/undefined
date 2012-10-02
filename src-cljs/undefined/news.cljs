@@ -7,10 +7,10 @@
         [undef.misc :only [restore-height]]))
 
 
-(defn newspage [href & [article-sel]]
+(defn newspage [href & [args]]
   (letfn [(submit-article [sel uid]
             (fn [e]
-              (.preventDefault e) 
+              (.preventDefault e)
               (let [article (em/from js/document
                                      :title     [sel :.inp_title] (em/get-prop :value)
                                      :body      [sel :.txt_body]  (em/get-prop :value)
@@ -29,20 +29,20 @@
                                                       (zipmap (:cats-val article) (:cats-c? article)))
                               div (get-page "news-refresh-article-div" uid)]
                     (em/at js/document
-                           [sel] (em/chain
-                                   (em/fade-out 200)
+                           [sel] (em/chain ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
+                                   (em/resize :curwidth 0 200)
                                    (em/substitute div)
                                    (ef/chainable-standard #(em/at %
                                                                   [:.btn_del] (em/listen :click delete-button)
                                                                   [:.btn_upd] (em/listen :click update-button)))
-                                   (em/fade-in 200))))
+                                   (restore-height 200))))
                   (js/alert "Check at least one author and category")))))
 
           (delete-button [e]
             (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
               (when (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
                 (fm/letrem [res (delete_article_rem uid)]
-                  (em/at js/document [(str "#article_" uid)] (em/substitute "")))))) 
+                  (em/at js/document [(str "#article_" uid)] (em/substitute ""))))))
 
           (update-button [e]
             (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
@@ -54,12 +54,9 @@
                                (em/html-content div)
                                (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit-article sel uid))))
                                (restore-height 200))))))]
-    (if article-sel
-      (em/at js/document
-             [article-sel :.btn_upd] (em/listen :click update-button))  
       (em/at js/document
              [:.btn_del] (em/listen :click delete-button)
-             [:.btn_upd] (em/listen :click update-button)))))
+             [:.btn_upd] (em/listen :click update-button))))
 
 
 (add-page-init! "news" newspage)
