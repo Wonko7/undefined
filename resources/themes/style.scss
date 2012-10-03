@@ -57,6 +57,10 @@ $shadow-small: 5px;
 	@include box-shadow($shadow-col 4px 4px 20px);
 }
 
+.shadow-margin {
+	margin: 15px;
+}
+
 .text-shadow {
 	//@include single-text-shadow($base-lighter);
 	@include single-text-shadow($dark-grey);
@@ -166,26 +170,10 @@ body {
 }
 
 #page {
-	// horiz spacing:
-	//margin-left: 2%;
-	//margin-left: 2%;
-	//padding-left: 2%;
-	//margin-right: 2%;
-	//padding-right: 2%;
-	// vert spacing:
 	min-height: 50px;
 	margin-bottom: 2%;
-	//padding-top: 15px;
-	//padding-bottom: 5px;
-	// deco:
 	color: $dark-grey;
-	// stuff;
 	overflow: hidden;
-}
-
-// FIXME: will move to top
-.shadow-margin {
-	margin: 15px;
 }
 
 #title { 
@@ -193,12 +181,7 @@ body {
 	text-align: center;
 	font-size: 20px;
 	font-weight: bold;
-	//color: $base-contrast-dark;
 	color: $base-lighter;
-	//width: 100%;
-	//padding: 1%;
-	//padding-top: 2px;
-	//padding-bottom: 2px;
 	@extend .shadow-margin;
 	@extend .visible-border;
 	@extend .shadow-small;
@@ -227,16 +210,12 @@ a:hover {
 	@extend .rounded-small;
 	@extend .shadow-small;
 	@extend .shadow-margin;
-	//width: 98%;
-	//padding: 1%;
-	//margin-bottom: 10px;
-	//margin-top: 10px;
+	padding-bottom: 10px;
 	overflow: hidden;
 
 	button {
 		@extend .input-light; 
 		margin: 5px;
-		//padding: 5px;
 	}
 
 	hr {
@@ -271,8 +250,6 @@ a:hover {
 	}
 
 	.article {
-		//padding-top: 10px;
-		//padding-bottom: 10px;
 		@extend .shadow-margin;
 		margin-bottom: 10px;
 		margin-top: 10px;

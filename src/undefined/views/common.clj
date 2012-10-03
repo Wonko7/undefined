@@ -29,7 +29,7 @@
                                    (html/set-attr :href url)
                                    (html/set-attr :data-href (str (name category) "-article"))
                                    (html/set-attr :data-args (str uid)))
-  [:.social :.href-set] (html/set-attr :href url)
+  [:.social :.href-set] (html/set-attr :href url) ;; FIXME for now unused, g+ was slow.
   [:.article-date]      (html/content date)
   [:.article]           (html/append article)
   [:.tags]              (html/content tags)
