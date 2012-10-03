@@ -4,8 +4,10 @@
 	<link id="site-url" href="http://example.org/" />
 	<id></id>
 	<author>
-		<name>Wonko7</name>
 		<name>Landolphia</name>
+	</author>
+	<author>
+		<name>Wonko7</name>
 	</author>
 	<updated></updated>
 </feed>

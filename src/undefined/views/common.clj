@@ -58,7 +58,7 @@
   [:.txt_body]        (html/content body)
   [:.inp_tags]        (html/set-attr :value tags)
   [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :name sel_auths))
-  [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats)) 
+  [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats))
   [:.btn_add_article] (html/set-attr :value uid)
   [:.btn_rst]         (html/set-attr :value uid))
 
@@ -93,17 +93,25 @@
   [title link feed-link date content]
   [:title]         (html/content title)
   [:id]            (html/content link)
-  [:link#feed-url] (html/set-attr :href feed-link)
-  [:link#site-url] (html/set-attr :href link)
+  [:link#feed-url] (html/do-> (html/set-attr :href feed-link)
+                              (html/remove-attr :id))
+  [:link#site-url] (html/do-> (html/set-attr :href link)
+                              (html/remove-attr :id))
   [:updated]       (html/do-> (html/content date)
                               (html/after content)))
 
 (html/defsnippet atom-entry "templates/entry.xml" [:entry]
-  [title link date article]
+  [title link date article authors]
   [:title]         (html/content title)
   [:id]            (html/content link)
   [:link]          (html/set-attr :href link)
-  [:content]       (html/content article))
+  [:updated]       (html/content date)
+  [:content]       (html/do-> (html/content article)
+                              (html/after authors)))
+
+(html/defsnippet atom-authors "templates/entry.xml" [:author]
+  [name]
+  [:name] (html/content name))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
