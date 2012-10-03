@@ -10,6 +10,7 @@ $base-light: #393;
 $base-lighter: #2a2;
 $base-contrast-dark: #a22;
 $base-dark-bg: #8c7;
+$max-size: 1100px;
 
 $dark-grey: #555;
 $light-grey: #666;
@@ -114,9 +115,14 @@ body {
 	color: $base-dark;
 }
 
-#nav {
+#nav-wrapper {
 	@extend .visible-border-bottom;
 	width: 100%;
+}
+
+#nav {
+	margin: 0 auto;
+	max-width: $max-size;
 }
 
 #nav a, #nav a:visited {
@@ -127,7 +133,8 @@ body {
 	text-align: center;
 	text-decoration: none;
 	font-weight: bold;
-	margin-left: 20px; // FIXME
+	margin-left: 10px; // FIXME
+	margin-right: 10px; // FIXME
 }
 
 #nav a:hover {
@@ -143,7 +150,10 @@ body {
 	z-index: -1;
 }
 
-#page-wrapper-wrapper { max-width: 1100px;}
+#page-wrapper-wrapper {
+	max-width: $max-size;
+	margin: 0 auto;
+}
 
 #page-right-wrapper {
 	width: 29%;
@@ -229,6 +239,12 @@ a:hover {
 		//padding: 5px;
 	}
 
+	hr {
+		color: $base-light;
+		background-color: $base-light;
+		height: 3px;
+		width: 100%;
+	}
 	.article-title {
 		@extend .text-shadow;
 		@extend .shadow-margin;
@@ -240,9 +256,8 @@ a:hover {
 	}
 
 	.article-date, .tags, .categories, .authors {
-		//@extend .shadow-margin;
-		margin-left: 10px;
-		margin-right: 10px;
+		margin-left: 15px;
+		margin-right: 15px;
 
 		font-size: 13px;
 		color: $light-grey;
@@ -256,7 +271,7 @@ a:hover {
 
 	.article {
 		//padding-top: 10px;
-		padding-bottom: 10px;
+		//padding-bottom: 10px;
 		@extend .shadow-margin;
 		margin-bottom: 10px;
 		margin-top: 10px;
@@ -275,15 +290,11 @@ a:hover {
 		.bold { font-weight: bold; }
 		.it   { font-style: italic; }
 		.underline { text-decoration: underline; }
-		@extend .visible-border-bottom;
 	}
 
 	.social {
-		@extend .visible-border-top;
-		padding-top: 10px;
 		margin-top: 10px;
 		@extend .shadow-margin;
-		//padding-top: 10px;
 	}
 }
 

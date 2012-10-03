@@ -1,25 +1,25 @@
-/* line 34, ../../themes/style.scss */
+/* line 35, ../../themes/style.scss */
 .rounded-big {
   -webkit-border-radius: 15px 15px;
   -moz-border-radius: 15px / 15px;
   border-radius: 15px / 15px;
 }
 
-/* line 38, ../../themes/style.scss */
+/* line 39, ../../themes/style.scss */
 .rounded-small, .small-center-dialog, #login, .newarticle, #title, .whole-article {
   -webkit-border-radius: 5px 5px;
   -moz-border-radius: 5px / 5px;
   border-radius: 5px / 5px;
 }
 
-/* line 42, ../../themes/style.scss */
+/* line 43, ../../themes/style.scss */
 .rounded-smaller, .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button {
   -webkit-border-radius: 3px 3px;
   -moz-border-radius: 3px / 3px;
   border-radius: 3px / 3px;
 }
 
-/* line 46, ../../themes/style.scss */
+/* line 47, ../../themes/style.scss */
 .rounded-bottom {
   -moz-border-radius-bottomleft: 15px;
   -webkit-border-bottom-left-radius: 15px;
@@ -29,57 +29,57 @@
   border-bottom-right-radius: 15px;
 }
 
-/* line 51, ../../themes/style.scss */
+/* line 52, ../../themes/style.scss */
 .shadow-small, #title, .whole-article {
   -webkit-box-shadow: #444444 2px 2px 10px;
   -moz-box-shadow: #444444 2px 2px 10px;
   box-shadow: #444444 2px 2px 10px;
 }
 
-/* line 55, ../../themes/style.scss */
+/* line 56, ../../themes/style.scss */
 .shadow-big, .small-center-dialog, #login, .newarticle {
   -webkit-box-shadow: #444444 4px 4px 20px;
   -moz-box-shadow: #444444 4px 4px 20px;
   box-shadow: #444444 4px 4px 20px;
 }
 
-/* line 59, ../../themes/style.scss */
+/* line 60, ../../themes/style.scss */
 .text-shadow, #title, .whole-article .article-title {
   text-shadow: 0px 0px 1px #555555;
 }
 
-/* line 64, ../../themes/style.scss */
+/* line 65, ../../themes/style.scss */
 .padding-horiz, #nav a, #nav a:visited {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-/* line 69, ../../themes/style.scss */
+/* line 70, ../../themes/style.scss */
 .visible-border, .small-center-dialog, #login, .newarticle, .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button, #title, .whole-article {
   border: 2px solid #339933;
 }
 
-/* line 73, ../../themes/style.scss */
-.visible-border-top, .whole-article .social {
+/* line 74, ../../themes/style.scss */
+.visible-border-top {
   border-top: 2px solid #339933;
 }
 
-/* line 77, ../../themes/style.scss */
-.visible-border-bottom, #nav, .whole-article .article {
+/* line 78, ../../themes/style.scss */
+.visible-border-bottom, #nav-wrapper {
   border-bottom: 2px solid #339933;
 }
 
-/* line 81, ../../themes/style.scss */
+/* line 82, ../../themes/style.scss */
 .hidden {
   display: none;
 }
 
-/* line 85, ../../themes/style.scss */
+/* line 86, ../../themes/style.scss */
 .visible {
   display: inline;
 }
 
-/* line 89, ../../themes/style.scss */
+/* line 90, ../../themes/style.scss */
 .small-center-dialog, #login, .newarticle {
   margin: 50px auto;
   padding: 10px;
@@ -87,24 +87,30 @@
   border: 4px solid grey;
 }
 
-/* line 99, ../../themes/style.scss */
+/* line 100, ../../themes/style.scss */
 .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button {
   color: #22aa22;
   background-color: white;
   border-color: #666666;
 }
 
-/* line 113, ../../themes/style.scss */
+/* line 114, ../../themes/style.scss */
 body {
   color: #336633;
 }
 
-/* line 117, ../../themes/style.scss */
-#nav {
+/* line 118, ../../themes/style.scss */
+#nav-wrapper {
   width: 100%;
 }
 
-/* line 122, ../../themes/style.scss */
+/* line 123, ../../themes/style.scss */
+#nav {
+  margin: 0 auto;
+  max-width: 1100px;
+}
+
+/* line 128, ../../themes/style.scss */
 #nav a, #nav a:visited {
   padding: 3px;
   color: #339933;
@@ -112,15 +118,16 @@ body {
   text-align: center;
   text-decoration: none;
   font-weight: bold;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-/* line 133, ../../themes/style.scss */
+/* line 140, ../../themes/style.scss */
 #nav a:hover {
   color: #555555;
 }
 
-/* line 137, ../../themes/style.scss */
+/* line 144, ../../themes/style.scss */
 #loading {
   width: 100%;
   padding-top: 50px;
@@ -130,24 +137,25 @@ body {
   z-index: -1;
 }
 
-/* line 146, ../../themes/style.scss */
+/* line 153, ../../themes/style.scss */
 #page-wrapper-wrapper {
   max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* line 148, ../../themes/style.scss */
+/* line 158, ../../themes/style.scss */
 #page-right-wrapper {
   width: 29%;
   float: right;
 }
 
-/* line 153, ../../themes/style.scss */
+/* line 163, ../../themes/style.scss */
 #page-wrapper {
   width: 70%;
   float: left;
 }
 
-/* line 158, ../../themes/style.scss */
+/* line 168, ../../themes/style.scss */
 #page {
   min-height: 50px;
   margin-bottom: 2%;
@@ -155,12 +163,12 @@ body {
   overflow: hidden;
 }
 
-/* line 177, ../../themes/style.scss */
+/* line 187, ../../themes/style.scss */
 .shadow-margin, #title, .whole-article, .whole-article .article-title, .whole-article .article, .whole-article .social {
   margin: 15px;
 }
 
-/* line 181, ../../themes/style.scss */
+/* line 191, ../../themes/style.scss */
 #title {
   text-align: center;
   font-size: 20px;
@@ -168,27 +176,34 @@ body {
   color: #22aa22;
 }
 
-/* line 199, ../../themes/style.scss */
+/* line 209, ../../themes/style.scss */
 a, a:visited {
   color: #339933;
   font-weight: bold;
   text-decoration: none;
 }
 
-/* line 205, ../../themes/style.scss */
+/* line 215, ../../themes/style.scss */
 a:hover {
   color: #555555;
 }
 
-/* line 215, ../../themes/style.scss */
+/* line 225, ../../themes/style.scss */
 .whole-article {
   overflow: hidden;
 }
-/* line 226, ../../themes/style.scss */
+/* line 236, ../../themes/style.scss */
 .whole-article button {
   margin: 5px;
 }
-/* line 232, ../../themes/style.scss */
+/* line 242, ../../themes/style.scss */
+.whole-article hr {
+  color: #339933;
+  background-color: #339933;
+  height: 3px;
+  width: 100%;
+}
+/* line 248, ../../themes/style.scss */
 .whole-article .article-title {
   text-align: center;
   font-size: 18px;
@@ -196,21 +211,20 @@ a:hover {
   color: #22aa22;
   margin-top: 5px;
 }
-/* line 242, ../../themes/style.scss */
+/* line 258, ../../themes/style.scss */
 .whole-article .article-date, .whole-article .tags, .whole-article .categories, .whole-article .authors {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 15px;
+  margin-right: 15px;
   font-size: 13px;
   color: #666666;
 }
-/* line 257, ../../themes/style.scss */
+/* line 272, ../../themes/style.scss */
 .whole-article .article {
-  padding-bottom: 10px;
   margin-bottom: 10px;
   margin-top: 10px;
   text-align: justify;
 }
-/* line 265, ../../themes/style.scss */
+/* line 280, ../../themes/style.scss */
 .whole-article .article .code {
   font-family: 'Courier New', monospace;
   white-space: pre-wrap;
@@ -220,90 +234,89 @@ a:hover {
   padding: 1%;
   background: #dddddd;
 }
-/* line 275, ../../themes/style.scss */
+/* line 290, ../../themes/style.scss */
 .whole-article .article .bold {
   font-weight: bold;
 }
-/* line 276, ../../themes/style.scss */
+/* line 291, ../../themes/style.scss */
 .whole-article .article .it {
   font-style: italic;
 }
-/* line 277, ../../themes/style.scss */
+/* line 292, ../../themes/style.scss */
 .whole-article .article .underline {
   text-decoration: underline;
 }
-/* line 281, ../../themes/style.scss */
+/* line 295, ../../themes/style.scss */
 .whole-article .social {
-  padding-top: 10px;
   margin-top: 10px;
 }
 
-/* line 296, ../../themes/style.scss */
+/* line 307, ../../themes/style.scss */
 .product-desc {
   width: 60%;
   float: right;
   text-align: justify;
 }
 
-/* line 302, ../../themes/style.scss */
+/* line 313, ../../themes/style.scss */
 .product-screenshot {
   width: 40%;
   float: left;
 }
 
-/* line 314, ../../themes/style.scss */
+/* line 325, ../../themes/style.scss */
 #login input[type=text], #login input[type=password] {
   margin-top: 10px;
   width: 150px;
   font-weight: bold;
 }
-/* line 321, ../../themes/style.scss */
+/* line 332, ../../themes/style.scss */
 #login input[type=submit] {
   margin-left: 220px;
   margin-top: 20px;
   font-weight: bold;
 }
-/* line 328, ../../themes/style.scss */
+/* line 339, ../../themes/style.scss */
 #login input[type=text], #login input[type=password], #login label {
   display: inline-block;
 }
-/* line 329, ../../themes/style.scss */
+/* line 340, ../../themes/style.scss */
 #login label {
   width: 100px;
 }
 
-/* line 340, ../../themes/style.scss */
+/* line 351, ../../themes/style.scss */
 .newarticle {
   width: 80%;
   overflow: hidden;
 }
-/* line 341, ../../themes/style.scss */
+/* line 352, ../../themes/style.scss */
 .newarticle .inp_title {
   font-weight: bold;
 }
-/* line 342, ../../themes/style.scss */
+/* line 353, ../../themes/style.scss */
 .newarticle .inp_tags {
   font-style: italic;
 }
-/* line 346, ../../themes/style.scss */
+/* line 357, ../../themes/style.scss */
 .newarticle fieldset {
   margin-top: 10px;
 }
-/* line 347, ../../themes/style.scss */
+/* line 358, ../../themes/style.scss */
 .newarticle button {
   margin-top: 20px;
   float: right;
 }
-/* line 349, ../../themes/style.scss */
+/* line 360, ../../themes/style.scss */
 .newarticle input, .newarticle textarea, .newarticle button {
   padding: 5px;
   margin: 5px;
 }
-/* line 355, ../../themes/style.scss */
+/* line 366, ../../themes/style.scss */
 .newarticle textarea {
   height: 300px;
 }
-/* line 356, ../../themes/style.scss */
+/* line 367, ../../themes/style.scss */
 .newarticle input[type=text], .newarticle textarea {
   width: 90%;
   margin-left: 5%;
