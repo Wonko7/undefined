@@ -151,13 +151,13 @@
           (join authors)
           (where {:artid id})))
 
-(defn get_user [current-id & {:keys [id name] :or {id nil name nil}}]
-  (if (is-admin? current-id)
-    (let [col (if (nil? name) :uid :name)
-          val (if (nil? name) id name)]
-      (select authors
-              (fields :name :hash :salt)
-              (where {col val})))))
+(defn get_user [{:keys [id name] :or {id nil name nil}}]
+  (let [[col val] (if (nil? name)
+                    [:uid id]
+                    [:name name])]
+    (select authors
+            (fields :name :hash :salt)
+            (where {col val}))))
 
 (defn select_products [] (select products))
 
