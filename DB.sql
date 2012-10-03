@@ -19,7 +19,7 @@ INSERT INTO articles (title, body) VALUES ('First title', 'Lorem ipsum dolor sit
 
 INSERT INTO tags (label) VALUES ('Sex'),('Drugs'),('Butterflies'),('Keyboards');
 INSERT INTO categories (label) VALUES ('blog'), ('news');
-INSERT INTO authors (name, hash, salt) VALUES ('Landolphia', 'tempnull', 'tempnull'), ('Wonko7', 'tempnull', 'tempnull');
+INSERT INTO authors (name, hash, salt) VALUES ('Landolphia', 'tempnull', 'tempnull'), ('Wonko', 'tempnull', 'tempnull');
 
 INSERT INTO article_tags VALUES (1, 1), (1, 4), (2, 2), (2, 1), (2, 4), (3, 3);
 INSERT INTO article_categories VALUES (1, 2), (2, 1), (2, 2), (3, 1), (4, 1), (4, 2);
