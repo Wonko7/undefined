@@ -46,7 +46,6 @@
            :metadata {:data-init-page "news"}})))
 
 
-;FIXME add categories and authors
 ;FIXME use news/blog correctly
 (defn update-article-div [user-id href uid]
   (let [article (first (select_article uid))]
