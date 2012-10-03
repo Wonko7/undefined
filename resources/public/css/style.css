@@ -44,7 +44,7 @@
 }
 
 /* line 60, ../../themes/style.scss */
-.shadow-margin, #title, .whole-article, .whole-article .article-title, .whole-article .article, .whole-article .social {
+.shadow-margin, #title, .whole-article, .whole-article .article-title, .whole-article .article, .whole-article .social, .product {
   margin: 15px;
 }
 
@@ -253,72 +253,75 @@ a:hover {
   margin-top: 10px;
 }
 
-/* line 285, ../../themes/style.scss */
-.product-desc {
-  width: 60%;
-  float: right;
+/* line 284, ../../themes/style.scss */
+.product {
   text-align: justify;
 }
-
-/* line 291, ../../themes/style.scss */
-.product-screenshot {
-  width: 40%;
+/* line 288, ../../themes/style.scss */
+.product .product-screenshot {
+  max-width: 50%;
   float: left;
+  margin-right: 15px;
+  margin-bottom: 15px;
+}
+/* line 289, ../../themes/style.scss */
+.product .product-screenshot img {
+  max-width: 100%;
 }
 
-/* line 303, ../../themes/style.scss */
+/* line 305, ../../themes/style.scss */
 #login input[type=text], #login input[type=password] {
   margin-top: 10px;
   width: 150px;
   font-weight: bold;
 }
-/* line 310, ../../themes/style.scss */
+/* line 312, ../../themes/style.scss */
 #login input[type=submit] {
   margin-left: 220px;
   margin-top: 20px;
   font-weight: bold;
 }
-/* line 317, ../../themes/style.scss */
+/* line 319, ../../themes/style.scss */
 #login input[type=text], #login input[type=password], #login label {
   display: inline-block;
 }
-/* line 318, ../../themes/style.scss */
+/* line 320, ../../themes/style.scss */
 #login label {
   width: 100px;
 }
 
-/* line 329, ../../themes/style.scss */
+/* line 331, ../../themes/style.scss */
 .newarticle {
   width: 80%;
   overflow: hidden;
 }
-/* line 330, ../../themes/style.scss */
+/* line 332, ../../themes/style.scss */
 .newarticle .inp_title {
   font-weight: bold;
 }
-/* line 331, ../../themes/style.scss */
+/* line 333, ../../themes/style.scss */
 .newarticle .inp_tags {
   font-style: italic;
 }
-/* line 335, ../../themes/style.scss */
+/* line 337, ../../themes/style.scss */
 .newarticle fieldset {
   margin-top: 10px;
 }
-/* line 336, ../../themes/style.scss */
+/* line 338, ../../themes/style.scss */
 .newarticle button {
   margin-top: 20px;
   float: right;
 }
-/* line 338, ../../themes/style.scss */
+/* line 340, ../../themes/style.scss */
 .newarticle input, .newarticle textarea, .newarticle button {
   padding: 5px;
   margin: 5px;
 }
-/* line 344, ../../themes/style.scss */
+/* line 346, ../../themes/style.scss */
 .newarticle textarea {
   height: 300px;
 }
-/* line 345, ../../themes/style.scss */
+/* line 347, ../../themes/style.scss */
 .newarticle input[type=text], .newarticle textarea {
   width: 90%;
   margin-left: 5%;

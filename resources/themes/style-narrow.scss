@@ -11,12 +11,9 @@
 	float: none;
 }
 
-.product-desc {
-	width: inherit;
-	float: none;
-}
-
-.product-screenshot {
-	width: inherit;
-	float: none;
+.product {
+	.product-screenshot {
+		max-width: 100%;
+		margin-right: 0px;
+	}
 }

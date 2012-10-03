@@ -25,8 +25,8 @@ INSERT INTO article_tags VALUES (1, 1), (1, 4), (2, 2), (2, 1), (2, 4), (3, 3);
 INSERT INTO article_categories VALUES (1, 2), (2, 1), (2, 2), (3, 1), (4, 1), (4, 2);
 INSERT INTO article_authors VALUES (1, 1), (2, 1), (2, 2), (3, 2), (4, 1);
 
-INSERT INTO products (title, description, link, screenshot, pin) VALUES ('Budget Splitter', '<p>Budget Splitter is an application designed to help you share a budget on outings with friends.</p><p>Alice rented a car for the trip which cost her $75, Bob payed $50 for gas & Charlie $25 worth of pizzas. Bob also paid $15 for two cinema tickets and popcorn. Alice didn''t go and won''t be participating in that expense.</p><p>How do we equalise the expenses? Budget Splitter to the rescue!</p><p>Budget Splitter targets WebKit browsers: Iphone, Android, Chrome & Safari.</p>', '/products/budget-splitter/index.html', '/screenshot/ss.png', 42);
-INSERT INTO products (title, description, link, screenshot, pin) VALUES ('Smriti', 'Smriti is a task manager, That''s it', '/products/smriti/index.html', '/screenshot/ss.png', 23);
+INSERT INTO products (title, description, link, screenshot, pin) VALUES ('Budget Splitter', '<p>Budget Splitter is an application designed to help you share a budget on outings with friends.</p><p>Alice rented a car for the trip which cost her $75, Bob payed $50 for gas & Charlie $25 worth of pizzas. Bob also paid $15 for two cinema tickets and popcorn. Alice didn''t go and won''t be participating in that expense.</p><p>How do we equalise the expenses? Budget Splitter to the rescue!</p><p>Budget Splitter targets WebKit browsers: Iphone, Android, Chrome & Safari.</p>', '/products/budget-splitter/index.html', '/img/404.jpg', 42);
+INSERT INTO products (title, description, link, screenshot, pin) VALUES ('Smriti', 'Smriti is a task manager, That''s it', '/products/smriti/index.html', '/img/404.jpg', 23);
 
 INSERT INTO roles (label) VALUES ('Peon'), ('Admin'), ('Contributor');
 

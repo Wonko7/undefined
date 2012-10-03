@@ -210,7 +210,7 @@ a:hover {
 	@extend .rounded-small;
 	@extend .shadow-small;
 	@extend .shadow-margin;
-	padding-bottom: 10px;
+	padding-bottom: 10px; // remove if social comes back
 	overflow: hidden;
 
 	button {
@@ -281,17 +281,19 @@ a:hover {
 // Products:
 ///////////////////////////////////////////////////////////
 
-
-.product-desc {
-	width: 60%;
-	float: right;
+.product {
+	@extend .shadow-margin;
 	text-align: justify;
+
+	.product-screenshot {
+		img { max-width: 100%; }
+		max-width: 50%;
+		float: left;
+		margin-right: 15px;
+		margin-bottom: 15px;
+	}
 }
 
-.product-screenshot {
-	width: 40%;
-	float: left;
-}
 
 
 ///////////////////////////////////////////////////////////
