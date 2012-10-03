@@ -9,9 +9,7 @@
 		<!-- find out what this does: -->
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
-		<!--
-		<link rel="stylesheet" href="/css/test.css" type="text/css" />
-		-->
+
 		<title></title>
 		<link rel="stylesheet" href="/css/normalize.css" type="text/css" />
 		<link rel="stylesheet" href="/css/helper.css" type="text/css" />
@@ -20,36 +18,49 @@
 			var CLOSURE_NO_DEPS = true;
 		</script>
 		<script type="text/javascript" src="/js/main.js" charset="utf-8"></script>
-	</head>
+		<!-- google analytics -->
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-35228216-1']);
+			_gaq.push(['_trackPageview']);
 
-	<body>
-		<!--[if lt IE 7]>
-		<p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
-		<![endif]-->
+			(function() {
+			 var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			 ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			 var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			 })();
 
-		<div id="nav">
-			<span class="navli">
-				<a href="news" data-href="news"> News </a>
-			</span>
-			<span class="navli">
-				<a href="products" data-href="products"> Products </a>
-			</span>
-			<span class="navli">
-				<a href="blog" data-href="blog"> Blog </a>
-			</span>
-			<span class="navli">
-				<a href="about" data-href="about"> About </a>
-			</span>
-			<span class="navli admin">
-				<a href="newarticle" data-href="newarticle"> + </a>
-			</span>
-			<span id="user-info">
-				<!--
-				<img src="img/loading.gif" />
-				-->
-			</span>
-		</div>
-		<div id="page-wrapper">
-		</div>
-	</body>
-</html>
+		 </script>
+	 </head>
+
+	 <body>
+		 <!--[if lt IE 7]>
+		 <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+		 <![endif]-->
+
+		 <div id="nav">
+			 <span class="navli">
+				 <a href="news" data-href="news"> News </a>
+			 </span>
+			 <span class="navli">
+				 <a href="products" data-href="products"> Products </a>
+			 </span>
+			 <span class="navli">
+				 <a href="blog" data-href="blog"> Blog </a>
+			 </span>
+			 <span class="navli">
+				 <a href="about" data-href="about"> About </a>
+			 </span>
+			 <span class="navli admin">
+				 <a href="newarticle" data-href="newarticle"> + </a>
+			 </span>
+			 <span id="user-info">
+				 <!--
+				 <img src="img/loading.gif" />
+				 -->
+			 </span>
+		 </div>
+		 <div id="page-wrapper">
+		 </div>
+	 </body>
+ </html>

@@ -1,5 +1,6 @@
 (ns undef.pages
   (:use [undef.init :only [add-init!]]
+        [undef.misc :only [show-admin-stuff]]
         [clojure.string :only [split]])
   (:require [fetch.remotes :as remotes]
             [undef.history :as hist]
@@ -13,16 +14,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def page-inits {})
+(def pre-link-inits {})
 
 (defn add-page-init! [name func]
   (def page-inits (into page-inits {name func})))
+
+(defn add-pre-link-init! [name func]
+  (def pre-link-inits (into pre-link-inits {name func})))
 
 (defn init-page []
   (let [data (em/from js/document
                       :init [:#metadata] (em/get-attr :data-init-page)
                       :args [:#metadata] (em/get-attr :data-init-args))]
     (when (:init data)
-      (if-let [f ((:init data) page-inits)] (f (:args data))))))
+      (if-let [f ((:init data) page-inits)]
+        (f (:args data))))
+    (show-admin-stuff)))
+
+(defn get-pre-link [name]
+  (pre-link-inits name))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -93,7 +103,10 @@
    (let [a    (.-currentTarget e)
          href (em/from a (em/get-attr :data-href))
          ext  (em/from a (em/get-attr :data-ext))
-         args (em/from a (em/get-attr :data-args))]
+         args (em/from a (em/get-attr :data-args))
+         pre  (em/from a (em/get-attr :data-pre-exec))]
+     (when-let [f (get-pre-link pre)]
+       (f e (em/from a (em/get-attr :data-pre-args))))
      (when (not= ext "true")
        (.preventDefault e)
        (page-click href args))))
@@ -106,11 +119,10 @@
        (.setToken history href)))
    (em/at js/document
           [:#page-wrapper] (em/before "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
-          [:#page] (em/chain
-                     (em/fade-out 100)
-                     #(load-page href args %1 %2)
-                     (em/fade-in 100)
-                     #(em/at js/document [:#loading] (em/remove-node)))))) ;; WARNING: this breaks em/chain
+          [:#page] (em/chain (em/fade-out 100)
+                             #(load-page href args %1 %2)
+                             (em/fade-in 100)
+                             #(em/at js/document [:#loading] (em/remove-node)))))) ;; WARNING: this breaks em/chain
 
 (add-init! #(em/at js/document
                    [:#nav :a] (em/listen :click page-click)))

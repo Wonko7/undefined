@@ -1,0 +1,11 @@
+<feed>
+	<title></title>
+	<link id="feed-url" href="http://example.org/feed/" rel="self" />
+	<link id="site-url" href="http://example.org/" />
+	<id></id>
+	<author>
+		<name>Wonko7</name>
+		<name>Landolphia</name>
+	</author>
+	<updated></updated>
+</feed>

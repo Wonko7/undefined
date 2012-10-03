@@ -1,12 +1,9 @@
-For a balanced breakfast
-
 * build:
 	- better cljs compilation with https://github.com/ibdknox/noir-cljs
 * ui:
 	- rss / atom
 	- mobile detection: mainly remove columns : products [screenshot|desc] -> desc & screenshot underneath. idem cloud tag
 * misc:
-	- domain name
 	- setup a real web architecture, maybe nginx: http://grokbase.com/t/gg/clj-noir/119ysw9vf0/noir-how-do-i-serve-static-files
 		http://www.bushidodesigns.net/blog/mobile-device-detection-css-without-user-agent/ (why avoid user agent?)
 	- hardenning
@@ -15,11 +12,12 @@ For a balanced breakfast
 		- catch errors, log, redirect user.
 		- BACKUPS.
 		- http://grokbase.com/t/gg/clj-noir/1229j1xres/noir-avoiding-xss-attacks
-	- about: think about thank yous and links for what was used on the site.
+	- about: think about thank yous and links for what was used on the site. --> put thank yous in product descr.
+	- french version?
+	- tag cloud
+	- find js & jvm profiling tools
 * sql:
-	- produtcs: platform list (web, ios, android, pc (for java)). title, desc, link & screenshot
-	- about page?
-	- creation script
+	- products: platform list (web, ios, android, pc (for java)) & enforcement.
 * tests
 	http://corfield.org/blog/post.cfm/automated-browser-based-testing-with-clojure
 	https://github.com/semperos/clj-webdriver

@@ -1,10 +1,12 @@
 (ns undefined.sql
-  (:require  [clojure.string :as string])
+  (:require [clojure.string :as string]
+            [noir.session :as session])
   (:use [undefined.config :only [get-config]]
-     [noir.fetch.remotes]
-     [korma.db]
-     [korma.core]
-     [undefined.auth :only [is-admin?]]))
+        [noir.fetch.remotes]
+        [korma.db]
+        [korma.core]
+        [undefined.content :only [str-to-int]]
+        [undefined.auth :only [is-admin?]]))
 
 
 ;(declare undef-db)
@@ -149,8 +151,8 @@
           (join authors)
           (where {:artid id})))
 
-(defn get_user [& {:keys [id name] :or {id nil name nil}}]
-  (if (is-admin?)
+(defn get_user [current-id & {:keys [id name] :or {id nil name nil}}]
+  (if (is-admin? current-id)
     (let [col (if (nil? name) :uid :name)
           val (if (nil? name) id name)]
       (select authors
@@ -159,6 +161,7 @@
 
 (defn select_products [] (select products))
 
+;; FIXME: this will change when auth works correctly
 (defn get_user_roles [id]
   (select author_roles
           (fields :roles.label)
@@ -187,8 +190,8 @@
 
 ;TODO transaction
 ;TODO beautify doseq
-(defn insert_article [title body tags authors categories]
-  (if (is-admin?)
+(defn insert_article [current-id title body tags authors categories]
+  (if (is-admin? current-id)
     (let [artid     (:uid (insert articles (values {:title title :body body})))
           get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
           auths     (get_keys authors)
@@ -201,8 +204,8 @@
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
 ;TODO actually... would there be that much of a perf improvement..? isn't it worse to check for existing values?
-(defn update_article [uid title body tags authors categories]
-  (if (is-admin?)
+(defn update_article [current-id uid title body tags authors categories]
+  (if (is-admin? current-id)
     (let [get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
           auths     (get_keys authors)
           cats      (get_keys categories)]
@@ -222,22 +225,22 @@
 
 
 ;DELETE
-(defn delete_article [uid]
-  (if (is-admin?)
+(defn delete_article [id uid]
+  (if (is-admin? id)
     (delete articles
             (where {:uid uid}))))
 
 
 ;; Remotes
 
-(defremote insert_article_rem [title body tags authors categories] (insert_article title body tags authors categories))
-(defremote update_article_rem [uid title body tags authors categories] (update_article (int uid) title body tags authors categories))
-(defremote tags_by_article_rem [id] (tags_by_article (int id)))
-(defremote select_article_rem [id] (select_article (int id)))
-(defremote delete_article_rem [uid] (delete_article (int uid)))
+(defremote insert_article_rem [title body tags authors categories] (insert_article (session/get :id) title body tags authors categories))
+(defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
+(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
+(defremote select_article_rem [id] (select_article (str-to-int id)))
+(defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
 (defremote select_authors_rem [] (select authors))
 (defremote select_categories_rem [] (select categories))
-(defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
+;(defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
 (defremote select_products_rem [] (select_products))
-(defremote get_user_roles_rem [id] (get_user_roles id))
-(defremote is_user_admin_rem? [id] (is_user_admin? id))
+;(defremote get_user_roles_rem [id] (get_user_roles id))
+;(defremote is_user_admin_rem? [id] (is_user_admin? id))

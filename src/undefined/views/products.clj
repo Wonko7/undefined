@@ -5,10 +5,12 @@
      [undefined.sql :only [select_products]]
      [noir.fetch.remotes]))
 
-(defn products-page [name product-id]
+(defn products-page [user-id name product-id]
   (let [title       "Undefined's Products"
         products    (select_products)]
     (page title 
-          (map #(product (:title %) (:link %) (:description %) (:screenshot %)) products))))
+          (map #(product (:title %) (:link %) (remove-unsafe-tags (:description %)) (:screenshot %) (when (re-find #"Budget" (:title %)) "restrict-webkit-only"))
+               products))))
+;; FIXME restrictions are hardcoded until we decide how to use platforms in db.
 
 (add-page-init! "products" products-page)

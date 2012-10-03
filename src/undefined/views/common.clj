@@ -1,11 +1,10 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
-     [undefined.auth :only [is-admin?]]
-     [noir.core :only [defpage]]
-     [undefined.misc :only [options_list]]
-     ;[undefined.misc :only [doall-recur]]
-     )
-  (:require [net.cgrand.enlive-html :as html]))
+        [undefined.auth :only [is-admin?]]
+        [noir.core :only [defpage]]
+        [undefined.misc :only [options_list]])
+  (:require [net.cgrand.enlive-html :as html]
+            [noir.session :as session]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -13,43 +12,47 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/defsnippet article "templates/article.html" [:div.whole-article]
-      [uid category title date article tags categories authors]
-      [:div.whole-article] (html/set-attr :id (str "article_" uid))
-      [:.article-title :a] (html/do-> (html/content title)
-                                 (html/set-attr :href (str (name category) "-article/" uid))
-                                 (html/set-attr :data-href (str (name category) "-article"))
-                                 (html/set-attr :data-args (str uid)))
-      [:.article-date]     (html/content date)
-      [:.article]          (html/append article)
-      [:.tags]             (html/content tags)
-      [:.categories]       (html/content categories)
-      [:.authors]          (html/content authors)
-      [:.admin]            (html/append (if (is-admin?)
-                                          [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
-                                           {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
+  [uid category title date article tags authors is-admin?]
+  [:div.whole-article] (html/set-attr :id (str "article_" uid))
+  [:.article-title :a] (html/do-> (html/content title)
+                                  (html/set-attr :href (str (name category) "-article/" uid))
+                                  (html/set-attr :data-href (str (name category) "-article"))
+                                  (html/set-attr :data-args (str uid)))
+  [:.article-date]     (html/content date)
+  [:.article]          (html/append article)
+  [:.tags]             (html/content tags)
+  [:.authors]          (html/content authors)
+  [:.admin]            (html/append (if is-admin?
+                                      [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
+                                       {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
-      [title link article sc]
-      [:.article-title :a]   (html/do-> (html/content title) (html/set-attr :href link))
-      [:.product-desc]       (html/content article)
-      [:.product-screenshot] (html/content sc))
+  [title link article sc restrictions] ;; FIXME this is probably temporary. we need more usecases on restrictions to realise.
+  [:.article-title :a]   (html/do-> (html/content title)
+                                    (html/set-attr :href link)
+                                    (html/set-attr :data-pre-exec restrictions))
+  [:.product-desc]       (html/content article)
+  [:.product-screenshot] (html/content sc))
+
+(html/defsnippet about "templates/about.html" [:.about]
+  [])
 
 (html/defsnippet login "templates/login.html" [:form]
-      [])
+  [])
 
 (html/defsnippet newarticle "templates/new_article.html" [:form.newarticle]
-      [authors categories title body tags uid sel_auths sel_cats]
-      [:.inp_title]       (html/set-attr :value title)
-      [:.txt_body]        (html/content body)
-      [:.inp_tags]        (html/set-attr :value tags)
-      [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :name sel_auths))
-      [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats)) 
-      [:.btn_add_article] (html/set-attr :value uid)
-      [:.btn_rst]         (html/set-attr :value uid))
+  [authors categories title body tags uid sel_auths sel_cats]
+  [:.inp_title]       (html/set-attr :value title)
+  [:.txt_body]        (html/content body)
+  [:.inp_tags]        (html/set-attr :value tags)
+  [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :name sel_auths))
+  [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats)) 
+  [:.btn_add_article] (html/set-attr :value uid)
+  [:.btn_rst]         (html/set-attr :value uid))
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
-      [data]
-      [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
+  [data]
+  [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -57,17 +60,38 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (html/deftemplate base "templates/index.html"
-      [content]
-      [:.admin]        (html/add-class "hidden")
-      [:title]         (html/content "Undefined Development")
-      [:#page-wrapper] (html/append content))
+  [content]
+  [:.admin]        (html/add-class "hidden")
+  [:title]         (html/content "Undefined Development")
+  [:#page-wrapper] (html/append content))
 
 (html/defsnippet page "templates/page.html" [:#page]
-      [title content & [optional]]
-      [:#title]   (html/content title)
-      [:#content] (html/do-> (html/append content)
-                             (html/append (metadata (:metadata optional))))
-      [:#bottom]  (html/append (:bottom optional)))
+  [title content & [optional]]
+  [:#title]   (html/content title)
+  [:#content] (html/do-> (html/append content)
+                         (html/append (metadata (:metadata optional))))
+  [:#bottom]  (html/append (:bottom optional)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Atom page:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(html/defsnippet atom-feed "templates/atom.xml" [:feed]
+  [title link feed-link date content]
+  [:title]         (html/content title)
+  [:id]            (html/content link)
+  [:link#feed-url] (html/set-attr :href feed-link)
+  [:link#site-url] (html/set-attr :href link)
+  [:updated]       (html/do-> (html/content date)
+                              (html/after content)))
+
+(html/defsnippet atom-entry "templates/entry.xml" [:entry]
+  [title link date article]
+  [:title]         (html/content title)
+  [:id]            (html/content link)
+  [:link]          (html/set-attr :href link)
+  [:content]       (html/content article))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -84,7 +108,7 @@
 
 (defremote get-page [href & [args]]
   (apply str (html/emit* (if-let [f (page-inits href)]
-                           (f href args)
+                           (f (session/get :id) href args)
                            page-404))))
 
 ;; WARNING: not thread safe.
@@ -96,6 +120,6 @@
      (register-page-init! ~name ~fun)
      ~(if arg
         `(defpage ~(str "/" name "/:" arg ) {:keys [~(symbol arg)]}
-           (base (~fun ~name ~(symbol arg))))
+           (base (~fun (session/get :id) ~name ~(symbol arg))))
         `(defpage ~(str "/" name) []
-           (base (~fun ~name nil))))))
+           (base (~fun (session/get :id) ~name nil))))))

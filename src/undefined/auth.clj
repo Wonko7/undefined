@@ -23,16 +23,21 @@
 
 (defremote auth-logout [] nil)
 
+;; FIXME: also check requires-scheme
 (pre-route "/login" []
            (let [req       (ring-request)
                  https-url (str "https://" (:server-name req) (str ":" (:ssl-port (get-config))) (:uri req))]
              (when (= :http (:scheme req))
                (redirect https-url))))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wrappers for undefined:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn is-admin? []
-  (friend/authorized? #{:undefined.server/admin}
-                      friend/*identity*))
+(defn is-admin? [id]
+  (let [{:keys [roles]} (friend/current-authentication id)]
+    (:undefined.server/admin roles)))
+
+(defn username [id]
+  (:username (friend/current-authentication id)))
