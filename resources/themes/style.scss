@@ -145,15 +145,6 @@ body {
 	color: $dark-grey;
 }
 
-#loading {
-	width: 100%;
-	padding-top: 50px;
-	vertical-align:middle;
-	text-align: center;
-	position: fixed;
-	z-index: -1;
-}
-
 #page-wrapper-wrapper {
 	max-width: $max-size;
 	margin: 0 auto;
@@ -167,6 +158,11 @@ body {
 #page-wrapper {
 	width: 70%;
 	float: left;
+}
+
+#loading-wrapper {
+	@extend #page-wrapper;
+	overflow: hidden;
 }
 
 #page {
@@ -197,6 +193,15 @@ a, a:visited {
 
 a:hover {
 	color: $dark-grey;
+}
+
+#loading {
+	width: 100%;
+	padding-top: 50px;
+	vertical-align:middle;
+	text-align: center;
+	position: fixed;
+	z-index: -1;
 }
 
 
@@ -293,7 +298,6 @@ a:hover {
 		margin-bottom: 15px;
 	}
 }
-
 
 
 ///////////////////////////////////////////////////////////
