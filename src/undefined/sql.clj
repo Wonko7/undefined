@@ -104,6 +104,14 @@
 
 ;SELECT
 
+(defn tag_cloud []
+  (select article_tags
+          ;(aggregate (count :*) :artid :cnt)
+          (fields :tags.label)
+          (group :tags.label)
+          (aggregate (count :*) :cnt :tags.label)
+          (join tags (= :tags.uid :article_tags.tagid))))
+
 (defn select_articles [off n cat]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
@@ -244,3 +252,5 @@
 (defremote select_products_rem [] (select_products))
 ;(defremote get_user_roles_rem [id] (get_user_roles id))
 ;(defremote is_user_admin_rem? [id] (is_user_admin? id))
+
+(defremote tag_cloud_rem [] (tag_cloud))
