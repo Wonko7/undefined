@@ -143,23 +143,39 @@ body {
 	z-index: -1;
 }
 
+#page-wrapper-wrapper { max-width: 1100px;}
+
+#page-right-wrapper {
+	width: 29%;
+	float: right;
+}
+
+#page-wrapper {
+	width: 70%;
+	float: left;
+}
+
 #page {
 	// horiz spacing:
-	max-width: 800px;
-	//width: 92%;
 	//margin-left: 2%;
-	padding-left: 2%;
+	//margin-left: 2%;
+	//padding-left: 2%;
 	//margin-right: 2%;
 	//padding-right: 2%;
 	// vert spacing:
 	min-height: 50px;
 	margin-bottom: 2%;
-	padding-top: 15px;
-	padding-bottom: 5px;
+	//padding-top: 15px;
+	//padding-bottom: 5px;
 	// deco:
 	color: $dark-grey;
 	// stuff;
 	overflow: hidden;
+}
+
+// FIXME: will move to top
+.shadow-margin {
+	margin: 15px;
 }
 
 #title { 
@@ -170,9 +186,10 @@ body {
 	//color: $base-contrast-dark;
 	color: $base-lighter;
 	//width: 100%;
-	padding: 1%;
-	padding-top: 2px;
-	padding-bottom: 2px;
+	//padding: 1%;
+	//padding-top: 2px;
+	//padding-bottom: 2px;
+	@extend .shadow-margin;
 	@extend .visible-border;
 	@extend .shadow-small;
 	@extend .rounded-small;
@@ -199,10 +216,11 @@ a:hover {
 	@extend .visible-border;
 	@extend .rounded-small;
 	@extend .shadow-small;
-	width: 98%;
-	padding: 1%;
-	margin-bottom: 10px;
-	margin-top: 10px;
+	@extend .shadow-margin;
+	//width: 98%;
+	//padding: 1%;
+	//margin-bottom: 10px;
+	//margin-top: 10px;
 	overflow: hidden;
 
 	button {
@@ -213,6 +231,7 @@ a:hover {
 
 	.article-title {
 		@extend .text-shadow;
+		@extend .shadow-margin;
 		text-align: center;
 		font-size: 18px;
 		font-weight: bold;
@@ -221,6 +240,7 @@ a:hover {
 	}
 
 	.article-date, .tags, .categories, .authors {
+		@extend .shadow-margin;
 		font-size: 13px;
 		color: $light-grey;
 	}
@@ -232,10 +252,13 @@ a:hover {
 	}
 
 	.article {
-		padding-top: 10px;
-		padding-bottom: 10px;
+		//padding-top: 10px;
+		//padding-bottom: 10px;
+		@extend .shadow-margin;
 		margin-bottom: 10px;
+		margin-top: 10px;
 		text-align: justify;
+
 		.code {
 			font-family: 'Courier New', monospace;
 			white-space: pre-wrap;
@@ -255,7 +278,8 @@ a:hover {
 	.social {
 		@extend .visible-border-top;
 		margin-top: 10px;
-		padding-top: 10px;
+		@extend .shadow-margin;
+		//padding-top: 10px;
 	}
 }
 
