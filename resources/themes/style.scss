@@ -160,11 +160,6 @@ body {
 	float: left;
 }
 
-#loading-wrapper {
-	@extend #page-wrapper;
-	overflow: hidden;
-}
-
 #page {
 	min-height: 50px;
 	margin-bottom: 2%;
@@ -195,12 +190,18 @@ a:hover {
 	color: $dark-grey;
 }
 
+#loading-wrapper {
+	@extend #page-wrapper;
+	z-index: -1;
+	overflow: hidden;
+}
+
 #loading {
 	width: 100%;
 	padding-top: 50px;
 	vertical-align:middle;
 	text-align: center;
-	position: fixed;
+	position: relative;
 	z-index: -1;
 }
 

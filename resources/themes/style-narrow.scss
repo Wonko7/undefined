@@ -11,6 +11,12 @@
 	float: none;
 }
 
+#loading-wrapper {
+	@extend #page-wrapper;
+	z-index: -1;
+	overflow: hidden;
+}
+
 .product {
 	.product-screenshot {
 		max-width: 100%;
