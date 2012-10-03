@@ -240,9 +240,10 @@ a:hover {
 	}
 
 	hr {
+		border: none;
 		color: $base-light;
 		background-color: $base-light;
-		height: 3px;
+		height: 2px;
 		width: 100%;
 	}
 	.article-title {
