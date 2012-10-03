@@ -145,11 +145,12 @@ body {
 
 #page {
 	// horiz spacing:
-	width: 92%;
-	margin-left: 2%;
+	max-width: 800px;
+	//width: 92%;
+	//margin-left: 2%;
 	padding-left: 2%;
-	margin-right: 2%;
-	padding-right: 2%;
+	//margin-right: 2%;
+	//padding-right: 2%;
 	// vert spacing:
 	min-height: 50px;
 	margin-bottom: 2%;
@@ -163,12 +164,12 @@ body {
 
 #title { 
 	@extend .text-shadow;
-	 text-align: center;
+	text-align: center;
 	font-size: 20px;
 	font-weight: bold;
 	//color: $base-contrast-dark;
 	color: $base-lighter;
-	width: 98%;
+	//width: 100%;
 	padding: 1%;
 	padding-top: 2px;
 	padding-bottom: 2px;
@@ -200,8 +201,8 @@ a:hover {
 	@extend .shadow-small;
 	width: 98%;
 	padding: 1%;
-	margin-bottom: 20px;
-	margin-top: 20px;
+	margin-bottom: 10px;
+	margin-top: 10px;
 	overflow: hidden;
 
 	button {
@@ -233,10 +234,12 @@ a:hover {
 	.article {
 		padding-top: 10px;
 		padding-bottom: 10px;
+		margin-bottom: 10px;
 		text-align: justify;
 		.code {
 			font-family: 'Courier New', monospace;
 			white-space: pre-wrap;
+			word-wrap: break-word;
 			margin-top: 10px;
 			margin-bottom: 10px;
 			padding: 1%;
@@ -246,6 +249,13 @@ a:hover {
 		.bold { font-weight: bold; }
 		.it   { font-style: italic; }
 		.underline { text-decoration: underline; }
+		@extend .visible-border-bottom;
+	}
+
+	.social {
+		@extend .visible-border-top;
+		margin-top: 10px;
+		padding-top: 10px;
 	}
 }
 
