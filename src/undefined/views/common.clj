@@ -1,30 +1,42 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
         [undefined.auth :only [is-admin?]]
+        [undefined.config :only [get-config]]
         [noir.core :only [defpage]]
         [undefined.misc :only [options_list]])
   (:require [net.cgrand.enlive-html :as html]
             [noir.session :as session]))
 
 
+(defmacro defsnippet-bind ;; FIXME this should be a lot simpler
+  [name source selector args bindings & forms]
+  `(defn ~name ~args
+     (let ~bindings
+       (apply (html/snippet ~source ~selector [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ] ~@forms)
+              [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ]))))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page composition:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(html/defsnippet article "templates/article.html" [:div.whole-article]
+(defsnippet-bind article "templates/article.html" [:div.whole-article]
   [uid category title date article tags authors is-admin?]
-  [:div.whole-article] (html/set-attr :id (str "article_" uid))
-  [:.article-title :a] (html/do-> (html/content title)
-                                  (html/set-attr :href (str (name category) "-article/" uid))
-                                  (html/set-attr :data-href (str (name category) "-article"))
-                                  (html/set-attr :data-args (str uid)))
-  [:.article-date]     (html/content date)
-  [:.article]          (html/append article)
-  [:.tags]             (html/content tags)
-  [:.authors]          (html/content authors)
-  [:.admin]            (html/append (if is-admin?
-                                      [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
-                                       {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
+  [url (str (:domain (get-config)) "/" (name category) "-article/" uid)]
+
+  [:div.whole-article]  (html/set-attr :id (str "article_" uid))
+  [:.article-title :a]  (html/do-> (html/content title)
+                                   (html/set-attr :href url)
+                                   (html/set-attr :data-href (str (name category) "-article"))
+                                   (html/set-attr :data-args (str uid)))
+  [:.social :.href-set] (html/set-attr :href url)
+  [:.article-date]      (html/content date)
+  [:.article]           (html/append article)
+  [:.tags]              (html/content tags)
+  [:.authors]           (html/content authors)
+  [:.admin]             (html/append (if is-admin?
+                                       [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
+                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
 
 (html/defsnippet product "templates/product.html" [:div.whole-article]
   [title link article sc restrictions] ;; FIXME this is probably temporary. we need more usecases on restrictions to realise.
