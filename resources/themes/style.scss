@@ -240,7 +240,10 @@ a:hover {
 	}
 
 	.article-date, .tags, .categories, .authors {
-		@extend .shadow-margin;
+		//@extend .shadow-margin;
+		margin-left: 10px;
+		margin-right: 10px;
+
 		font-size: 13px;
 		color: $light-grey;
 	}
@@ -253,7 +256,7 @@ a:hover {
 
 	.article {
 		//padding-top: 10px;
-		//padding-bottom: 10px;
+		padding-bottom: 10px;
 		@extend .shadow-margin;
 		margin-bottom: 10px;
 		margin-top: 10px;
@@ -277,6 +280,7 @@ a:hover {
 
 	.social {
 		@extend .visible-border-top;
+		padding-top: 10px;
 		margin-top: 10px;
 		@extend .shadow-margin;
 		//padding-top: 10px;
