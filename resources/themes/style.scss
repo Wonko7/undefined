@@ -148,6 +148,7 @@ body {
 #page-wrapper-wrapper {
 	max-width: $max-size;
 	margin: 0 auto;
+	position: relative;
 }
 
 #page-right-wrapper {
@@ -157,7 +158,10 @@ body {
 
 #page-wrapper {
 	width: 70%;
-	float: left;
+	//float: left;
+	position: absolute;
+	top: 0px;
+	left: 0px;
 }
 
 #page {
