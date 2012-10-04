@@ -335,3 +335,27 @@ a:hover {
   width: 90%;
   margin-left: 5%;
 }
+
+/* line 4, ../../themes/style-narrow.scss */
+#page-right-wrapper {
+  width: inherit;
+  float: none;
+}
+
+/* line 9, ../../themes/style-narrow.scss */
+#page-wrapper, #loading-wrapper {
+  width: inherit;
+  float: none;
+}
+
+/* line 14, ../../themes/style-narrow.scss */
+#loading-wrapper {
+  z-index: -1;
+  overflow: hidden;
+}
+
+/* line 21, ../../themes/style-narrow.scss */
+.product .product-screenshot {
+  max-width: 100%;
+  margin-right: 0px;
+}

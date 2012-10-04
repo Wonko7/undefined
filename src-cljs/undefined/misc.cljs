@@ -19,11 +19,10 @@
     (fn [node]
       (let [h (:size (em/from node
                               :size [:> :*] (fn [children]
-                                              (reduce #(let [padd ((ef/extr-multi-node style/getMarginBox) %2)
-                                                             marg ((ef/extr-multi-node style/getPaddingBox) %2)
+                                              (reduce #(let [marg ((ef/extr-multi-node style/getPaddingBox) %2)
                                                              bord ((ef/extr-multi-node style/getBorderBox) %2)
                                                              size ((ef/extr-multi-node style/getSize) %2)]
-                                                         (+ %1 (.-top padd) (.-bottom padd) (.-top marg) (.-bottom marg) (.-top bord) (.-bottom bord) (.-height size)))
+                                                         (+ %1 (.-top marg) (.-bottom marg) (.-top bord) (.-bottom bord) (.-height size)))
                                                       0
                                                       (if (seq? children) children [children])))))]
         ((em/chain (em/resize :curwidth h speed)

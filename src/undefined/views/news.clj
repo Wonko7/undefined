@@ -68,7 +68,7 @@
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
-(add-page-init! "blog-article" #(news-page %1 %2 1) id)
-(add-page-init! "news-article" #(news-page %1 %2 1) id)
+(add-page-init! "blog-article" #(news-page %1 %2 %3 1) id)
+(add-page-init! "news-article" #(news-page %1 %2 %3 1) id)
 (add-page-init! "news" #(news-page %1 %2 %3) page)
 (add-page-init! "blog" #(news-page %1 %2 %3) page)

@@ -1,0 +1,25 @@
+@import "style";
+
+
+#page-right-wrapper {
+	width: inherit;
+	float: none;
+}
+
+#page-wrapper {
+	width: inherit;
+	float: none;
+}
+
+#loading-wrapper {
+	@extend #page-wrapper;
+	z-index: -1;
+	overflow: hidden;
+}
+
+.product {
+	.product-screenshot {
+		max-width: 100%;
+		margin-right: 0px;
+	}
+}
