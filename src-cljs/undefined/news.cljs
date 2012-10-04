@@ -56,6 +56,5 @@
       [:.btn_del] (em/listen :click delete-button)
       [:.btn_upd] (em/listen :click update-button))))
 
-
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)
