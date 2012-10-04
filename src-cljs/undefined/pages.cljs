@@ -27,7 +27,7 @@
                       :init [:#metadata] (em/get-attr :data-init-page)
                       :args [:#metadata] (em/get-attr :data-init-args))]
     (em/at js/document
-           [:#page-wrapper :a] (em/listen :click page-click))
+           [:#page-wrapper-wrapper :a] (em/listen :click page-click))
     (when (:init data)
       (if-let [f ((:init data) page-inits)]
         (f (:args data))))
