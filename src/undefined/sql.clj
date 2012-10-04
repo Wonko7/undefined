@@ -107,8 +107,8 @@
 (defn tag_cloud []
   (select article_tags
           ;(aggregate (count :*) :artid :cnt)
-          (fields :tags.label :tags.uid :article_tags.artid)
-          (group :tags.label)
+          (fields :tags.label :tags.uid)
+          (group :tags.label :tags.uid)
           (aggregate (count :*) :cnt :tags.label)
           (join tags (= :tags.uid :article_tags.tagid))))
 
