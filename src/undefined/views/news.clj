@@ -34,7 +34,7 @@
         articles         (condp = type
                            :single (select_article id)
                            :page   (select_articles id (inc nb-articles) (name category))
-                           :tag    (mapcat #(select_article (:uid %)) (articles_by_tags id 0 nb-articles))) ;; FIXME cyrille ; does this look good to you?
+                           :tag    (mapcat #(select_article (:uid %)) (articles_by_tags id 0 nb-articles))) ;; FIXME william; it doesn't, the offset needs to be set somehow (temp->0); cyrille ; does this look good to you?
         [pv nx articles] (if (= type :single)
                            [nil nil articles]
                            (let [[arts nx] (if (> (count articles) nb-articles)
