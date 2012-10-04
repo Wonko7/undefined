@@ -12,6 +12,7 @@
                   (map #(li-link (:label %) {:href (str "/tag/" (:tagid %))
                                              :data-href "tag"
                                              :data-args (str (:tagid %))})
-                       (tag_cloud))))) ;; FIXME we need a limit
+                       (tag_cloud)
+                       )))) ;; FIXME we need a limit
 
 (add-page-init! "right-content" right-content-page)
