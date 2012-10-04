@@ -35,7 +35,7 @@
         articles         (condp = type
                            :single (select_article id)
                            :page   (select_articles id (inc nb-articles) (name category))
-                           :tag    (mapcat #(select_article (:uid %)) (articles_by_tags id))) ;; FIXME cyrille ; does this look good to you?
+                           :tag    (mapcat #(select_article (:uid %)) (articles_by_tags id))) ;; FIXME articles_by_tags could return whole articles
         [pv nx articles] (if (= type :single)
                            [nil nil articles]
                            (let [[arts nx] (if (> (count articles) nb-articles)
@@ -43,7 +43,7 @@
                                              [articles nil])
                                  pv (- id nb-articles)
                                  pv (if (neg? pv) 0 pv)]
-                             [(when (> id 0) pv) nx arts]))
+                             [(when (and (not= type :tag) (> id 0)) pv) nx arts])) ;; FIXME we need pages for :tag too... think about it. tag/id/page. id argument is [id page] when type = :tag-page
         admin?           (is-admin? user-id)]
     (page (mk-blog-cat-title category id)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
@@ -78,4 +78,5 @@
 (add-page-init! "news-article" #(news-page %1 %2 :single %3) id)
 (add-page-init! "news" #(news-page %1 %2 :page %3) page)
 (add-page-init! "blog" #(news-page %1 %2 :page %3) page)
+
 (add-page-init! "tag"  #(news-page %1 %2 :tag  %3) tag)
