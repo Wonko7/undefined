@@ -34,7 +34,7 @@
         articles         (condp = type
                            :single (select_article id)
                            :page   (select_articles id (inc nb-articles) (name category))
-                           :tag    (articles_by_tags id))
+                           :tag    (mapcat #(select_article (:uid %)) (articles_by_tags id))) ;; FIXME cyrille ; does this look good to you?
         [pv nx articles] (if (= type :single)
                            [nil nil articles]
                            (let [[arts nx] (if (> (count articles) nb-articles)
