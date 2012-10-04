@@ -26,6 +26,8 @@
   (let [data (em/from js/document
                       :init [:#metadata] (em/get-attr :data-init-page)
                       :args [:#metadata] (em/get-attr :data-init-args))]
+    (em/at js/document
+           [:#page-wrapper :a] (em/listen :click page-click))
     (when (:init data)
       (if-let [f ((:init data) page-inits)]
         (f (:args data))))
@@ -82,8 +84,6 @@
     (.scrollTo js/window 0 0)
     (em/at js/document
            [:#page-wrapper] (em/content page))
-    (em/at js/document
-           [:#page-wrapper :a] (em/listen :click page-click))
     (em-fx em-args)
     (init-page)))
 
