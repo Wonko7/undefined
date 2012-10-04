@@ -27,7 +27,7 @@
                                                       (:tags article)
                                                       (zipmap (:auths-val article) (:auths-c? article))
                                                       (zipmap (:cats-val article) (:cats-c? article)))
-                              div (get-page "news-refresh-article-div" uid)]
+                              div (get-page "refresh-article-div" uid)]
                     (em/at js/document
                            [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
                                            (em/substitute div)
@@ -46,7 +46,7 @@
           (update-button [e]
             (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
                   sel    (keyword (str "#article_" uid))]
-              (fm/letrem [div (get-page "news-update-article-div" uid)]
+              (fm/letrem [div (get-page "update-article-div" uid)]
                 (em/at js/document
                        [sel] (em/chain (em/resize :curwidth 0 200)
                                        (em/html-content div)

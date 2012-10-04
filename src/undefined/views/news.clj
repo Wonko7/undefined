@@ -61,10 +61,8 @@
              (str "Authors: " (get_labels (authors_by_article (:uid art)) :name))
              (is-admin? user-id))))
 
-(add-page-init! "news-update-article-div" update-article-div)
-(add-page-init! "blog-update-article-div" update-article-div)
-(add-page-init! "news-refresh-article-div" refresh-article-div)
-(add-page-init! "blog-refresh-article-div" refresh-article-div)
+(add-page-init! "update-article-div" update-article-div)
+(add-page-init! "refresh-article-div" refresh-article-div)
 
 (add-page-init! "news" news-page)
 (add-page-init! "blog" news-page)
