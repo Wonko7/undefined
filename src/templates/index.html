@@ -1,8 +1,4 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 <html>
 	<head>
 		<meta charset="UTF-8" />
@@ -13,12 +9,13 @@
 		<title></title>
 		<link rel="stylesheet" href="/css/normalize.css" type="text/css" />
 		<link rel="stylesheet" href="/css/helper.css" type="text/css" />
-		<link rel="stylesheet" href="/css/style.css" type="text/css" />
+		<link media="screen and (min-width: 900px)" rel="stylesheet" href="/css/style.css" type="text/css" />
+		<link media="screen and (max-width: 899px)" rel="stylesheet" href="/css/style-narrow.css" type="text/css" />
 		<script type="text/javascript">
 			var CLOSURE_NO_DEPS = true;
 		</script>
 		<script type="text/javascript" src="/js/main.js" charset="utf-8"></script>
-		<!-- google analytics -->
+		<!-- google analytics: we might want to make a callable function out of this and use it in base page to track ajax page changes FIXME -->
 		<script type="text/javascript">
 			var _gaq = _gaq || [];
 			_gaq.push(['_setAccount', 'UA-35228216-1']);
@@ -38,29 +35,38 @@
 		 <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
 		 <![endif]-->
 
-		 <div id="nav">
-			 <span class="navli">
-				 <a href="news" data-href="news"> News </a>
-			 </span>
-			 <span class="navli">
-				 <a href="products" data-href="products"> Products </a>
-			 </span>
-			 <span class="navli">
-				 <a href="blog" data-href="blog"> Blog </a>
-			 </span>
-			 <span class="navli">
-				 <a href="about" data-href="about"> About </a>
-			 </span>
-			 <span class="navli admin">
-				 <a href="newarticle" data-href="newarticle"> + </a>
-			 </span>
-			 <span id="user-info">
-				 <!--
-				 <img src="img/loading.gif" />
-				 -->
-			 </span>
+		 <div id="nav-wrapper">
+			 <div id="nav">
+				 <span class="navli">
+					 <a href="news" data-href="news"> News </a>
+				 </span>
+				 <span class="navli">
+					 <a href="products" data-href="products"> Products </a>
+				 </span>
+				 <span class="navli">
+					 <a href="blog" data-href="blog"> Blog </a>
+				 </span>
+				 <span class="navli">
+					 <a href="about" data-href="about"> About </a>
+				 </span>
+				 <span class="navli admin">
+					 <a href="newarticle" data-href="newarticle"> + </a>
+				 </span>
+				 <span id="user-info">
+					 <!--
+					 <img src="img/loading.gif" />
+					 -->
+				 </span>
+			 </div>
 		 </div>
-		 <div id="page-wrapper">
+		 <div id="page-wrapper-wrapper">
+			 <div id="loading-wrapper">
+			 </div>
+			 <div id="page-wrapper">
+			 </div>
+			 <div id="page-right-wrapper">
+				 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id arcu tellus, non sodales dolor. Cras lorem sapien, viverra in auctor in, hendrerit ut libero. Proin adipiscing ornare leo, eget imperdiet magna fermentum et. Maecenas auctor neque vitae urna facilisis at sodales urna lacinia. Morbi auctor lorem in augue lacinia vel rhoncus felis consectetur. Phasellus in fringilla ligula. Pellentesque ac dui sed libero faucibus tempor eget a orci. Maecenas dolor mauris, blandit non sollicitudin a, condimentum non libero. Quisque congue sodales massa sed rhoncus. Proin vitae sapien ligula, ut dignissim ligula. Maecenas elit mauris, suscipit ac aliquam sit amet, malesuada in lectus. Vivamus lacinia laoreet velit, nec tempor ligula consequat non. Nunc adipiscing pulvinar tellus eu varius. Aenean metus urna, facilisis a auctor ut, gravida eu ipsum.
+			 </div>
 		 </div>
 	 </body>
  </html>
