@@ -193,6 +193,7 @@ a:hover {
 #loading-wrapper {
 	@extend #page-wrapper;
 	z-index: -1;
+	position: absolute; top: 100px; left: 0px; margin: 0 auto;
 	overflow: hidden;
 }
 
