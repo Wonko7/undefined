@@ -212,6 +212,21 @@ body {
 	@extend .rounded-small;
 }
 
+.title {
+	@extend .text-shadow;
+	@extend .shadow-margin;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	color: $base-lighter;
+	margin-top: 5px;
+}
+
+.right-title {
+	@extend #title;
+	font-size: 18px;
+}
+
 // links in page:
 a, a:visited {
 	color: $base-light;
@@ -251,13 +266,7 @@ hr {
 	}
 
 	.article-title {
-		@extend .text-shadow;
-		@extend .shadow-margin;
-		text-align: center;
-		font-size: 18px;
-		font-weight: bold;
-		color: $base-lighter;
-		margin-top: 5px;
+		@extend .title;
 	}
 
 	.article-date, .tags, .categories, .authors {
