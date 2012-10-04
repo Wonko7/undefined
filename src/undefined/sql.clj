@@ -136,7 +136,11 @@
           (where {:artid id})
           (order :articles.birth :DESC)))
 
-(defn select_tags [] (select tags))
+(defn select_tags [& [id]]
+  (if id
+    (select tags 
+            (where {:uid id}))
+    (select tags)))
 
 (defn tags_by_article [id]
   (select article_tags

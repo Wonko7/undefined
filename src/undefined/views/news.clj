@@ -2,7 +2,7 @@
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page newarticle article base]]
         [undefined.sql :only [select_articles select_article select_authors select_categories
-                              tags_by_article articles_by_tags
+                              tags_by_article articles_by_tags select_tags
                               categories_by_article
                               authors_by_article]]
         [undefined.auth :only [is-admin?]]
@@ -21,11 +21,12 @@
         (= (first href) \b) :blog 
         :else               :news))
 
-(defn mk-blog-cat-title [category]
-  (condp = type 
-    :blog "Undefined's Technical Blog"
-    :news "Undefined's Latest News"
-          "Undefined's Articles"))
+(defn mk-blog-cat-title [category & [id]]
+  (cond
+    (= type :blog) "Undefined's Technical Blog"
+    (= type :news) "Undefined's Latest News"
+    id             (str (:label (first (select_tags id))))
+    :else          "Undefined's Articles"))
 
 (defn news-page [user-id href type id]
   (let [id               (str-to-int id)
@@ -44,7 +45,7 @@
                                  pv (if (neg? pv) 0 pv)]
                              [(when (> id 0) pv) nx arts]))
         admin?           (is-admin? user-id)]
-    (page (mk-blog-cat-title category)
+    (page (mk-blog-cat-title category id)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
