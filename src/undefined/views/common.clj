@@ -24,7 +24,7 @@
 
 (defsnippet-bind article "templates/article.html" [:div.whole-article]
   [uid category title date article tags authors is-admin?]
-  [url (str (:domain (get-config)) "/" (name category) "-article/" uid)]
+  [url (str (name category) "-article/" uid)]
 
   [:div.whole-article]  (html/set-attr :id (str "article_" uid))
   [:.article-title :a]  (html/do-> (html/content title)

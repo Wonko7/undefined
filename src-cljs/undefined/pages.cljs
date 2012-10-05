@@ -105,8 +105,8 @@
          ext  (em/from a (em/get-attr :data-ext))
          pre  (em/from a (em/get-attr :data-pre-exec))
          href (if (= \/ (first href)) (apply str (next href)) href)
-         fun  (re-find #"^\w+" href)
-         args (map second (re-seq #"[/](\w+)" href))]
+         fun  (re-find #"^[A-Za-z0-9_-]+" href) ;; Warning; does not work on absolute links. I don't think we need that though...
+         args (map second (re-seq #"[/]([A-Za-z0-9_-]+)" href))]
      (when-let [f (get-pre-link pre)]
        (f e (em/from a (em/get-attr :data-pre-args))))
      (when (not= ext "true")
