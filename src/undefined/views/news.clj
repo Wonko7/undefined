@@ -43,14 +43,13 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn news-page [user-id href type [arg1 arg2]]
-  (println type [arg1 arg2] )
   (let [[arg1 arg2]       [(str-to-int arg1) (str-to-int arg2)]
         category          (get-category href type)
         nb-articles       10
         [offset articles] (condp = type
                             :single [nil         (select_article arg1)]
                             :page   [arg1        (select_articles arg1 (inc nb-articles) (name category))]
-                            :tag    [(or arg2 0) (mapcat #(select_article (:uid %)) (articles_by_tags arg1 arg2 nb-articles))]) ;; FIXME articles_by_tags could return whole articles
+                            :tag    [(or arg2 0) (articles_by_tags arg1 arg2 (inc nb-articles))])
         [nx articles]     (if (> (count articles) nb-articles)
                             [(+ offset nb-articles) (drop-last articles)]
                             [nil articles])

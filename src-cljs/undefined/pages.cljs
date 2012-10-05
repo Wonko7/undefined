@@ -116,7 +116,7 @@
   ([href args & [no-hist]]
    (clear-future-actions!)
    (when (nil? no-hist)
-     (if args
+     (if (seq args)
        (.setToken history (apply str (concat [href "/"] (interpose "/" args))))
        (.setToken history href)))
    (em/at js/document

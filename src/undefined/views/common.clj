@@ -141,7 +141,6 @@
                     {:metadata {:data-init-page "404"}}))
 
 (defremote get-page [href & [args]]
-  (println "get-page" "|" href "|" args (page-inits href))
   (apply str (html/emit* (if-let [f (page-inits href)]
                            (f (session/get :id) href args)
                            page-404))))
