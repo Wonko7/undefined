@@ -104,6 +104,7 @@
          href (em/from a (em/get-attr :href))
          ext  (em/from a (em/get-attr :data-ext))
          pre  (em/from a (em/get-attr :data-pre-exec))
+         href (if (= \/ (first href)) (apply str (next href)) href)
          fun  (re-find #"^\w+" href)
          args (map second (re-seq #"[/](\w+)" href))]
      (when-let [f (get-pre-link pre)]

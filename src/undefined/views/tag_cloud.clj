@@ -9,9 +9,7 @@
                                                          :data-ext "true"}]
                                            ["Blog Feed" {:href (str url "/blog-feed")
                                                          :data-ext "true"}]]) ;; FIXME add g+ twitter & facebook
-                  (map #(li-link (:label %) {:href (str "/tag/" (:uid %))
-                                             :data-href "tag"
-                                             :data-args (str (:uid %))})
+                  (map #(li-link (:label %) {:href (str "/tag/" (:uid %))})
                        (sort #(> (:cnt %1) (:cnt %2)) (tag_cloud)))))) ;; FIXME we need a limit. and maybe sql should do the sort, depends on what ui we choose.
 
 (add-page-init! "right-content" right-content-page)

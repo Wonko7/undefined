@@ -78,6 +78,7 @@
 (add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))
 (add-page-init! "blog-article" #(news-page %1 %2 :single %3) 1)
 (add-page-init! "news-article" #(news-page %1 %2 :single %3) 1)
+(add-page-init! "tag-article"  #(news-page %1 %2 :single %3) 1)
 (add-page-init! "news" #(news-page %1 %2 :page %3) 1)
 (add-page-init! "blog" #(news-page %1 %2 :page %3) 1)
 
