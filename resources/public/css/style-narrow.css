@@ -365,13 +365,13 @@ hr {
 
 /* line 4, ../../themes/style-narrow.scss */
 #page-right-wrapper {
-  width: inherit;
+  width: auto;
   float: none;
 }
 
 /* line 10, ../../themes/style-narrow.scss */
 #page-wrapper, #loading-wrapper {
-  width: inherit;
+  width: auto;
   float: none;
 }
 
