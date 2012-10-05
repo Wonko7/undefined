@@ -90,7 +90,7 @@
 
 (def history (hist/history (fn [{:keys [token navigation?]}]
                              (when navigation?
-                               (let [[href arg] (split token #"[/]")]
+                               (let [[href & arg] (split token #"[/]")]
                                  (page-click href arg :no-hist))))))
 
 ;; FIXME this should work. check css-select.
@@ -100,13 +100,11 @@
 (defn page-click
   ;; call with an event (used through em/listen)
   ([e]
-   (let [a    (.-currentTarget e)
-         href (em/from a (em/get-attr :href))
-         ext  (em/from a (em/get-attr :data-ext))
-         pre  (em/from a (em/get-attr :data-pre-exec))
-         href (filter #(not= "" %) (split href #"[/]"))
-         fun  (first href)
-         args (next href)]
+   (let [a            (.-currentTarget e)
+         href         (em/from a (em/get-attr :href))
+         ext          (em/from a (em/get-attr :data-ext))
+         pre          (em/from a (em/get-attr :data-pre-exec))
+         [fun & args] (filter #(not= "" %) (split href #"[/]"))]
      (when-let [f (get-pre-link pre)]
        (f e (em/from a (em/get-attr :data-pre-args))))
      (when (not= ext "true")
