@@ -112,10 +112,15 @@
           (aggregate (count :*) :cnt :tags.label)
           (join tags (= :tags.uid :article_tags.tagid))))
 
-(defn articles_by_tags [id]
+(defn articles_by_tags [id off n]
   (select article_tags
-          (fields [:article_tags.artid :uid])
-          (where {:article_tags.tagid id})))
+          (fields [:article_tags.artid :uid]
+                  [:articles.title :title] [:articles.body :body] [:articles.birth :birth])
+          (join articles (= :articles.uid :article_tags.artid))
+          (where {:article_tags.tagid id})
+          (limit n)
+          (offset off)
+          (order :articles.birth :DESC)))
 
 (defn select_articles [off n cat]
   (select article_categories
