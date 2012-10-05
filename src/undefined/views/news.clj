@@ -10,6 +10,11 @@
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Helper funs;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn blog-nav [prev next category type id offset]
   (let [link (str (name category) (when (= type :single) "-article"))
         args #(if (= type :tag)
@@ -31,6 +36,11 @@
     (= category :news) "Undefined's Latest News"
     id                 (str (:label (first (select_tags id))))
     :else              "Undefined's Articles"))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  News;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn news-page [user-id href type [arg1 arg2]]
   (println type [arg1 arg2] )
@@ -57,6 +67,10 @@
            :metadata {:data-init-page "news"}})))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  Updates;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defn update-article-div [user-id href uid]
   (let [article (first (select_article uid))]
     (newarticle (select_authors) (select_categories) (:title article) (:body article)
@@ -70,6 +84,11 @@
              (str "Tags: " (get_labels (tags_by_article (:uid art)) :label))
              (str "Authors: " (get_labels (authors_by_article (:uid art)) :name))
              (is-admin? user-id))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;  routes;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-page-init! "update-article-div" update-article-div)
 (add-page-init! "refresh-article-div" refresh-article-div)
