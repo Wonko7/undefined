@@ -104,25 +104,25 @@
          href (em/from a (em/get-attr :href))
          ext  (em/from a (em/get-attr :data-ext))
          pre  (em/from a (em/get-attr :data-pre-exec))
-         href (if (= \/ (first href)) (apply str (next href)) href)
-         fun  (re-find #"^[A-Za-z0-9_-]+" href) ;; Warning; does not work on absolute links. I don't think we need that though...
-         args (map second (re-seq #"[/]([A-Za-z0-9_-]+)" href))]
+         href (filter #(not= "" %) (split href #"[/]"))
+         fun  (first href)
+         args (next href)]
      (when-let [f (get-pre-link pre)]
        (f e (em/from a (em/get-attr :data-pre-args))))
      (when (not= ext "true")
        (.preventDefault e)
        (page-click fun args))))
   ;; can be called directly:
-  ([href args & [no-hist]]
+  ([fun args & [no-hist]]
    (clear-future-actions!)
    (when (nil? no-hist)
      (if (seq args)
-       (.setToken history (apply str (concat [href "/"] (interpose "/" args))))
-       (.setToken history href)))
+       (.setToken history (apply str (concat [fun "/"] (interpose "/" args))))
+       (.setToken history fun)))
    (em/at js/document
           [:#loading-wrapper] (em/html-content "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
           [:#page] (em/chain (em/fade-out 100)
-                             #(load-page href args %1 %2)
+                             #(load-page fun args %1 %2)
                              (em/fade-in 100)
                              #(em/at js/document [:#loading] (em/remove-node)))))) ;; WARNING: this breaks em/chain
 
