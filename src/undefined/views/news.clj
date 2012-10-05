@@ -16,44 +16,44 @@
                 (str "/" id "/" %1)
                 (str "/" %1))]
     [(when prev
-       {:tag :a :attrs {:href (str link (args prev)) :data-href link :data-args prev} :content "Previous"})
+       {:tag :a :attrs {:href (str link (args prev))} :content "Previous"})
      (when next
-       {:tag :a :attrs {:href (str link (args next)) :data-href link :data-args next :style "float: right"} :content "Next"})]))
+       {:tag :a :attrs {:href (str link (args next)) :style "float: right"} :content "Next"})]))
 
 (defn get-category [href type]
   (cond (= type :tag)       :tag
-        (= (first href) \b) :blog 
+        (= (first href) \b) :blog
         :else               :news))
 
 (defn mk-blog-cat-title [category & [id]]
   (cond
-    (= type :blog) "Undefined's Technical Blog"
-    (= type :news) "Undefined's Latest News"
-    id             (str (:label (first (select_tags id))))
-    :else          "Undefined's Articles"))
+    (= category :blog) "Undefined's Technical Blog"
+    (= category :news) "Undefined's Latest News"
+    id                 (str (:label (first (select_tags id))))
+    :else              "Undefined's Articles"))
 
-(defn news-page [user-id href type args]
-  (let [[arg1 arg2]      (map str-to-int args)
-        category         (get-category href type)
-        nb-articles      10
+(defn news-page [user-id href type [arg1 arg2]]
+  (println type [arg1 arg2] )
+  (let [[arg1 arg2]       [(str-to-int arg1) (str-to-int arg2)]
+        category          (get-category href type)
+        nb-articles       10
         [offset articles] (condp = type
                             :single [nil         (select_article arg1)]
                             :page   [arg1        (select_articles arg1 (inc nb-articles) (name category))]
                             :tag    [(or arg2 0) (mapcat #(select_article (:uid %)) (articles_by_tags arg1))]) ;; FIXME articles_by_tags could return whole articles
-        [nx articles] (if (> (count articles) nb-articles)
-                        [(drop-last articles) (+ offset nb-articles)]
-                        [nil articles])
-        pv            (when (and (not= type :single) (> offset 0))
-                        (- offset nb-articles))
-        
-        admin?           (is-admin? user-id)]
+        [nx articles]     (if (> (count articles) nb-articles)
+                            [(+ offset nb-articles) (drop-last articles)]
+                            [nil articles])
+        pv                (when (and offset (> offset 0))
+                            (- offset nb-articles))
+        admin?            (is-admin? user-id)]
     (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
                          admin?)
                articles)
-          {:bottom (blog-nav category type (if (neg? pv) 0 pv) nx)
+          {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
 
 
@@ -74,8 +74,8 @@
 (add-page-init! "update-article-div" update-article-div)
 (add-page-init! "refresh-article-div" refresh-article-div)
 
-(add-page-init! "news" #(news-page %1 %2 :page (or 0 %3))) ;; always evals to 0 but reference %3 for compiler.
-(add-page-init! "blog" #(news-page %1 %2 :page (or 0 %3)))
+(add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.
+(add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))
 (add-page-init! "blog-article" #(news-page %1 %2 :single %3) 1)
 (add-page-init! "news-article" #(news-page %1 %2 :single %3) 1)
 (add-page-init! "news" #(news-page %1 %2 :page %3) 1)

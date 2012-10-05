@@ -143,6 +143,7 @@
                     {:metadata {:data-init-page "404"}}))
 
 (defremote get-page [href & [args]]
+  (println "get-page" "|" href "|" args (page-inits href))
   (apply str (html/emit* (if-let [f (page-inits href)]
                            (f (session/get :id) href args)
                            page-404))))
@@ -158,6 +159,6 @@
         (let [args (map #(str "id" %) (range nb-args))
               syms (map symbol args)]
           `(defpage ~(str "/" name "/:" (apply str (interpose "/:" args))) {:keys [~@syms]}
-             (base (~fun (session/get :id) ~name [~@syms])))) 
+             (base (~fun (session/get :id) ~name [~@syms]))))
         `(defpage ~(str "/" name) []
            (base (~fun (session/get :id) ~name nil))))))
