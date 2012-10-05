@@ -2,7 +2,7 @@
   (:require [net.cgrand.enlive-html :as html])
   (:use [undefined.views.common :only [add-page-init! page newarticle article base]]
         [undefined.sql :only [select_articles select_article select_authors select_categories
-                              tags_by_article 
+                              tags_by_article articles_by_tags select_tags
                               categories_by_article
                               authors_by_article]]
         [undefined.auth :only [is-admin?]]
@@ -10,43 +10,53 @@
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
 
-(defn blog-nav [link prev next]
-  [(when prev
-     {:tag :a :attrs {:href (str link "/" prev) :data-href link :data-args prev} :content "Previous"}) ;; FIXME: make something more generic
-   (when next
-     {:tag :a :attrs {:href (str link "/" next) :data-href link :data-args next :style "float: right"} :content "Next"})])
+(defn blog-nav [prev next category type id offset]
+  (let [link (str (name category) (when (= type :single) "-article"))
+        args #(if (= type :tag)
+                (str "/" id "/" %1)
+                (str "/" %1))]
+    [(when prev
+       {:tag :a :attrs {:href (str link (args prev))} :content "Previous"})
+     (when next
+       {:tag :a :attrs {:href (str link (args next)) :style "float: right"} :content "Next"})]))
 
-(defn mk-blog-cat-title [category]
-  (if (= :blog category)
-    "Undefined's Technical Blog"
-    "Undefined's Latest News"))
+(defn get-category [href type]
+  (cond (= type :tag)       :tag
+        (= (first href) \b) :blog
+        :else               :news))
 
-(defn news-page [user-id href article-id & [nb-articles]]
-  (let [category         (if (= (take 4 href) (seq "blog")) :blog :news)
-        single-art?      (= 1 nb-articles)
-        nb-articles      (str-to-int nb-articles 10)
-        article-id       (str-to-int article-id 0)
-        [pv nx articles] (if single-art?
-                           [nil nil (select_article article-id)]
-                           (let [arts      (select_articles article-id (inc nb-articles) (name category))
-                                 [arts nx] (if (> (count arts) nb-articles)
-                                             [(drop-last arts) (+ article-id nb-articles)]
-                                             [arts nil])
-                                 pv (- article-id nb-articles)
-                                 pv (if (neg? pv) 0 pv)]
-                             [(when (> article-id 0) pv) nx arts]))
-        admin?           (is-admin? user-id)]
-    (page (mk-blog-cat-title category)
+(defn mk-blog-cat-title [category & [id]]
+  (cond
+    (= category :blog) "Undefined's Technical Blog"
+    (= category :news) "Undefined's Latest News"
+    id                 (str (:label (first (select_tags id))))
+    :else              "Undefined's Articles"))
+
+(defn news-page [user-id href type [arg1 arg2]]
+  (println type [arg1 arg2] )
+  (let [[arg1 arg2]       [(str-to-int arg1) (str-to-int arg2)]
+        category          (get-category href type)
+        nb-articles       10
+        [offset articles] (condp = type
+                            :single [nil         (select_article arg1)]
+                            :page   [arg1        (select_articles arg1 (inc nb-articles) (name category))]
+                            :tag    [(or arg2 0) (mapcat #(select_article (:uid %)) (articles_by_tags arg1))]) ;; FIXME articles_by_tags could return whole articles
+        [nx articles]     (if (> (count articles) nb-articles)
+                            [(+ offset nb-articles) (drop-last articles)]
+                            [nil articles])
+        pv                (when (and offset (> offset 0))
+                            (- offset nb-articles))
+        admin?            (is-admin? user-id)]
+    (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
                          admin?)
                articles)
-          {:bottom (blog-nav href pv nx)
+          {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
 
 
-;FIXME use news/blog correctly
 (defn update-article-div [user-id href uid]
   (let [article (first (select_article uid))]
     (newarticle (select_authors) (select_categories) (:title article) (:body article)
@@ -64,9 +74,13 @@
 (add-page-init! "update-article-div" update-article-div)
 (add-page-init! "refresh-article-div" refresh-article-div)
 
-(add-page-init! "news" news-page)
-(add-page-init! "blog" news-page)
-(add-page-init! "blog-article" #(news-page %1 %2 %3 1) id)
-(add-page-init! "news-article" #(news-page %1 %2 %3 1) id)
-(add-page-init! "news" #(news-page %1 %2 %3) page)
-(add-page-init! "blog" #(news-page %1 %2 %3) page)
+(add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.
+(add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))
+(add-page-init! "blog-article" #(news-page %1 %2 :single %3) 1)
+(add-page-init! "news-article" #(news-page %1 %2 :single %3) 1)
+(add-page-init! "tag-article"  #(news-page %1 %2 :single %3) 1)
+(add-page-init! "news" #(news-page %1 %2 :page %3) 1)
+(add-page-init! "blog" #(news-page %1 %2 :page %3) 1)
+
+(add-page-init! "tag"  #(news-page %1 %2 :tag %3) 1)
+(add-page-init! "tag"  #(news-page %1 %2 :tag %3) 2)

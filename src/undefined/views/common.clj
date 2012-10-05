@@ -15,6 +15,8 @@
        (apply (html/snippet ~source ~selector [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ] ~@forms)
               [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ]))))
 
+(defn set-attrs [data] ;; FIXME (into :attrs data) ?
+  (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page composition:
@@ -26,10 +28,8 @@
 
   [:div.whole-article]  (html/set-attr :id (str "article_" uid))
   [:.article-title :a]  (html/do-> (html/content title)
-                                   (html/set-attr :href url)
-                                   (html/set-attr :data-href (str (name category) "-article"))
-                                   (html/set-attr :data-args (str uid)))
-  [:.social :.href-set] (html/set-attr :href url) ;; FIXME for now unused, g+ was slow.
+                                   (html/set-attr :href url))
+  ;[:.social :.href-set] (html/set-attr :href url) ;; FIXME for now unused, g+ was slow.
   [:.article-date]      (html/content date)
   [:.article]           (html/append article)
   [:.tags]              (html/content tags)
@@ -64,18 +64,32 @@
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]
-  [:#metadata] (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
+  [:#metadata] (set-attrs data))
+
+(html/defsnippet right-content "templates/right-content.html" [:#right-content]
+  [static-links tags]
+  [:ul.static-links] (html/append static-links)
+  [:ul.tags]         (html/append tags))
+
+(html/defsnippet li-link "templates/right-content.html" [:li]
+  [title attrs]
+  [:li :a] (html/do->
+             (set-attrs attrs)
+             (html/content title)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page skeleton:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(declare page-inits)
+
 (html/deftemplate base "templates/index.html"
   [content]
-  [:.admin]        (html/add-class "hidden")
-  [:title]         (html/content "Undefined Development")
-  [:#page-wrapper] (html/append content))
+  [:.admin]              (html/add-class "hidden")
+  [:title]               (html/content "Undefined Development")
+  [:#page-wrapper]       (html/append content)
+  [:#page-right-wrapper] (html/append ((page-inits "right-content") nil "right-content" nil)))
 
 (html/defsnippet page "templates/page.html" [:#page]
   [title content & [optional]]
@@ -127,6 +141,7 @@
                     {:metadata {:data-init-page "404"}}))
 
 (defremote get-page [href & [args]]
+  (println "get-page" "|" href "|" args (page-inits href))
   (apply str (html/emit* (if-let [f (page-inits href)]
                            (f (session/get :id) href args)
                            page-404))))
@@ -135,11 +150,13 @@
 (defn register-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
-(defmacro add-page-init! [name fun & [arg]]
+(defmacro add-page-init! [name fun & [nb-args]]
   `(do
      (register-page-init! ~name ~fun)
-     ~(if arg
-        `(defpage ~(str "/" name "/:" arg ) {:keys [~(symbol arg)]}
-           (base (~fun (session/get :id) ~name ~(symbol arg))))
+     ~(if nb-args
+        (let [args (map #(str "id" %) (range nb-args))
+              syms (map symbol args)]
+          `(defpage ~(str "/" name "/:" (apply str (interpose "/:" args))) {:keys [~@syms]}
+             (base (~fun (session/get :id) ~name [~@syms]))))
         `(defpage ~(str "/" name) []
            (base (~fun (session/get :id) ~name nil))))))

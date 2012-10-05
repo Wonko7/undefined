@@ -6,7 +6,7 @@
 }
 
 /* line 39, ../../themes/style.scss */
-.rounded-small, .small-center-dialog, #login, .newarticle, #title, .whole-article {
+.rounded-small, .small-center-dialog, #login, .newarticle, #title, .right-title, .whole-article {
   -webkit-border-radius: 5px 5px;
   -moz-border-radius: 5px / 5px;
   border-radius: 5px / 5px;
@@ -30,7 +30,7 @@
 }
 
 /* line 52, ../../themes/style.scss */
-.shadow-small, #title, .whole-article {
+.shadow-small, #title, .right-title, .whole-article {
   -webkit-box-shadow: #444444 2px 2px 10px;
   -moz-box-shadow: #444444 2px 2px 10px;
   box-shadow: #444444 2px 2px 10px;
@@ -44,12 +44,12 @@
 }
 
 /* line 60, ../../themes/style.scss */
-.shadow-margin, #title, .whole-article, .whole-article .article-title, .whole-article .article, .whole-article .social, .product {
+.shadow-margin, #title, .right-title, .title, .whole-article .article-title, .whole-article, .whole-article .article, .whole-article .social, .product {
   margin: 15px;
 }
 
 /* line 64, ../../themes/style.scss */
-.text-shadow, #title, .whole-article .article-title {
+.text-shadow, #title, .right-title, .title, .whole-article .article-title {
   text-shadow: 0px 0px 1px #555555;
 }
 
@@ -60,7 +60,7 @@
 }
 
 /* line 74, ../../themes/style.scss */
-.visible-border, .small-center-dialog, #login, .newarticle, .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button, #title, .whole-article {
+.visible-border, .small-center-dialog, #login, .newarticle, .input-light, .whole-article button, #login input[type=text], #login input[type=password], #login input[type=submit], .newarticle input, .newarticle textarea, .newarticle button, #title, .right-title, .whole-article {
   border: 2px solid #339933;
 }
 
@@ -104,18 +104,18 @@ body {
   color: #336633;
 }
 
-/* line 122, ../../themes/style.scss */
+/* line 123, ../../themes/style.scss */
 #nav-wrapper {
   width: 100%;
 }
 
-/* line 127, ../../themes/style.scss */
+/* line 128, ../../themes/style.scss */
 #nav {
   margin: 0 auto;
   max-width: 1100px;
 }
 
-/* line 132, ../../themes/style.scss */
+/* line 133, ../../themes/style.scss */
 #nav a, #nav a:visited {
   padding: 3px;
   color: #339933;
@@ -127,33 +127,48 @@ body {
   margin-right: 10px;
 }
 
-/* line 144, ../../themes/style.scss */
+/* line 145, ../../themes/style.scss */
 #nav a:hover {
   color: #555555;
 }
 
-/* line 148, ../../themes/style.scss */
+/* line 149, ../../themes/style.scss */
 #page-wrapper-wrapper {
   max-width: 1100px;
   margin: 0 auto;
   position: relative;
 }
 
-/* line 154, ../../themes/style.scss */
+/* line 155, ../../themes/style.scss */
 #page-right-wrapper {
   width: 29%;
   float: right;
 }
-
 /* line 159, ../../themes/style.scss */
-#page-wrapper, #loading-wrapper {
-  width: 70%;
+#page-right-wrapper #right-content {
+  margin: 30px;
+}
+/* line 161, ../../themes/style.scss */
+#page-right-wrapper #right-content ul {
+  list-style-type: disc;
+  color: #339933;
+}
+
+/* line 168, ../../themes/style.scss */
+#page-content-wrapper {
   position: absolute;
+  width: 100%;
   top: 0px;
   left: 0px;
 }
 
-/* line 167, ../../themes/style.scss */
+/* line 175, ../../themes/style.scss */
+#page-wrapper, #loading-wrapper {
+  width: 70%;
+  float: left;
+}
+
+/* line 180, ../../themes/style.scss */
 #page {
   min-height: 50px;
   margin-bottom: 2%;
@@ -161,33 +176,17 @@ body {
   overflow: hidden;
 }
 
-/* line 174, ../../themes/style.scss */
-#title {
-  text-align: center;
-  font-size: 20px;
-  font-weight: bold;
-  color: #22aa22;
-}
-
 /* line 187, ../../themes/style.scss */
-a, a:visited {
-  color: #339933;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-/* line 193, ../../themes/style.scss */
-a:hover {
-  color: #555555;
-}
-
-/* line 197, ../../themes/style.scss */
 #loading-wrapper {
   z-index: -1;
+  position: absolute;
+  top: 100px;
+  left: 0px;
+  margin: 0 auto;
   overflow: hidden;
 }
 
-/* line 203, ../../themes/style.scss */
+/* line 194, ../../themes/style.scss */
 #loading {
   width: 100%;
   padding-top: 50px;
@@ -197,45 +196,72 @@ a:hover {
   z-index: -1;
 }
 
-/* line 218, ../../themes/style.scss */
-.whole-article {
-  padding-bottom: 10px;
-  overflow: hidden;
+/* line 203, ../../themes/style.scss */
+#title, .right-title {
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #22aa22;
 }
-/* line 226, ../../themes/style.scss */
-.whole-article button {
-  margin: 5px;
-}
-/* line 231, ../../themes/style.scss */
-.whole-article hr {
-  border: none;
-  color: #339933;
-  background-color: #339933;
-  height: 2px;
-  width: 100%;
-}
-/* line 238, ../../themes/style.scss */
-.whole-article .article-title {
+
+/* line 215, ../../themes/style.scss */
+.title, .whole-article .article-title {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
   color: #22aa22;
   margin-top: 5px;
 }
-/* line 248, ../../themes/style.scss */
+
+/* line 225, ../../themes/style.scss */
+.right-title {
+  font-size: 18px;
+}
+
+/* line 231, ../../themes/style.scss */
+a, a:visited {
+  color: #339933;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* line 237, ../../themes/style.scss */
+a:hover {
+  color: #555555;
+}
+
+/* line 241, ../../themes/style.scss */
+hr {
+  border: none;
+  color: #339933;
+  background-color: #339933;
+  height: 2px;
+  width: 100%;
+}
+
+/* line 255, ../../themes/style.scss */
+.whole-article {
+  padding-bottom: 10px;
+  overflow: hidden;
+}
+/* line 263, ../../themes/style.scss */
+.whole-article button {
+  margin: 5px;
+}
+/* line 272, ../../themes/style.scss */
 .whole-article .article-date, .whole-article .tags, .whole-article .categories, .whole-article .authors {
   margin-left: 15px;
   margin-right: 15px;
   font-size: 13px;
   color: #666666;
 }
-/* line 262, ../../themes/style.scss */
+/* line 286, ../../themes/style.scss */
 .whole-article .article {
   margin-bottom: 10px;
   margin-top: 10px;
   text-align: justify;
 }
-/* line 268, ../../themes/style.scss */
+/* line 292, ../../themes/style.scss */
 .whole-article .article .code {
   font-family: 'Courier New', monospace;
   white-space: pre-wrap;
@@ -245,92 +271,92 @@ a:hover {
   padding: 1%;
   background: #dddddd;
 }
-/* line 278, ../../themes/style.scss */
+/* line 302, ../../themes/style.scss */
 .whole-article .article .bold {
   font-weight: bold;
 }
-/* line 279, ../../themes/style.scss */
+/* line 303, ../../themes/style.scss */
 .whole-article .article .it {
   font-style: italic;
 }
-/* line 280, ../../themes/style.scss */
+/* line 304, ../../themes/style.scss */
 .whole-article .article .underline {
   text-decoration: underline;
 }
-/* line 283, ../../themes/style.scss */
+/* line 307, ../../themes/style.scss */
 .whole-article .social {
   margin-top: 10px;
 }
 
-/* line 294, ../../themes/style.scss */
+/* line 318, ../../themes/style.scss */
 .product {
   text-align: justify;
 }
-/* line 298, ../../themes/style.scss */
+/* line 322, ../../themes/style.scss */
 .product .product-screenshot {
   max-width: 50%;
   float: left;
   margin-right: 15px;
   margin-bottom: 15px;
 }
-/* line 299, ../../themes/style.scss */
+/* line 323, ../../themes/style.scss */
 .product .product-screenshot img {
   max-width: 100%;
 }
 
-/* line 314, ../../themes/style.scss */
+/* line 338, ../../themes/style.scss */
 #login input[type=text], #login input[type=password] {
   margin-top: 10px;
   width: 150px;
   font-weight: bold;
 }
-/* line 321, ../../themes/style.scss */
+/* line 345, ../../themes/style.scss */
 #login input[type=submit] {
   margin-left: 220px;
   margin-top: 20px;
   font-weight: bold;
 }
-/* line 328, ../../themes/style.scss */
+/* line 352, ../../themes/style.scss */
 #login input[type=text], #login input[type=password], #login label {
   display: inline-block;
 }
-/* line 329, ../../themes/style.scss */
+/* line 353, ../../themes/style.scss */
 #login label {
   width: 100px;
 }
 
-/* line 340, ../../themes/style.scss */
+/* line 364, ../../themes/style.scss */
 .newarticle {
   width: 80%;
   overflow: hidden;
 }
-/* line 341, ../../themes/style.scss */
+/* line 365, ../../themes/style.scss */
 .newarticle .inp_title {
   font-weight: bold;
 }
-/* line 342, ../../themes/style.scss */
+/* line 366, ../../themes/style.scss */
 .newarticle .inp_tags {
   font-style: italic;
 }
-/* line 346, ../../themes/style.scss */
+/* line 370, ../../themes/style.scss */
 .newarticle fieldset {
   margin-top: 10px;
 }
-/* line 347, ../../themes/style.scss */
+/* line 371, ../../themes/style.scss */
 .newarticle button {
   margin-top: 20px;
   float: right;
 }
-/* line 349, ../../themes/style.scss */
+/* line 373, ../../themes/style.scss */
 .newarticle input, .newarticle textarea, .newarticle button {
   padding: 5px;
   margin: 5px;
 }
-/* line 355, ../../themes/style.scss */
+/* line 379, ../../themes/style.scss */
 .newarticle textarea {
   height: 300px;
 }
-/* line 356, ../../themes/style.scss */
+/* line 380, ../../themes/style.scss */
 .newarticle input[type=text], .newarticle textarea {
   width: 90%;
   margin-left: 5%;

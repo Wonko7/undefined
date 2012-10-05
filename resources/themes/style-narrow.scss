@@ -4,6 +4,7 @@
 #page-right-wrapper {
 	width: inherit;
 	float: none;
+	@extend .shadow-margin;
 }
 
 #page-wrapper {

@@ -117,6 +117,7 @@ $shadow-small: 5px;
 
 body {
 	color: $base-dark;
+	//background: #222; -> too matrix
 }
 
 #nav-wrapper {
@@ -154,14 +155,26 @@ body {
 #page-right-wrapper {
 	width: 29%;
 	float: right;
+
+	#right-content {
+		margin: 30px;
+		ul {
+			list-style-type: disc;
+			color: $base-light;
+		}
+	}
+}
+
+#page-content-wrapper {
+	position: absolute;
+	width: 100%;
+	top: 0px;
+	left: 0px;
 }
 
 #page-wrapper {
 	width: 70%;
-	//float: left;
-	position: absolute;
-	top: 0px;
-	left: 0px;
+	float: left;
 }
 
 #page {
@@ -169,29 +182,6 @@ body {
 	margin-bottom: 2%;
 	color: $dark-grey;
 	overflow: hidden;
-}
-
-#title { 
-	@extend .text-shadow;
-	text-align: center;
-	font-size: 20px;
-	font-weight: bold;
-	color: $base-lighter;
-	@extend .shadow-margin;
-	@extend .visible-border;
-	@extend .shadow-small;
-	@extend .rounded-small;
-}
-
-// links in page:
-a, a:visited {
-	color: $base-light;
-	font-weight: bold;
-	text-decoration: none;
-}
-
-a:hover {
-	color: $dark-grey;
 }
 
 #loading-wrapper {
@@ -208,6 +198,52 @@ a:hover {
 	text-align: center;
 	position: relative;
 	z-index: -1;
+}
+
+#title { 
+	@extend .text-shadow;
+	text-align: center;
+	font-size: 20px;
+	font-weight: bold;
+	color: $base-lighter;
+	@extend .shadow-margin;
+	@extend .visible-border;
+	@extend .shadow-small;
+	@extend .rounded-small;
+}
+
+.title {
+	@extend .text-shadow;
+	@extend .shadow-margin;
+	text-align: center;
+	font-size: 18px;
+	font-weight: bold;
+	color: $base-lighter;
+	margin-top: 5px;
+}
+
+.right-title {
+	@extend #title;
+	font-size: 18px;
+}
+
+// links in page:
+a, a:visited {
+	color: $base-light;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+a:hover {
+	color: $dark-grey;
+}
+
+hr {
+	border: none;
+	color: $base-light;
+	background-color: $base-light;
+	height: 2px;
+	width: 100%;
 }
 
 
@@ -229,21 +265,8 @@ a:hover {
 		margin: 5px;
 	}
 
-	hr {
-		border: none;
-		color: $base-light;
-		background-color: $base-light;
-		height: 2px;
-		width: 100%;
-	}
 	.article-title {
-		@extend .text-shadow;
-		@extend .shadow-margin;
-		text-align: center;
-		font-size: 18px;
-		font-weight: bold;
-		color: $base-lighter;
-		margin-top: 5px;
+		@extend .title;
 	}
 
 	.article-date, .tags, .categories, .authors {

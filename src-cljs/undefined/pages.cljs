@@ -13,6 +13,8 @@
 ;;;;;; page inits:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(declare page-click)
+
 (def page-inits {})
 (def pre-link-inits {})
 
@@ -27,7 +29,7 @@
                       :init [:#metadata] (em/get-attr :data-init-page)
                       :args [:#metadata] (em/get-attr :data-init-args))]
     (em/at js/document
-           [:#page-wrapper :a] (em/listen :click page-click))
+           [:#page-wrapper-wrapper :a] (em/listen :click page-click))
     (when (:init data)
       (if-let [f ((:init data) page-inits)]
         (f (:args data))))
@@ -77,8 +79,6 @@
 ;;;;;; page loading:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(declare page-click)
-
 (defn load-page [href args em-args em-fx]
   (fm/letrem [page (get-page href args)]
     (.scrollTo js/window 0 0)
@@ -101,24 +101,26 @@
   ;; call with an event (used through em/listen)
   ([e]
    (let [a    (.-currentTarget e)
-         href (em/from a (em/get-attr :data-href))
+         href (em/from a (em/get-attr :href))
          ext  (em/from a (em/get-attr :data-ext))
-         args (em/from a (em/get-attr :data-args))
-         pre  (em/from a (em/get-attr :data-pre-exec))]
+         pre  (em/from a (em/get-attr :data-pre-exec))
+         href (if (= \/ (first href)) (apply str (next href)) href)
+         fun  (re-find #"^\w+" href)
+         args (map second (re-seq #"[/](\w+)" href))]
      (when-let [f (get-pre-link pre)]
        (f e (em/from a (em/get-attr :data-pre-args))))
      (when (not= ext "true")
        (.preventDefault e)
-       (page-click href args))))
+       (page-click fun args))))
   ;; can be called directly:
   ([href args & [no-hist]]
    (clear-future-actions!)
    (when (nil? no-hist)
      (if args
-       (.setToken history (str href "/" args)) ;; check if args is a seq. if so, reduce it.
+       (.setToken history (apply str (concat [href "/"] (interpose "/" args))))
        (.setToken history href)))
    (em/at js/document
-          ["#loading-wrapper"] (em/html-content "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
+          [:#loading-wrapper] (em/html-content "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
           [:#page] (em/chain (em/fade-out 100)
                              #(load-page href args %1 %2)
                              (em/fade-in 100)
