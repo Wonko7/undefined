@@ -151,11 +151,13 @@
 (defn register-page-init! [name func]
   (def page-inits (into page-inits {name func})))
 
-(defmacro add-page-init! [name fun & [arg]]
+(defmacro add-page-init! [name fun & [nb-args]]
   `(do
      (register-page-init! ~name ~fun)
-     ~(if arg
-        `(defpage ~(str "/" name "/:" arg ) {:keys [~(symbol arg)]}
-           (base (~fun (session/get :id) ~name ~(symbol arg))))
+     ~(if nb-args
+        (let [args (map #(str "id" %) (range nb-args))
+              syms (map symbol args)]
+          `(defpage ~(str "/" name "/:" (apply str (interpose "/:" args))) {:keys [~@syms]}
+             (base (~fun (session/get :id) ~name [~@syms])))) 
         `(defpage ~(str "/" name) []
            (base (~fun (session/get :id) ~name nil))))))

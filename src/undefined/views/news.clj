@@ -10,11 +10,15 @@
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
 
-(defn blog-nav [link prev next]
-  [(when prev
-     {:tag :a :attrs {:href (str link "/" prev) :data-href link :data-args prev} :content "Previous"}) ;; FIXME: make something more generic
-   (when next
-     {:tag :a :attrs {:href (str link "/" next) :data-href link :data-args next :style "float: right"} :content "Next"})])
+(defn blog-nav [prev next category type id offset]
+  (let [link (str (name category) (when (= type :single) "-article"))
+        args #(if (= type :tag)
+                (str "/" id "/" %1)
+                (str "/" %1))]
+    [(when prev
+       {:tag :a :attrs {:href (str link (args prev)) :data-href link :data-args prev} :content "Previous"})
+     (when next
+       {:tag :a :attrs {:href (str link (args next)) :data-href link :data-args next :style "float: right"} :content "Next"})]))
 
 (defn get-category [href type]
   (cond (= type :tag)       :tag
@@ -28,30 +32,28 @@
     id             (str (:label (first (select_tags id))))
     :else          "Undefined's Articles"))
 
-(defn news-page [user-id href type id]
-  (let [id               (str-to-int id)
+(defn news-page [user-id href type args]
+  (let [[arg1 arg2]      (map str-to-int args)
         category         (get-category href type)
         nb-articles      10
-        articles         (condp = type
-                           :single (select_article id)
-                           :page   (select_articles id (inc nb-articles) (name category))
-                           :tag    (mapcat #(select_article (:uid %)) (articles_by_tags id))) ;; FIXME articles_by_tags could return whole articles
-        [pv nx articles] (if (= type :single)
-                           [nil nil articles]
-                           (let [[arts nx] (if (> (count articles) nb-articles)
-                                             [(drop-last articles) (+ id nb-articles)]
-                                             [articles nil])
-                                 pv (- id nb-articles)
-                                 pv (if (neg? pv) 0 pv)]
-                             [(when (and (not= type :tag) (> id 0)) pv) nx arts])) ;; FIXME we need pages for :tag too... think about it. tag/id/page. id argument is [id page] when type = :tag-page
+        [offset articles] (condp = type
+                            :single [nil         (select_article arg1)]
+                            :page   [arg1        (select_articles arg1 (inc nb-articles) (name category))]
+                            :tag    [(or arg2 0) (mapcat #(select_article (:uid %)) (articles_by_tags arg1))]) ;; FIXME articles_by_tags could return whole articles
+        [nx articles] (if (> (count articles) nb-articles)
+                        [(drop-last articles) (+ offset nb-articles)]
+                        [nil articles])
+        pv            (when (and (not= type :single) (> offset 0))
+                        (- offset nb-articles))
+        
         admin?           (is-admin? user-id)]
-    (page (mk-blog-cat-title category id)
+    (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
                          admin?)
                articles)
-          {:bottom (blog-nav href pv nx)
+          {:bottom (blog-nav category type (if (neg? pv) 0 pv) nx)
            :metadata {:data-init-page "news"}})))
 
 
@@ -74,9 +76,10 @@
 
 (add-page-init! "news" #(news-page %1 %2 :page (or 0 %3))) ;; always evals to 0 but reference %3 for compiler.
 (add-page-init! "blog" #(news-page %1 %2 :page (or 0 %3)))
-(add-page-init! "blog-article" #(news-page %1 %2 :single %3) id)
-(add-page-init! "news-article" #(news-page %1 %2 :single %3) id)
-(add-page-init! "news" #(news-page %1 %2 :page %3) page)
-(add-page-init! "blog" #(news-page %1 %2 :page %3) page)
+(add-page-init! "blog-article" #(news-page %1 %2 :single %3) 1)
+(add-page-init! "news-article" #(news-page %1 %2 :single %3) 1)
+(add-page-init! "news" #(news-page %1 %2 :page %3) 1)
+(add-page-init! "blog" #(news-page %1 %2 :page %3) 1)
 
-(add-page-init! "tag"  #(news-page %1 %2 :tag  %3) tag)
+(add-page-init! "tag"  #(news-page %1 %2 :tag %3) 1)
+(add-page-init! "tag"  #(news-page %1 %2 :tag %3) 2)
