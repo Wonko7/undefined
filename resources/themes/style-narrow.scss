@@ -13,9 +13,7 @@
 }
 
 #loading-wrapper {
-	@extend #page-wrapper;
-	z-index: -1;
-	overflow: hidden;
+	width: 100%;
 }
 
 .product {

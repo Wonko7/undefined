@@ -377,17 +377,16 @@ hr {
 
 /* line 15, ../../themes/style-narrow.scss */
 #loading-wrapper {
-  z-index: -1;
-  overflow: hidden;
+  width: 100%;
 }
 
-/* line 22, ../../themes/style-narrow.scss */
+/* line 20, ../../themes/style-narrow.scss */
 .product .product-screenshot {
   max-width: 100%;
   margin-right: 0px;
 }
 
-/* line 28, ../../themes/style-narrow.scss */
+/* line 26, ../../themes/style-narrow.scss */
 #bottom {
   margin-right: 15px;
   margin-left: 15px;
