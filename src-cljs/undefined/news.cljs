@@ -52,6 +52,7 @@
                                        (em/html-content div)
                                        (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit-article sel uid))))
                                        (restore-height 200))))))]
+;  (fm/letrem [res (get_user_rem :name "Landolphia")] (js/alert res))))
     (em/at js/document
       [:.btn_del] (em/listen :click delete-button)
       [:.btn_upd] (em/listen :click update-button))))

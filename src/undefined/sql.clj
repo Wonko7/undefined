@@ -178,7 +178,10 @@
                     [:uid id]
                     [:username username])]
     (select authors
-            (fields :username :password :salt)
+            (join author_roles (= :author_roles.authid :authors.uid))
+            (join roles (= :roles.uid :author_roles.roleid))
+            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :password]
+                    [:authors.salt :salt] [:roles.label :role])
             (where {col val}))))
 
 (defn select_products [] (select products))
@@ -262,7 +265,7 @@
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
 ;(defremote select_authors_rem [] (select authors))
 ;(defremote select_categories_rem [] (select categories))
-;(defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
+(defremote get_user_rem [& {:keys [id username] :or {id nil username nil}}] (get_user :id id :username username))
 ;(defremote select_products_rem [] (select_products))
 ;(defremote get_user_roles_rem [id] (get_user_roles id))
 ;(defremote is_user_admin_rem? [id] (is_user_admin? id))
