@@ -3,7 +3,7 @@ CREATE TABLE articles (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NO
 
 CREATE TABLE categories (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 CREATE TABLE tags (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
-CREATE TABLE authors (uid SERIAL PRIMARY KEY, name TEXT UNIQUE NOT NULL, hash TEXT NOT NULL, salt TEXT NOT NULL);
+CREATE TABLE authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, salt TEXT NOT NULL);
 
 CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 
@@ -19,7 +19,7 @@ INSERT INTO articles (title, body) VALUES ('First title', E'Lorem ipsum dolor si
 
 INSERT INTO tags (label) VALUES ('Sex'),('Drugs'),('Butterflies'),('Keyboards');
 INSERT INTO categories (label) VALUES ('blog'), ('news');
-INSERT INTO authors (name, hash, salt) VALUES ('Landolphia', 'tempnull', 'tempnull'), ('Wonko', 'tempnull', 'tempnull');
+INSERT INTO authors (username, password, salt) VALUES ('Landolphia', 'tempnull', 'tempnull'), ('Wonko', 'tempnull', 'tempnull');
 
 INSERT INTO article_tags VALUES (1, 1), (1, 4), (2, 2), (2, 1), (2, 4), (3, 3);
 INSERT INTO article_categories VALUES (1, 2), (2, 1), (2, 2), (3, 1), (4, 1), (4, 2);
