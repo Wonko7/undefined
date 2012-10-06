@@ -38,8 +38,6 @@
                        {:credential-fn (partial creds/bcrypt-credential-fn (fn [name]
                                                                              (let [[user] (get_user {:username name})
                                                                                    roles (get_user_roles (:uid user))]
-                                                                               ;(println (into {} (get_user_roles (:uid u))))
-                                                                               ;
                                                                                (println (:uid user) roles)
                                                                                (println (into user {:roles (into #{} roles)}))
                                                                                (into user {:roles #{::admin}})
