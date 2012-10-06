@@ -34,18 +34,15 @@
           {:status 401 :headers {"Content-Type" "text/plain"}
            :body ""})))))
 
-(server/add-middleware friend/authenticate
-                       {:credential-fn (partial creds/bcrypt-credential-fn (fn [name]
-                                                                             (let [[user] (get_user {:username name})
-                                                                                   roles (get_user_roles (:uid user))]
-                                                                               (println (:uid user) roles)
-                                                                               (println (into user {:roles (into #{} roles)}))
-                                                                               (into user {:roles #{::admin}})
-                                                                               )))
-                        :workflows [#'fetch-workflow]
-                        :unauthorized-handler (constantly
-                                                {:status 401
-                                                 :body (pr-str "Sorry, you do not have access to this resource.")})})
+(server/add-middleware friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn
+                                                                    (fn [name]
+                                                                      (let [[{:keys [uid username pass]} :as roles] (get_user :username name)]
+                                                                        {:username username :uid uid :password pass
+                                                                         :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))})))
+                                            :workflows [#'fetch-workflow]
+                                            :unauthorized-handler (constantly
+                                                                    {:status 401
+                                                                     :body (pr-str "Sorry, you do not have access to this resource.")})})
 
 (defn fetch-logout [handler]
   (fn [request]
@@ -57,7 +54,6 @@
       (handler request))))
 
 (server/add-middleware fetch-logout)
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
