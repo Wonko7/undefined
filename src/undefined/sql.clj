@@ -173,10 +173,10 @@
           (join authors)
           (where {:artid id})))
 
-(defn get_user [{:keys [id username] :or {id nil name nil}}]
+(defn get_user [{:keys [id username] :or {id nil username nil}}]
   (let [[col val] (if (nil? username)
                     [:uid id]
-                    [:username name])]
+                    [:username username])]
     (select authors
             (fields :username :password :salt)
             (where {col val}))))
