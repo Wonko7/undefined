@@ -1,7 +1,7 @@
 (ns undefined.server
 (:import org.mindrot.jbcrypt.BCrypt)
   (:use [undefined.config :only [set-config!]]
-        [undefined.sql :only [init-db-connection]])
+        [undefined.sql :only [init-db-connection get_user_roles get_user]])
   (:require [noir.server :as server]
             [noir.session :as session]
             [noir.fetch.remotes :as remotes]
@@ -19,14 +19,6 @@
 ;; see https://github.com/cemerick/friend.git
 ;; and https://github.com/xeqi/friend-fetch-example
 
-(def users {"admin" {:username "admin" ;; FIXME tmp
-                     :password (creds/hash-bcrypt "admin1")
-                     :roles #{::admin}}
-            "alice" {:username "alice"
-                     :password (creds/hash-bcrypt "alice1")
-                     :roles #{::user}}})
-(println users)
-
 (defn fetch-workflow [request]
   (session/put! :id (friend/identity request))
   (when (= "/_fetch" (:uri request))
@@ -43,14 +35,15 @@
            :body ""})))))
 
 (server/add-middleware friend/authenticate
-                       {:credential-fn (partial creds/bcrypt-credential-fn (fn [user]
-                                                                             (let [{:keys [id name hash]} (get_user user)]
-                                                                               (println (into #{} (get_user_roles id)))
-                                                                               {:username name :password hash
-                                                                                :roles (into #{} (get_user_roles id))})))
-
-                        
-                        ;(partial creds/bcrypt-credential-fn users) ;; <-- this will change with db FIXME.
+                       {:credential-fn (partial creds/bcrypt-credential-fn (fn [name]
+                                                                             (let [[user] (get_user {:username name})
+                                                                                   roles (get_user_roles (:uid user))]
+                                                                               ;(println (into {} (get_user_roles (:uid u))))
+                                                                               ;
+                                                                               (println (:uid user) roles)
+                                                                               (println (into user {:roles (into #{} roles)}))
+                                                                               (into user {:roles #{::admin}})
+                                                                               )))
                         :workflows [#'fetch-workflow]
                         :unauthorized-handler (constantly
                                                 {:status 401
