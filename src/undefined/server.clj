@@ -1,7 +1,7 @@
 (ns undefined.server
 (:import org.mindrot.jbcrypt.BCrypt)
   (:use [undefined.config :only [set-config!]]
-        [undefined.sql :only [init-db-connection]])
+        [undefined.sql :only [init-db-connection get_user get_user_roles]])
   (:require [noir.server :as server]
             [noir.session :as session]
             [noir.fetch.remotes :as remotes]
