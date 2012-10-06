@@ -199,7 +199,6 @@
           (where {:authid id
                   :roles.label "Admin"})))
 
-
 ;INSERT
 
 ;TODO this has to be prettyfiable
@@ -265,7 +264,7 @@
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
 ;(defremote select_authors_rem [] (select authors))
 ;(defremote select_categories_rem [] (select categories))
-(defremote get_user_rem [& {:keys [id username] :or {id nil username nil}}] (get_user :id id :username username))
+;(defremote get_user_rem [& {:keys [id username] :or {id nil username nil}}] (get_user :id id :username username))
 ;(defremote select_products_rem [] (select_products))
 ;(defremote get_user_roles_rem [id] (get_user_roles id))
 ;(defremote is_user_admin_rem? [id] (is_user_admin? id))

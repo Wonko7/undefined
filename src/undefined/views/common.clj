@@ -57,7 +57,7 @@
   [:.inp_title]       (html/set-attr :value title)
   [:.txt_body]        (html/content body)
   [:.inp_tags]        (html/set-attr :value tags)
-  [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :name sel_auths))
+  [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :username sel_auths))
   [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats))
   [:.btn_add_article] (html/set-attr :value uid)
   [:.btn_rst]         (html/set-attr :value uid))

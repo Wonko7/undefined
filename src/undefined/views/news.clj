@@ -59,7 +59,7 @@
     (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
-                         (str "Authors: " (get_labels (authors_by_article (:uid %)) :name))
+                         (str "Authors: " (get_labels (authors_by_article (:uid %)) :username))
                          admin?)
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
