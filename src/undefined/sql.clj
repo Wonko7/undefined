@@ -54,7 +54,7 @@
 (defentity authors
   (table :authors)
   (pk :uid)
-  (entity-fields :name)
+  (entity-fields :username)
   (database undef-db))
 
 (defentity roles
@@ -169,16 +169,16 @@
 
 (defn authors_by_article [id]
   (select article_authors
-          (fields :authors.name)
+          (fields :authors.username)
           (join authors)
           (where {:artid id})))
 
-(defn get_user [{:keys [id name] :or {id nil name nil}}]
-  (let [[col val] (if (nil? name)
+(defn get_user [{:keys [id username] :or {id nil name nil}}]
+  (let [[col val] (if (nil? username)
                     [:uid id]
-                    [:name name])]
+                    [:username name])]
     (select authors
-            (fields :name :hash :salt)
+            (fields :username :password :salt)
             (where {col val}))))
 
 (defn select_products [] (select products))
@@ -257,15 +257,15 @@
 
 (defremote insert_article_rem [title body tags authors categories] (insert_article (session/get :id) title body tags authors categories))
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
-(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
-(defremote select_article_rem [id] (select_article (str-to-int id)))
+;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
+;(defremote select_article_rem [id] (select_article (str-to-int id)))
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
-(defremote select_authors_rem [] (select authors))
-(defremote select_categories_rem [] (select categories))
+;(defremote select_authors_rem [] (select authors))
+;(defremote select_categories_rem [] (select categories))
 ;(defremote get_user_rem [& {:keys [id name] :or {id nil name nil}}] (get_user :id id :name name))
-(defremote select_products_rem [] (select_products))
+;(defremote select_products_rem [] (select_products))
 ;(defremote get_user_roles_rem [id] (get_user_roles id))
 ;(defremote is_user_admin_rem? [id] (is_user_admin? id))
 
-(defremote tag_cloud_rem [] (tag_cloud))
-(defremote articles_by_tags_rem [id] (articles_by_tags id))
+;(defremote tag_cloud_rem [] (tag_cloud))
+;(defremote articles_by_tags_rem [id] (articles_by_tags id))

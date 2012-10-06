@@ -25,6 +25,7 @@
             "alice" {:username "alice"
                      :password (creds/hash-bcrypt "alice1")
                      :roles #{::user}}})
+(println users)
 
 (defn fetch-workflow [request]
   (session/put! :id (friend/identity request))
@@ -42,7 +43,14 @@
            :body ""})))))
 
 (server/add-middleware friend/authenticate
-                       {:credential-fn (partial creds/bcrypt-credential-fn users) ;; <-- this will change with db FIXME.
+                       {:credential-fn (partial creds/bcrypt-credential-fn (fn [user]
+                                                                             (let [{:keys [id name hash]} (get_user user)]
+                                                                               (println (into #{} (get_user_roles id)))
+                                                                               {:username name :password hash
+                                                                                :roles (into #{} (get_user_roles id))})))
+
+                        
+                        ;(partial creds/bcrypt-credential-fn users) ;; <-- this will change with db FIXME.
                         :workflows [#'fetch-workflow]
                         :unauthorized-handler (constantly
                                                 {:status 401
