@@ -173,15 +173,15 @@
           (join authors)
           (where {:artid id})))
 
-(defn get_user [{:keys [id username] :or {id nil username nil}}]
+(defn get_user [& {:keys [id username] :or {id nil username nil}}]
   (let [[col val] (if (nil? username)
                     [:uid id]
                     [:username username])]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
-            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :password]
-                    [:authors.salt :salt] [:roles.label :role])
+            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass]
+                    [:authors.salt :salt] [:roles.label :roles])
             (where {col val}))))
 
 (defn select_products [] (select products))
