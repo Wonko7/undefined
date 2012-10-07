@@ -37,7 +37,8 @@
     id                 (str (:label (first (select_tags id))))
     :else              "Undefined's Articles"))
 
-(def mk-tag-link #(a-link (str (:label %) " ") {:href (str "tag/" (:uid %))}))
+(defn mk-tag-link [tag]
+  (a-link (str (:label tag) " ") {:href (str "tag/" (:uid tag))}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  News;
