@@ -44,7 +44,7 @@
 }
 
 /* line 60, ../../themes/style.scss */
-.shadow-margin, #title, .right-title, .title, .whole-article .article-title, .whole-article, .whole-article .article, .whole-article .social, .product {
+.shadow-margin, #title, .right-title, .title, .whole-article .article-title, .whole-article, .whole-article .article, .whole-article .social, .project {
   margin: 15px;
 }
 
@@ -290,18 +290,18 @@ hr {
 }
 
 /* line 319, ../../themes/style.scss */
-.product {
+.project {
   text-align: justify;
 }
 /* line 323, ../../themes/style.scss */
-.product .product-screenshot {
+.project .project-screenshot {
   max-width: 50%;
   float: left;
   margin-right: 15px;
   margin-bottom: 15px;
 }
 /* line 324, ../../themes/style.scss */
-.product .product-screenshot img {
+.project .project-screenshot img {
   max-width: 100%;
 }
 

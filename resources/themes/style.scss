@@ -316,11 +316,11 @@ hr {
 // projects:
 ///////////////////////////////////////////////////////////
 
-.product {
+.project {
 	@extend .shadow-margin;
 	text-align: justify;
 
-	.product-screenshot {
+	.project-screenshot {
 		img { max-width: 100%; }
 		max-width: 50%;
 		float: left;
