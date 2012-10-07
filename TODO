@@ -2,7 +2,7 @@
 	- better cljs compilation with https://github.com/ibdknox/noir-cljs
 * ui:
 	- rss / atom
-	- mobile detection: mainly remove columns : products [screenshot|desc] -> desc & screenshot underneath. idem cloud tag
+	- mobile detection: mainly remove columns : projects [screenshot|desc] -> desc & screenshot underneath. idem cloud tag
 * misc:
 	- setup a real web architecture, maybe nginx: http://grokbase.com/t/gg/clj-noir/119ysw9vf0/noir-how-do-i-serve-static-files
 		http://www.bushidodesigns.net/blog/mobile-device-detection-css-without-user-agent/ (why avoid user agent?)
@@ -17,7 +17,7 @@
 	- tag cloud
 	- find js & jvm profiling tools
 * sql:
-	- products: platform list (web, ios, android, pc (for java)) & enforcement.
+	- projects: platform list (web, ios, android, pc (for java)) & enforcement.
 * tests
 	http://corfield.org/blog/post.cfm/automated-browser-based-testing-with-clojure
 	https://github.com/semperos/clj-webdriver

@@ -39,8 +39,8 @@
 ;TODO joins with cats, tags, authors
 ;TODO sort by remotes/fns
 
-(defentity products
-  (table :products)
+(defentity projects
+  (table :projects)
   (pk :uid)
   (entity-fields :uid :title :description :link :screenshot :pin)
   (database undef-db))
@@ -184,7 +184,7 @@
                     [:authors.salt :salt] [:roles.label :roles])
             (where {col val}))))
 
-(defn select_products [] (select products))
+(defn select_projects [] (select projects))
 
 ;; FIXME: this will change when auth works correctly
 (defn get_user_roles [id]
@@ -265,7 +265,7 @@
 ;(defremote select_authors_rem [] (select authors))
 ;(defremote select_categories_rem [] (select categories))
 ;(defremote get_user_rem [& {:keys [id username] :or {id nil username nil}}] (get_user :id id :username username))
-;(defremote select_products_rem [] (select_products))
+;(defremote select_projects_rem [] (select_projects))
 ;(defremote get_user_roles_rem [id] (get_user_roles id))
 ;(defremote is_user_admin_rem? [id] (is_user_admin? id))
 
