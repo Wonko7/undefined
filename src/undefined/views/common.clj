@@ -32,7 +32,7 @@
   ;[:.social :.href-set] (html/set-attr :href url) ;; FIXME for now unused, g+ was slow.
   [:.article-date]      (html/content date)
   [:.article]           (html/append article)
-  [:.tags]              (html/content tags)
+  [:.tags]              (html/append tags)
   [:.authors]           (html/content authors)
   [:.admin]             (html/append (if is-admin?
                                        [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
@@ -78,6 +78,12 @@
   [:li :a] (html/do->
              (set-attrs attrs)
              (html/content title)))
+
+(html/defsnippet a-link "templates/right-content.html" [:li :a]
+  [title attrs]
+  [:a] (html/do->
+         (set-attrs attrs)
+         (html/content title)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

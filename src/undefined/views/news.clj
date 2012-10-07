@@ -1,6 +1,6 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
-  (:use [undefined.views.common :only [add-page-init! page newarticle article base]]
+  (:use [undefined.views.common :only [add-page-init! page newarticle article base a-link]]
         [undefined.sql :only [select_articles select_article select_authors select_categories
                               tags_by_article articles_by_tags select_tags
                               categories_by_article
@@ -55,10 +55,11 @@
                             [nil articles])
         pv                (when (and offset (> offset 0))
                             (- offset nb-articles))
-        admin?            (is-admin? user-id)]
+        admin?            (is-admin? user-id)
+        mk-tag-link       #(a-link (str (:label %) " ") {:href (str "tag/" (:uid %))})]
     (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
-                         (str "Tags: " (get_labels (tags_by_article (:uid %)) :label))
+                         {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :username))
                          admin?)
                articles)

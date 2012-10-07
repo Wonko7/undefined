@@ -149,7 +149,7 @@
 
 (defn tags_by_article [id]
   (select article_tags
-          (fields :tags.label)
+          (fields :tags.uid :tags.label)
           (join tags)
           (where {:artid id})))
 
