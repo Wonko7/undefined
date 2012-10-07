@@ -44,7 +44,9 @@
                                          (html/set-attr :href link)
                                          (html/set-attr :data-pre-exec restrictions))
   [:.product-desc]            (html/content article)
-  [:.product-screenshot :img] (html/set-attr :src sc))
+  [:.product-screenshot :img] (if (and sc (not= sc ""))
+                                (html/set-attr :src sc)
+                                (html/add-class "hidden")))
 
 (html/defsnippet about "templates/about.html" [:.about]
   [])
