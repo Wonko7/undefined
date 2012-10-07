@@ -37,6 +37,7 @@
     id                 (str (:label (first (select_tags id))))
     :else              "Undefined's Articles"))
 
+(def mk-tag-link #(a-link (str (:label %) " ") {:href (str "tag/" (:uid %))}))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  News;
@@ -55,8 +56,7 @@
                             [nil articles])
         pv                (when (and offset (> offset 0))
                             (- offset nb-articles))
-        admin?            (is-admin? user-id)
-        mk-tag-link       #(a-link (str (:label %) " ") {:href (str "tag/" (:uid %))})]
+        admin?            (is-admin? user-id)]
     (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
@@ -81,8 +81,8 @@
   (let [category (if (= (take 4 href) (seq "blog")) :blog :news)
         art      (first (select_article uid))]
     (article (:uid art) category (:title art) (format-date (:birth art)) (remove-unsafe-tags (:body art))
-             (str "Tags: " (get_labels (tags_by_article (:uid art)) :label))
-             (str "Authors: " (get_labels (authors_by_article (:uid art)) :name))
+             {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid art))))}
+             (str "Authors: " (get_labels (authors_by_article (:uid art)) :username))
              (is-admin? user-id))))
 
 
