@@ -16,7 +16,8 @@
               [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ]))))
 
 (defn set-attrs [data]
-  (apply html/set-attr (apply concat data)))
+  (when data
+    (apply html/set-attr (apply concat data))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page composition:
