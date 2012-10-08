@@ -60,7 +60,6 @@
 ;; server;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; FIXME make different ports for test build and release builds.
 (defn -main [& m]
   (let [mode (keyword (or (first m) :dev))
         conf (set-config! mode)]

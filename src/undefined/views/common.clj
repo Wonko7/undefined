@@ -15,8 +15,8 @@
        (apply (html/snippet ~source ~selector [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ] ~@forms)
               [ ~@(concat args (keep-indexed #(when (even? %1) %2) bindings)) ]))))
 
-(defn set-attrs [data] ;; FIXME (into :attrs data) ?
-  (apply html/do-> (map #(html/set-attr % (% data)) (keys data))))
+(defn set-attrs [data]
+  (apply html/set-attr (apply concat data)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page composition:

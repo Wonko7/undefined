@@ -186,7 +186,6 @@
 
 (defn select_projects [] (select projects))
 
-;; FIXME: this will change when auth works correctly
 (defn get_user_roles [id]
   (select author_roles
           (fields :roles.label)
