@@ -113,11 +113,11 @@
   ;; can be called directly:
   ([fun args & [no-hist]]
    (clear-future-actions!)
-   (let [url (if seq args
+   (let [url (if (seq args)
                (apply str (concat [fun "/"] (interpose "/" args)))
                fun)]
      (when (nil? no-hist)
-       (.setToken history url)) 
+       (.setToken history url))
      (.push js/_gaq (array "trackPageview" (str "/" url))))
    (em/at js/document
           [:#loading-wrapper] (em/html-content "<div id=\"loading\"><img src=\"/img/loading.gif\"></div>")
