@@ -7,7 +7,7 @@
   [:div.content] (html/html-content article))
 
 (def unsafe
-  (let [safe-tags #{:a :div :span :section :p :article :br :big :small}]
+  (let [safe-tags #{:a :div :span :section :p :article :br :big :small :center :img}]
     (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
