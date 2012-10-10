@@ -2,7 +2,7 @@
   (:require [clojure.string :as string]
             [noir.session :as session])
   (:use [undefined.config :only [get-config]]
-        [undefined.mis    :only [get_keys]]
+        [undefined.misc   :only [get_keys]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]

@@ -18,8 +18,10 @@
                                                       (em/from (em/select [".cbx_auth"]) (em/get-prop :checked)))
                                          categories (zipmap
                                                       (em/from (em/select [".cbx_cat"]) (em/get-prop :value))
-                                                      (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))]
+                                                      (em/from (em/select [".cbx_cat"]) (em/get-prop :checked)))
+                                         get_keys   (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
+                                         redirect   (if (= "1" (first (get_keys categories))) "blog" "news")]
                                      (fm/letrem [res (insert_article_rem title body tags authors categories)] 
-                                       (page-click "newarticle" nil)))))))
+                                       (page-click redirect nil)))))))
 
 (add-page-init! "newarticle" newarticlepage)
