@@ -7,9 +7,10 @@
   (page "Log In:"
         (if user-id
           {:tag :div :attrs {:class "whole-article"}
-           :content [(str "Logged in as: " (username user-id))
-                     {:tag :br}
-                     {:tag :a :attrs {:class "logout" :href "logout"} :content "Log Out"}]}
+           :content [{:tag :div :attrs {:class "article"}
+                      :content [(str "Logged in as: " (username user-id))
+                                {:tag :br}
+                                {:tag :a :attrs {:class "logout" :href "logout"} :content "Log Out"}]}]}
           (login))
         {:metadata {:data-init-page "login"}}))
 
