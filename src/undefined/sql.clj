@@ -64,6 +64,10 @@
   (entity-fields :username :email)
   (database undef-db))
 
+(defentity temp_authors
+  (table :temp_authors)
+  (pk :uid))
+
 (defentity roles
   (table :roles)
   (pk :uid)
@@ -110,15 +114,7 @@
   (database undef-db))
 
 ;SELECT
-
-(defn tag_cloud []
-  (select article_tags
-          ;(aggregate (count :*) :artid :cnt)
-          (fields :tags.label :tags.uid)
-          (group :tags.label :tags.uid)
-          (aggregate (count :*) :cnt :tags.label)
-          (join tags (= :tags.uid :article_tags.tagid))))
-
+;
 (defn articles_by_tags [id off n]
   (select article_tags
           (fields [:article_tags.artid :uid]
@@ -153,6 +149,13 @@
           (where {:artid id})
           (order :articles.birth :DESC)))
 
+(defn tag_cloud []
+  (select article_tags
+          (fields :tags.label :tags.uid)
+          (group :tags.label :tags.uid)
+          (aggregate (count :*) :cnt :tags.label)
+          (join tags (= :tags.uid :article_tags.tagid))))
+
 (defn select_tags [& [id]]
   (if id
     (select tags 
@@ -185,16 +188,19 @@
           (join authors)
           (where {:artid id})))
 
-(defn get_user [& {:keys [id username] :or {id nil username nil}}]
-  (let [[col val] (if (nil? username)
-                    [:uid id]
-                    [:username username])]
+;TODO LOWER username?
+(defn get_user [& {:keys [id username email] :or {id nil username nil email nil}}]
+  (let [[col op val] (if username   ["username" " ILIKE " username]
+                    (if id          ["authors.uid" " = " id]
+                                    ["email" " ILIKE " email]))]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
             (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass] [:authors.email :email]
                     [:authors.salt :salt] [:roles.label :roles])
-            (where {col val}))))
+
+            (where (raw (str col " " op " '" val "'"))))))
+            ;(where {col val}))))
 
 (defn select_projects [] (select projects))
 
@@ -218,6 +224,31 @@
           (group :authors.username :birth :edit)
           (order :birth :ASC)
           (where {:artid id})))
+
+(defn temp_to_real_user [username email password birth]
+  (transaction
+    (insert authors
+          (values :username username
+                  :email    email
+                  :password password
+                  :birth    birth))
+    (delete temp_authors (where {:username username})))) 
+ 
+;FIXME find a fix for different cases
+;(clojure.string/lower-case and..? something psql?
+;use prepare and/or transform?
+(defn create_temp_user [username email password]
+;  (do
+;    ();cleanup deprecated entries aka older than one day?
+  (if (first (get_user :username username))
+    (println (str "This username isn't available anymore."))
+    (if (first (get_user :email email))
+      (println "This email has already been used to create an account.")
+      (println "Everything's good.")
+      ;Check if an entry in the temp table already exists
+      ;Generate password bcrypt + activation link
+      ;insert into temp table
+      )))
 
 ;INSERT
 
@@ -243,7 +274,6 @@
       (weed_tags tags artid)
       artid)))
 
-;TODO Add authentication
 (defn insert_comment [id author content]
   (if (is-admin? author)
     (insert comments (values {:artid id :authid author :content content}))))

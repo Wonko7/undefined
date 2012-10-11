@@ -9,9 +9,9 @@ CREATE TABLE authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, ema
 CREATE UNIQUE INDEX username_lower_id ON authors (lower(username));
 CREATE UNIQUE INDEX email_lower_id ON authors (lower(email));
 
-CREATE TABLE temp_authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, salt TEXT NOT NULL birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP);
-CREATE UNIQUE INDEX username_lower_id ON temp_authors (lower(username));
-CREATE UNIQUE INDEX email_lower_id ON temp_authors (lower(email));
+CREATE TABLE temp_authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, salt TEXT NOT NULL, birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, activation TEXT NOT NULL);
+CREATE UNIQUE INDEX username_temp_lower_id ON temp_authors (lower(username));
+CREATE UNIQUE INDEX email_temp_lower_id ON temp_authors (lower(email));
 
 
 CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
