@@ -64,7 +64,7 @@
                          (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :username)) ;; count
-                         "FIXME comment count: 3.14159" (map mk-comment comments))
+                         (str "Comment Count: " (count comments)) (map mk-comment comments))
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
