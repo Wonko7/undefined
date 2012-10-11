@@ -4,7 +4,7 @@
         [undefined.sql :only [select_articles select_article select_authors select_categories
                               tags_by_article articles_by_tags select_tags
                               categories_by_article authors_by_article
-                              comments_by_article]]
+                              comments_by_article comment_count_by_article]]
         [undefined.auth :only [is-admin?]]
         [undefined.misc :only [format-date get_labels]]
         [undefined.content :only [remove-unsafe-tags str-to-int]]
@@ -64,7 +64,10 @@
                          (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :username)) ;; count
-                         (str "Comment Count: " (count comments)) (map mk-comment comments))
+                         (str "Comment Count: " (if comments
+                                                  (count comments)
+                                                  (:cnt (first (comment_count_by_article (:uid %))))))
+                         (map mk-comment comments))
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
