@@ -24,7 +24,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defsnippet-bind article "templates/article.html" [:div.whole-article]
-  [uid category title date article tags authors is-admin?]
+  [uid category is-admin? title date article tags authors comment_count comments]
   [url (str (name category) "-article/" uid)]
 
   [:div.whole-article]  (html/set-attr :id (str "article_" uid))
@@ -35,9 +35,21 @@
   [:.article]           (html/append article)
   [:.tags]              (html/append tags)
   [:.authors]           (html/content authors)
-  [:.admin]             (html/append (if is-admin?
+  [:.admin]             (html/append (when is-admin?
                                        [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
-                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
+                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}]))
+  [:.comment-count :a]  (html/do-> (html/content comment_count)
+                                   (html/set-attr :href url))
+  [:.comments]          (html/append comments))
+
+(html/defsnippet user-comment "templates/article.html" [:div.comment]
+  [uid is-admin? author date-birth date-edit comment]
+  [:.author]     (html/content author)
+  [:.date-birth] (html/content (str "Added: " date-birth))
+  [:.date-edit]  (html/content (when date-edit (str " - Edited: " date-edit)))
+  [:.content]    (html/content comment)
+  [:.admin]      (html/append (when is-admin?
+                                [{:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
 
 (html/defsnippet project "templates/project.html" [:div.whole-article]
   [title link article sc restrictions] ;; FIXME this is probably temporary. we need more usecases on restrictions to realise.
