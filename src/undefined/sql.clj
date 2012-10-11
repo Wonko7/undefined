@@ -1,7 +1,11 @@
 (ns undefined.sql
-  (:require [clojure.string :as string]
+  (:refer-clojure :exclude [extend])
+  (:require [clj-time.coerce :as dateconv]
+            [clojure.string :as string]
+            [clj-time.format :as time-format]
             [noir.session :as session])
-  (:use [undefined.config :only [get-config]]
+  (:use [clj-time.core]
+        [undefined.config :only [get-config]]
         [undefined.misc   :only [get_keys]]
         [noir.fetch.remotes]
         [korma.db]
@@ -259,12 +263,14 @@
       (doseq [x auths]  (insert article_authors     (values {:artid uid :authid (Integer/parseInt x)})))
       (doseq [x cats]   (insert article_categories  (values {:artid uid :catid (Integer/parseInt x)})))))))
 
-;FIXME add currenttimestamp to :edit
 (defn update_comment [uid author content]
-  (if (is-admin? author)
+;  (if (is-admin? author)
     (update comments
-            (set-fields {:content content})
-            (where {:uid uid}))))
+            (set-fields {:content content :edit (java.sql.Timestamp/valueOf
+                                                  (time-format/unparse
+                                                    (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+                                                    (from-time-zone (now) (time-zone-for-offset -2))))})
+            (where {:uid uid})))
 
 
 ;DELETE
