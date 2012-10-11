@@ -1,7 +1,6 @@
 (ns undefined.sql
   (:refer-clojure :exclude [extend])
-  (:require [clj-time.coerce :as dateconv]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [clj-time.format :as time-format]
             [noir.session :as session])
   (:use [clj-time.core]

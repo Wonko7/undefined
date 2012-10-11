@@ -25,7 +25,7 @@ INSERT INTO comments (content, artid, authid, birth)
 	       	('Unfortunately this is tree', 5, 1,  '2012/08/31 17:01'::timestamp),
 		('Treehouse and blog', 5, 2,  '2012/09/05 14:08'::timestamp),
 		('Where is the cat?', 5, 1,  '2012/09/27 11:26'::timestamp),
-	       	('How interesting', 5, 2,  '2012/09/28 :10:51'::timestamp),
+	       	('How interesting', 5, 2,  '2012/09/28 10:51'::timestamp),
 		('Trolling', 4, 1,  '2012/09/30 14:30'::timestamp),
 		('Your mother sucks clocks in hell', 4, 1,  '2012/10/25 15:13'::timestamp),
 	       	('Forbidden clue', 5, 1,  '2012/10/26 20:07'::timestamp);*/
@@ -47,6 +47,6 @@ INSERT INTO projects (title, description, link, screenshot, pin) VALUES ('Budget
 
 INSERT INTO roles (label) VALUES ('peon'), ('admin'), ('contributor');
 
-INSERT INTO author_roles VALUES (1, 2), (2, 2));
+INSERT INTO author_roles VALUES (1, 2), (2, 2);
 
-GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, projects, roles, author_roles, tags_uid_seq, articles_uid_seq, comments_uid_seq TO web;
+GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, projects, roles, author_roles, tags_uid_seq, articles_uid_seq, comments_uid_seq, comments TO web;
