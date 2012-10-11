@@ -37,11 +37,13 @@
                                            (restore-height 200))))
                   (js/alert "Check at least one author and category")))))
 
-          (delete-button [e]
-            (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
-              (when (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
-                (fm/letrem [res (delete_article_rem uid)]
-                  (em/at js/document [(str "#article_" uid)] (em/substitute ""))))))
+          (delete-button [type]
+            (fn [e]
+              (let [uid (em/from (.-currentTarget e) (em/get-attr :value))
+                    stype (name type)]
+                (when (js/confirm (str "This will PERMANENTLY erase the " stype " #" uid " from the database."))
+                  (fm/letrem [res (delete_rem type uid)]
+                    (em/at js/document [(str "#" stype "_" uid)] (em/substitute "")))))))
 
           (update-button [e]
             (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
@@ -53,8 +55,8 @@
                                        (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit-article sel uid))))
                                        (restore-height 200))))))]
     (em/at js/document
-      [:.btn_del] (em/listen :click delete-button)
-      [:.btn_upd] (em/listen :click update-button))))
+      [:.btn_del] (em/listen :click (delete-button :article))
+      [:.btn_upd] (em/listen :click (update-button :article)))))
 
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)

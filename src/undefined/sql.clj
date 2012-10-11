@@ -296,11 +296,19 @@
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 (defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
 (defremote update_comment_rem [comid authid content] (update_comment comid authid content))
-(defremote delete_comment_rem [adminid comid] (delete_comment adminid comid))
+
+;(defremote delete_comment_rem [adminid comid] (delete_comment adminid comid)) ?? admindid?
+;(defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
+
+(defremote delete_rem [type uid]
+  (let [id (session/get :id)]
+   (if (= type :article)
+    (delete_article id (str-to-int uid))
+    (delete_comment id (str-to-int uid)))))
+
 (defremote comment_count_rem  [id] (comment_count_by_article id))
 ;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
 ;(defremote select_article_rem [id] (select_article (str-to-int id)))
-(defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
 ;(defremote select_authors_rem [] (select authors))
 ;(defremote select_categories_rem [] (select categories))
 ;(defremote get_user_rem [& {:keys [id username] :or {id nil username nil}}] (get_user :id id :username username))
