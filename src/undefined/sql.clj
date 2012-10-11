@@ -120,7 +120,7 @@
   (select article_tags
           (fields [:article_tags.artid :uid]
                   [:articles.title :title] [:articles.body :body] [:articles.birth :birth])
-          (join articles (= :articles.uid :article_tags.artid))
+          (join articles (= :articles.uid :article_tags.artid))          
           (where {:article_tags.tagid id})
           (limit n)
           (offset off)
@@ -233,8 +233,10 @@
       (weed_tags tags artid)
       artid)))
 
+;TODO Add authentication
 (defn insert_comment [id author content]
-  (insert comments (values {:artid id :authid author :content content})))
+  (if (is-admin? author)
+    (insert comments (values {:artid id :authid author :content content}))))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
@@ -257,6 +259,13 @@
       (doseq [x auths]  (insert article_authors     (values {:artid uid :authid (Integer/parseInt x)})))
       (doseq [x cats]   (insert article_categories  (values {:artid uid :catid (Integer/parseInt x)})))))))
 
+;FIXME add currenttimestamp to :edit
+(defn update_comment [uid author content]
+  (if (is-admin? author)
+    (update comments
+            (set-fields {:content content})
+            (where {:uid uid}))))
+
 
 ;DELETE
 (defn delete_article [id uid]
@@ -270,6 +279,7 @@
 (defremote insert_article_rem [title body tags authors categories] (insert_article (session/get :id) title body tags authors categories))
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 (defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
+(defremote update_comment_rem [comid authid content] (update_comment comid authid content))
 ;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
 ;(defremote select_article_rem [id] (select_article (str-to-int id)))
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
