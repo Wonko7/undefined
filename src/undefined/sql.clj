@@ -61,7 +61,7 @@
 (defentity authors
   (table :authors)
   (pk :uid)
-  (entity-fields :username)
+  (entity-fields :username :email)
   (database undef-db))
 
 (defentity roles
@@ -181,7 +181,7 @@
 
 (defn authors_by_article [id]
   (select article_authors
-          (fields :authors.username)
+          (fields :authors.username :authors.email)
           (join authors)
           (where {:artid id})))
 
@@ -192,7 +192,7 @@
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
-            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass]
+            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass] [:authors.email :email]
                     [:authors.salt :salt] [:roles.label :roles])
             (where {col val}))))
 
