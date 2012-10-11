@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [clj-time.format :as time-format]
             [noir.session :as session])
-  (:use [clj-time.core]
+  (:use [clj-time.core :only [now]]
         [undefined.config :only [get-config]]
         [undefined.misc   :only [get_keys]]
         [noir.fetch.remotes]
@@ -139,6 +139,11 @@
           (where {:categories.label cat})
           (order :articles.birth :DESC)))
 
+(defn comment_count_by_article [id]
+  (select comments
+          (aggregate (count :*) :cnt)
+          (where {:artid id})))
+
 (defn select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
@@ -209,6 +214,8 @@
   (select comments
           (fields :uid :content [:authors.username :author] :birth :edit)
           (join authors (= :authors.uid :comments.authid))
+          (aggregate (count :*) :cnt :comments.uid)
+          (group :authors.username :birth :edit)
           (order :birth :ASC)
           (where {:artid id})))
 
@@ -291,6 +298,7 @@
 (defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
 (defremote update_comment_rem [comid authid content] (update_comment comid authid content))
 (defremote delete_comment_rem [adminid comid] (delete_comment adminid comid))
+(defremote comment_count_rem  [id] (comment_count_by_article id))
 ;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
 ;(defremote select_article_rem [id] (select_article (str-to-int id)))
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
