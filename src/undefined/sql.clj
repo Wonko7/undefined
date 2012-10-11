@@ -134,8 +134,6 @@
           (fields :articles.title :articles.body :articles.birth :articles.uid)
           (join articles (= :article_categories.artid :articles.uid))
           (join categories (= :categories.uid :article_categories.catid))
-          (join comments (= :articles.uid :comments.artid))
-          (aggregate (count :comments) :commCount :article.uid)
           (limit n)
           (offset off)
           (where {:categories.label cat})
