@@ -209,8 +209,6 @@
           (order :birth :ASC)
           (where {:artid id})))
 
-(println (comments_by_article 4))
-
 ;INSERT
 
 ;TODO this has to be prettyfiable
@@ -225,7 +223,6 @@
     (doseq [x tag_array] (insert article_tags (values {:artid artid :tagid (Integer/parseInt (get_tagid x))})))))
 
 ;TODO transaction
-;TODO beautify doseq
 (defn insert_article [current-id title body tags authors categories]
   (if (is-admin? current-id)
     (let [artid     (:uid (insert articles (values {:title title :body body})))
@@ -235,6 +232,9 @@
       (doseq [x cats]   (insert article_categories  (values {:artid artid :catid (Integer/parseInt x)})))
       (weed_tags tags artid)
       artid)))
+
+(defn insert_comment [id author content]
+  (insert comments (values {:artid id :authid author :content content})))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
@@ -269,6 +269,7 @@
 
 (defremote insert_article_rem [title body tags authors categories] (insert_article (session/get :id) title body tags authors categories))
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
+(defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
 ;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
 ;(defremote select_article_rem [id] (select_article (str-to-int id)))
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
