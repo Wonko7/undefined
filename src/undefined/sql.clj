@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [clj-time.format :as time-format]
             [noir.session :as session])
-  (:use [clj-time.core :only [now]]
+  (:use [clj-time.core]
         [undefined.config :only [get-config]]
         [undefined.misc   :only [get_keys]]
         [noir.fetch.remotes]
@@ -134,6 +134,8 @@
           (fields :articles.title :articles.body :articles.birth :articles.uid)
           (join articles (= :article_categories.artid :articles.uid))
           (join categories (= :categories.uid :article_categories.catid))
+          (join comments (= :articles.uid :comments.artid))
+          (aggregate (count :comments) :commCount :article.uid)
           (limit n)
           (offset off)
           (where {:categories.label cat})
@@ -277,7 +279,6 @@
                                                     (time-format/formatter "yyyy-MM-dd HH:mm:ss")
                                                     (from-time-zone (now) (time-zone-for-offset -2))))})
             (where {:uid uid})))
-
 
 ;DELETE
 (defn delete_article [id uid]
