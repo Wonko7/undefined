@@ -87,11 +87,6 @@
   [data]
   [:#metadata] (set-attrs data))
 
-(html/defsnippet right-content "templates/right-content.html" [:#right-content]
-  [static-links tags]
-  [:ul.static-links] (html/append static-links)
-  [:ul.tags]         (html/append tags))
-
 (html/defsnippet li-link "templates/right-content.html" [:li]
   [title attrs]
   [:li :a] (html/do->
@@ -103,6 +98,12 @@
   [:a] (html/do->
          (set-attrs attrs)
          (html/content title)))
+
+(html/defsnippet right-content "templates/right-content.html" [:#right-content]
+  [static-links tags]
+  [:ul.login]        (html/append (li-link "Log In" {:href "login"}))
+  [:ul.static-links] (html/append static-links)
+  [:ul.tags]         (html/append tags))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
