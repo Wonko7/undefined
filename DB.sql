@@ -5,9 +5,14 @@ CREATE TABLE articles (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NO
 CREATE TABLE categories (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 CREATE TABLE tags (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 
-CREATE TABLE authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL password TEXT NOT NULL, salt TEXT NOT NULL);
+CREATE TABLE authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, salt TEXT NOT NULL, birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP);
 CREATE UNIQUE INDEX username_lower_id ON authors (lower(username));
 CREATE UNIQUE INDEX email_lower_id ON authors (lower(email));
+
+CREATE TABLE temp_authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, salt TEXT NOT NULL birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP);
+CREATE UNIQUE INDEX username_lower_id ON temp_authors (lower(username));
+CREATE UNIQUE INDEX email_lower_id ON temp_authors (lower(email));
+
 
 CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 
@@ -20,6 +25,8 @@ CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASC
 CREATE TABLE projects (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL, link TEXT NOT NULL, screenshot TEXT NOT NULL, pin INTEGER UNIQUE NOT NULL);
 
 CREATE TABLE comments (uid SERIAL PRIMARY KEY, content TEXT NOT NULL, artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid), birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, edit TIMESTAMP (0) DEFAULT NULL);
+
+
 
 -- INSERT INTO articles (title, body) VALUES ('First title', E'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id arcu tellus, non sodales dolor. Cras lorem sapien, viverra in auctor in, hendrerit ut libero. Proin adipiscing ornare leo, eget imperdiet magna fermentum et. Maecenas auctor neque vitae urna facilisis at sodales urna lacinia. Morbi auctor lorem in augue lacinia vel rhoncus felis consectetur. Phasellus in fringilla ligula. Pellentesque ac dui sed libero faucibus tempor eget a orci. Maecenas dolor mauris, blandit non sollicitudin a, condimentum non libero. Quisque congue sodales massa sed rhoncus. Proin vitae sapien ligula, ut dignissim ligula. Maecenas elit mauris, suscipit ac aliquam sit amet, malesuada in lectus. Vivamus lacinia laoreet velit, nec tempor ligula consequat non. Nunc adipiscing pulvinar tellus eu varius. Aenean metus urna, facilisis a auctor ut, gravida eu ipsum.<div class="code"> Suspendisse consectetur pulvinar ultrices.\nas \nlol \na asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd \n dddddddddffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</div> Fusce at enim scelerisque erat molestie facilisis a at nibh.'), ('Second title', 'Nunc ut ante est. Phasellus cursus, arcu a vestibulum tempus, dolor risus mattis lectus, sit amet cursus justo orci nec mi. Fusce diam justo, venenatis sit amet dictum tempor, vestibulum vel odio. Fusce nisl mauris, tristique nec pellentesque ut, porta quis nulla. Phasellus quis lectus leo, et dignissim nunc. Nam enim enim, congue eu rutrum at, dapibus quis urna. Morbi placerat blandit volutpat. Donec ante ligula, tempus in lacinia eu, commodo non ante. Donec sollicitudin aliquet ultricies.'), ('Third title', 'Nunc nunc neque, dignissim ac euismod at, vehicula sit amet felis. Phasellus convallis laoreet dui, at ullamcorper lectus consequat ac. Pellentesque ut semper dui. Praesent tempus, lorem a tincidunt fringilla, quam nulla varius ante, eu lacinia mauris arcu ac turpis. Etiam arcu lacus, iaculis at lacinia in, volutpat ut lorem. In hac habitasse platea dictumst. Ut sed facilisis urna.'), ('Fourth article', 'Pellentesque ut porta quam. Donec mollis lacus at magna sodales egestas. Fusce at felis libero, eu consequat nunc. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia luctus nunc, et varius erat sodales eget. Donec sed mauris a arcu malesuada auctor ut vel arcu. Nullam aliquet auctor sodales.');
 
@@ -39,4 +46,4 @@ INSERT INTO roles (label) VALUES ('peon'), ('admin'), ('contributor');
 
 INSERT INTO author_roles VALUES (1, 2), (2, 2);
 
-GRANT ALL PRIVILEGES ON articles, tags, authors, categories, article_tags, article_categories, article_authors, projects, roles, author_roles, tags_uid_seq, articles_uid_seq, comments_uid_seq, comments TO web;
+GRANT ALL PRIVILEGES ON articles, comments, tags, authors, categories, article_tags, article_categories, article_authors, projects, roles, author_roles, tags_uid_seq, articles_uid_seq, comments_uid_seq TO web;
