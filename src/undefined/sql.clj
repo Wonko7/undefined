@@ -204,7 +204,7 @@
 
 (defn comments_by_article [id]
   (select comments
-          (fields :content [:authors.username :author] :birth :edit)
+          (fields :uid :content [:authors.username :author] :birth :edit)
           (join authors (= :authors.uid :comments.authid))
           (order :birth :ASC)
           (where {:artid id})))
@@ -273,6 +273,11 @@
     (delete articles
             (where {:uid uid}))))
 
+(defn delete_comment [id uid]
+  (id (is-admin? id)
+      (delete comments
+              (where {:uid uid}))))
+
 
 ;; Remotes
 
@@ -280,6 +285,7 @@
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 (defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
 (defremote update_comment_rem [comid authid content] (update_comment comid authid content))
+(defremote delete_comment_rem [adminid comid] (delete_comment adminid comid))
 ;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
 ;(defremote select_article_rem [id] (select_article (str-to-int id)))
 (defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
