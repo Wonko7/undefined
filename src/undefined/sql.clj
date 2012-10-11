@@ -10,7 +10,6 @@
         [undefined.auth :only [is-admin?]]))
 
 
-;(declare undef-db)
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
                            :password "password";"droptableusers"
@@ -37,13 +36,17 @@
                                                :fields string/upper-case}})))
   (default-connection undef-db))
 
-;TODO joins with cats, tags, authors
-;TODO sort by remotes/fns
 
 (defentity projects
   (table :projects)
   (pk :uid)
   (entity-fields :uid :title :description :link :screenshot :pin)
+  (database undef-db))
+
+(defentity comments
+  (table :comments)
+  (pk :uid)
+  (entity-fields :uid :content :authid :artid :birth :edit)
   (database undef-db))
 
 (defentity tags
@@ -198,6 +201,15 @@
           (join roles)
           (where {:authid id
                   :roles.label "Admin"})))
+
+(defn comments_by_article [id]
+  (select comments
+          (fields :content [:authors.username :author] :birth :edit)
+          (join authors (= :authors.uid :comments.authid))
+          (order :birth :ASC)
+          (where {:artid id})))
+
+(println (comments_by_article 4))
 
 ;INSERT
 
