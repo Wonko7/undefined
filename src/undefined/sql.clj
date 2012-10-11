@@ -13,7 +13,7 @@
 ;(declare undef-db)
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
-                           :password "droptableusers"
+                           :password "password";"droptableusers"
                            ;;OPTIONAL KEYS
                            :host "127.0.0.1"
                            :port "5432"
