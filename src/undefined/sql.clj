@@ -2,6 +2,7 @@
   (:require [clojure.string :as string]
             [noir.session :as session])
   (:use [undefined.config :only [get-config]]
+        [undefined.misc   :only [get_keys]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
@@ -216,7 +217,6 @@
 (defn insert_article [current-id title body tags authors categories]
   (if (is-admin? current-id)
     (let [artid     (:uid (insert articles (values {:title title :body body})))
-          get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
           auths     (get_keys authors)
           cats      (get_keys categories)]
       (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
@@ -229,8 +229,7 @@
 ;TODO actually... would there be that much of a perf improvement..? isn't it worse to check for existing values?
 (defn update_article [current-id uid title body tags authors categories]
   (if (is-admin? current-id)
-    (let [get_keys  (fn [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
-          auths     (get_keys authors)
+    (let [auths     (get_keys authors)
           cats      (get_keys categories)]
     (transaction
       (update articles

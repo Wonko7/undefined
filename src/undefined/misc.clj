@@ -13,6 +13,8 @@
 
 (defn get_labels [x y] (apply str (interpose " " (map y x))))
 
+(defn get_keys [m] (keys (select-keys m (for [[k v] m :when (= v true)] k))))
+
 (defn options_list [x c k sel_x]
   (reduce str (map #(str "<input type=\"checkbox\" class=\"" c "\" value=\"" (:uid %) "\""
                          (if (some (fn [y] (= (k %) (k y))) sel_x)
