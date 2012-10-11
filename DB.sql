@@ -4,7 +4,9 @@ CREATE TABLE articles (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, body TEXT NO
 
 CREATE TABLE categories (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 CREATE TABLE tags (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
+
 CREATE TABLE authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password TEXT NOT NULL, salt TEXT NOT NULL);
+CREATE UNIQUE INDEX username_lower_id ON authors (lower(username));
 
 CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 
@@ -12,24 +14,11 @@ CREATE TABLE article_categories (artid INTEGER references articles(uid) ON DELET
 CREATE TABLE article_tags (artid INTEGER references articles(uid) ON DELETE CASCADE, tagid INTEGER references tags(uid) ON DELETE CASCADE, PRIMARY KEY (artid, tagid));
 CREATE TABLE article_authors (artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid) ON DELETE CASCADE, PRIMARY KEY(artid, authid));
 
-CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE, roleid INTEGER references roles(uid) ON DELETE CASCADE);
+CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE, roleid INTEGER references roles(uid) ON DELETE CASCADEqu);
 
 CREATE TABLE projects (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL, link TEXT NOT NULL, screenshot TEXT NOT NULL, pin INTEGER UNIQUE NOT NULL);
 
 CREATE TABLE comments (uid SERIAL PRIMARY KEY, content TEXT NOT NULL, artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid), birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, edit TIMESTAMP (0) DEFAULT NULL);
-
-/*
-INSERT INTO comments (content, artid, authid, birth)
-	VALUES	('I am a comment', 4, 1,  '2012/02/15 14:30'::timestamp),
-		('Youtube feeds on quartz', 4, 1,  '2012/03/13 15:21'::timestamp),
-	       	('Unfortunately this is tree', 5, 1,  '2012/08/31 17:01'::timestamp),
-		('Treehouse and blog', 5, 2,  '2012/09/05 14:08'::timestamp),
-		('Where is the cat?', 5, 1,  '2012/09/27 11:26'::timestamp),
-	       	('How interesting', 5, 2,  '2012/09/28 10:51'::timestamp),
-		('Trolling', 4, 1,  '2012/09/30 14:30'::timestamp),
-		('Your mother sucks clocks in hell', 4, 1,  '2012/10/25 15:13'::timestamp),
-	       	('Forbidden clue', 5, 1,  '2012/10/26 20:07'::timestamp);*/
-
 
 -- INSERT INTO articles (title, body) VALUES ('First title', E'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id arcu tellus, non sodales dolor. Cras lorem sapien, viverra in auctor in, hendrerit ut libero. Proin adipiscing ornare leo, eget imperdiet magna fermentum et. Maecenas auctor neque vitae urna facilisis at sodales urna lacinia. Morbi auctor lorem in augue lacinia vel rhoncus felis consectetur. Phasellus in fringilla ligula. Pellentesque ac dui sed libero faucibus tempor eget a orci. Maecenas dolor mauris, blandit non sollicitudin a, condimentum non libero. Quisque congue sodales massa sed rhoncus. Proin vitae sapien ligula, ut dignissim ligula. Maecenas elit mauris, suscipit ac aliquam sit amet, malesuada in lectus. Vivamus lacinia laoreet velit, nec tempor ligula consequat non. Nunc adipiscing pulvinar tellus eu varius. Aenean metus urna, facilisis a auctor ut, gravida eu ipsum.<div class="code"> Suspendisse consectetur pulvinar ultrices.\nas \nlol \na asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd \n dddddddddffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</div> Fusce at enim scelerisque erat molestie facilisis a at nibh.'), ('Second title', 'Nunc ut ante est. Phasellus cursus, arcu a vestibulum tempus, dolor risus mattis lectus, sit amet cursus justo orci nec mi. Fusce diam justo, venenatis sit amet dictum tempor, vestibulum vel odio. Fusce nisl mauris, tristique nec pellentesque ut, porta quis nulla. Phasellus quis lectus leo, et dignissim nunc. Nam enim enim, congue eu rutrum at, dapibus quis urna. Morbi placerat blandit volutpat. Donec ante ligula, tempus in lacinia eu, commodo non ante. Donec sollicitudin aliquet ultricies.'), ('Third title', 'Nunc nunc neque, dignissim ac euismod at, vehicula sit amet felis. Phasellus convallis laoreet dui, at ullamcorper lectus consequat ac. Pellentesque ut semper dui. Praesent tempus, lorem a tincidunt fringilla, quam nulla varius ante, eu lacinia mauris arcu ac turpis. Etiam arcu lacus, iaculis at lacinia in, volutpat ut lorem. In hac habitasse platea dictumst. Ut sed facilisis urna.'), ('Fourth article', 'Pellentesque ut porta quam. Donec mollis lacus at magna sodales egestas. Fusce at felis libero, eu consequat nunc. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam lacinia luctus nunc, et varius erat sodales eget. Donec sed mauris a arcu malesuada auctor ut vel arcu. Nullam aliquet auctor sodales.');
 
