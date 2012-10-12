@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [extend])
   (:require [clojure.string :as string]
             [clj-time.format :as time-format]
-            [noir.session :as session])
+            [noir.session :as session]
+            [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
         [undefined.misc   :only [get_keys]]
@@ -12,6 +13,9 @@
         [undefined.content :only [str-to-int]]
         [undefined.auth :only [is-admin?]]))
 
+
+(defn ilike [k v] 
+  (eng/infix k "ILIKE" v))
 
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
@@ -188,19 +192,17 @@
           (join authors)
           (where {:artid id})))
 
-;TODO LOWER username?
 (defn get_user [& {:keys [id username email] :or {id nil username nil email nil}}]
-  (let [[col op val] (if username   ["username" " ILIKE " username]
-                    (if id          ["authors.uid" " = " id]
-                                    ["email" " ILIKE " email]))]
+  (let [[col op val] (if username   [:username ILIKE username]
+                    (if id          [:authors.uid = id]
+                                    [:email ILIKE email]))]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
             (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass] [:authors.email :email]
                     [:authors.salt :salt] [:roles.label :roles])
 
-            (where (raw (str col " " op " '" val "'"))))))
-            ;(where {col val}))))
+            (where {col [op val]}))))
 
 (defn select_projects [] (select projects))
 
@@ -241,14 +243,16 @@
 ;  (do
 ;    ();cleanup deprecated entries aka older than one day?
   (if (first (get_user :username username))
-    (println (str "This username isn't available anymore."))
+    "This username isn't available anymore."
     (if (first (get_user :email email))
-      (println "This email has already been used to create an account.")
-      (println "Everything's good.")
+      "This email has already been used to create an account."
+      (if (first (get_temp
+      "Everything's good."
       ;Check if an entry in the temp table already exists
       ;Generate password bcrypt + activation link
       ;insert into temp table
       )))
+
 
 ;INSERT
 
