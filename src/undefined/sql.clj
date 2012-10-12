@@ -262,21 +262,30 @@
                        :birth    (:birth newuser)}))
       (delete temp_authors (where {:username username})))))
 
+(defn get_temp_user [username]
+  (select temp_authors (where {:username username})))
+
 (defn create_temp_user [username email password]
   (do
-    (remove_expired_temp_authors)
+    (remove_expired_temp_authors) ;TODO move to activation link click, before checking the link
   (if (first (get_user :username username))
     "This username isn't available anymore."
     (if (first (get_user :email email))
       "This email has already been used to create an account."
-      ;(if (first (get_temp
       (do
-        ;(temp_to_real_user "Me")
-        "Everything's good.")
-      ;Check if an entry in the temp table already exists
-      ;Generate password bcrypt + activation link
-      ;insert into temp table
-      ))))
+        (if (first (get_temp_user username))
+          (delete temp_authors (where {:username username})))
+        (insert temp_authors
+                (values {:username    username
+                         :email       email
+                         :password    password
+                         :salt        "NO SALT"
+                         :birth       (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
+                         :activation  "NO ACTIVATION"}))
+        "User added to temp table, send activation link")))))
+
+(println (str "\n\n" (create_temp_user "Landophia" "landolphia@unefied.re" "ALSKJD") "\n\n"))
+(println (str "\n" (promote_temp_user "Landophia")))
 
 ;INSERT
 
