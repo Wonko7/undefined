@@ -265,6 +265,18 @@
 (defn get_temp_user [username]
   (select temp_authors (where {:username username})))
 
+(defn activate_user [link username]
+  (do
+    (remove_expired_temp_authors)
+    (if (first (select temp_authors
+                       (where {:activation link :username username})))
+      (do
+        (promote_temp_user username)
+        "The account has been succesfully activated")
+      "This link is not valid.")))
+
+(println (activate_user "jjgg" "Him"))
+
 (defn create_temp_user [username email password]
   (do
     (remove_expired_temp_authors) ;TODO move to activation link click, before checking the link
@@ -283,9 +295,6 @@
                          :birth       (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
                          :activation  "NO ACTIVATION"}))
         "User added to temp table, send activation link")))))
-
-(println (str "\n\n" (create_temp_user "Landophia" "landolphia@unefied.re" "ALSKJD") "\n\n"))
-(println (str "\n" (promote_temp_user "Landophia")))
 
 ;INSERT
 
