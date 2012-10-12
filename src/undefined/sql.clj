@@ -80,7 +80,7 @@
 (defentity authors
   (table :authors)
   (pk :uid)
-  (entity-fields :username :email)
+  (entity-fields :username :email :birth)
   (database undef-db))
 
 (defentity temp_authors
@@ -242,15 +242,6 @@
           (order :birth :ASC)
           (where {:artid id})))
 
-(defn temp_to_real_user [username email password birth]
-  (transaction
-    (insert authors
-          (values :username username
-                  :email    email
-                  :password password
-                  :birth    birth))
-    (delete temp_authors (where {:username username})))) 
-
 ;;;;;;;;;;;;
 ;; SIGNUP ;;
 ;;;;;;;;;;;;
@@ -260,21 +251,32 @@
     (delete temp_authors
             (where {:birth [< (psqltime treshold)]})))) 
 
-(println (remove_expired_temp_authors))
+(defn promote_temp_user [username]
+  (let [newuser (first (select temp_authors (where {:username username})))]
+    (transaction
+      (insert authors
+              (values {:username (:username newuser)
+                       :email    (:email newuser)
+                       :password (:password newuser)
+                       :salt     "laskdjalksj"
+                       :birth    (:birth newuser)}))
+      (delete temp_authors (where {:username username})))))
 
 (defn create_temp_user [username email password]
-;  (do
-;    ();cleanup deprecated entries aka older than one day?
+  (do
+    (remove_expired_temp_authors)
   (if (first (get_user :username username))
     "This username isn't available anymore."
     (if (first (get_user :email email))
       "This email has already been used to create an account."
       ;(if (first (get_temp
-      "Everything's good."
+      (do
+        ;(temp_to_real_user "Me")
+        "Everything's good.")
       ;Check if an entry in the temp table already exists
       ;Generate password bcrypt + activation link
       ;insert into temp table
-      )))
+      ))))
 
 ;INSERT
 
