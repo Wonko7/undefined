@@ -14,8 +14,18 @@
         [undefined.auth :only [is-admin?]]))
 
 
+;;;;;;;;;;;;;
+;; Helpers ;;
+;;;;;;;;;;;;;
+
+;TODO add to_psql_time wrapper (js+time-format+time-zone?)
+
 (defn ilike [k v] 
   (eng/infix k "ILIKE" v))
+
+(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+
+;;;;;;;;;;;;;
 
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
@@ -193,9 +203,9 @@
           (where {:artid id})))
 
 (defn get_user [& {:keys [id username email] :or {id nil username nil email nil}}]
-  (let [[col op val] (if username   [:username ILIKE username]
+  (let [[col op val] (if username   [:username ilike username]
                     (if id          [:authors.uid = id]
-                                    [:email ILIKE email]))]
+                                    [:email ilike email]))]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
@@ -235,10 +245,19 @@
                   :password password
                   :birth    birth))
     (delete temp_authors (where {:username username})))) 
- 
-;FIXME find a fix for different cases
-;(clojure.string/lower-case and..? something psql?
-;use prepare and/or transform?
+
+;;;;;;;;;;;;
+;; SIGNUP ;;
+;;;;;;;;;;;;
+
+(defn remove_expired_temp_authors []
+  (let [treshold (minus (now) (days 1) (hours -2))]
+    (delete temp_authors
+            (where {:birth [< (java.sql.Timestamp/valueOf
+                                (time-format/unparse psqltime treshold))]})))) 
+
+(println (remove_expired_temp_authors))
+
 (defn create_temp_user [username email password]
 ;  (do
 ;    ();cleanup deprecated entries aka older than one day?
@@ -246,13 +265,12 @@
     "This username isn't available anymore."
     (if (first (get_user :email email))
       "This email has already been used to create an account."
-      (if (first (get_temp
+      ;(if (first (get_temp
       "Everything's good."
       ;Check if an entry in the temp table already exists
       ;Generate password bcrypt + activation link
       ;insert into temp table
       )))
-
 
 ;INSERT
 
@@ -308,7 +326,7 @@
     (update comments
             (set-fields {:content content :edit (java.sql.Timestamp/valueOf
                                                   (time-format/unparse
-                                                    (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+                                                    psqltime
                                                     (from-time-zone (now) (time-zone-for-offset -2))))})
             (where {:uid uid})))
 
