@@ -23,7 +23,12 @@
 (defn ilike [k v] 
   (eng/infix k "ILIKE" v))
 
-(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+
+(defn psqltime [t] (java.sql.Timestamp/valueOf
+                     (time-format/unparse
+                       (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+                       t)))
 
 ;;;;;;;;;;;;;
 
@@ -253,8 +258,7 @@
 (defn remove_expired_temp_authors []
   (let [treshold (minus (now) (days 1) (hours -2))]
     (delete temp_authors
-            (where {:birth [< (java.sql.Timestamp/valueOf
-                                (time-format/unparse psqltime treshold))]})))) 
+            (where {:birth [< (psqltime treshold)]})))) 
 
 (println (remove_expired_temp_authors))
 
@@ -324,10 +328,7 @@
 (defn update_comment [uid author content]
 ;  (if (is-admin? author)
     (update comments
-            (set-fields {:content content :edit (java.sql.Timestamp/valueOf
-                                                  (time-format/unparse
-                                                    psqltime
-                                                    (from-time-zone (now) (time-zone-for-offset -2))))})
+            (set-fields {:content content :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
             (where {:uid uid})))
 
 ;DELETE
