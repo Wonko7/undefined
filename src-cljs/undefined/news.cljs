@@ -14,8 +14,8 @@
                              [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
                                              (em/substitute div)
                                              (ef/chainable-standard #(em/at %
-                                                                            [:.btn_del] (em/listen :click (delete-button type)) ; FIXME -> comments
-                                                                            [:.btn_upd] (em/listen :click (update-button type))))
+                                                                            [:.btn_del_c_and_a] (em/listen :click (delete-button type)) ; FIXME -> comments
+                                                                            [:.btn_upd_c_and_a] (em/listen :click (update-button type))))
                                              (restore-height 200))))]
               (if (= type :article)
                 (fn [e]

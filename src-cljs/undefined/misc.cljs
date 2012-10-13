@@ -24,6 +24,5 @@
                                                  bord (reduce red-bot-top 0 (nodes-or-node ((ef/extr-multi-node style/getBorderBox) children)))
                                                  size (reduce #(+ %1 (.-height %2)) 0 (nodes-or-node ((ef/extr-multi-node style/getSize) children)))]
                                              (+ marg bord size)))))]
-        (js/console.log h speed)
         ((em/chain (em/resize :curwidth h speed)
                    (em/remove-style :height :width)) node)))))
