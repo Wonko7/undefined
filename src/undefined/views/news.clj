@@ -103,9 +103,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-page-init! "update-article-div" update-article-div)
-(add-page-init! "refresh-article-div" #(let [uid %3
-                                             sel (keyword (str "#article_" uid))]
-                                         (html/select (news-page %1 %2 :single [uid]) [sel])))
+(add-page-init! "refresh-article-div" #(html/select (news-page %1 %2 :single [%3]) [(keyword (str "#article_" %3))]))
 
 (add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.
 (add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))
