@@ -8,53 +8,77 @@
 
 
 (defn newspage [href & [args]]
-  (letfn [(submit-article [sel uid]
+  (letfn [(submit [type sel uid]
+            (letfn [(animate-replace [div]
+                      (em/at js/document
+                             [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
+                                             (em/substitute div)
+                                             (ef/chainable-standard #(em/at %
+                                                                            [:.btn_del] (em/listen :click (delete-button type))
+                                                                            [:.btn_upd] (em/listen :click (update-button type))))
+                                             (restore-height 200))))]
+              (if (= type :article)
+                (fn [e]
+                  (.preventDefault e)
+                  (let [article (em/from js/document
+                                         :title     [sel :.inp_title] (em/get-prop :value)
+                                         :body      [sel :.txt_body]  (em/get-prop :value)
+                                         :tags      [sel :.inp_tags]  (em/get-prop :value)
+                                         :auths-val [sel :.cbx_auth]  (em/get-prop :value)
+                                         :auths-c?  [sel :.cbx_auth]  (em/get-prop :checked)
+                                         :cats-val  [sel :.cbx_cat]   (em/get-prop :value)
+                                         :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))
+                        one-c?  (partial some identity)]
+                    (if (and (one-c? (:cats-c? article)) (one-c? (:auths-c? article))) ;; FIXME test title/body & add tests on server side
+                      (fm/letrem [res (update_article_rem uid
+                                                          (:title article)
+                                                          (:body article)
+                                                          (:tags article)
+                                                          (zipmap (:auths-val article) (:auths-c? article))
+                                                          (zipmap (:cats-val article) (:cats-c? article)))
+                                  div (get-page "refresh-article-div" uid)]
+                        (animate-replace div))
+                      (js/alert "Check at least one author and category"))))
+                (fn [e]
+                  (.preventDefault e)
+                  (let [comment (em/from js/document
+                                         :body       [sel :txt_body] (em/get-prop :value)
+                                         :article-id [sel :txt_body] (em/get-attr :data-article-id))]
+                    (if (re-find #"^\s*$" "")
+                      (fm/letrem [res (update_comment_rem uid (:article-id comment) (:body comment))
+                                  div (get-page "refresh-comment-div" uid)]
+                        (animate-replace div))
+                      (js/alert "Your comment is empty...")))))))
+
+          (delete-button [type]
             (fn [e]
-              (.preventDefault e)
-              (let [article (em/from js/document
-                                     :title     [sel :.inp_title] (em/get-prop :value)
-                                     :body      [sel :.txt_body]  (em/get-prop :value)
-                                     :tags      [sel :.inp_tags]  (em/get-prop :value)
-                                     :auths-val [sel :.cbx_auth]  (em/get-prop :value)
-                                     :auths-c?  [sel :.cbx_auth]  (em/get-prop :checked)
-                                     :cats-val  [sel :.cbx_cat]   (em/get-prop :value)
-                                     :cats-c?   [sel :.cbx_cat]   (em/get-prop :checked))
-                    one-c?  (partial some identity)]
-                (if (and (one-c? (:cats-c? article)) (one-c? (:auths-c? article))) ;; FIXME test title/body & add tests on server side
-                  (fm/letrem [res (update_article_rem uid
-                                                      (:title article)
-                                                      (:body article)
-                                                      (:tags article)
-                                                      (zipmap (:auths-val article) (:auths-c? article))
-                                                      (zipmap (:cats-val article) (:cats-c? article)))
-                              div (get-page "refresh-article-div" uid)]
-                    (em/at js/document
-                           [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
-                                           (em/substitute div)
-                                           (ef/chainable-standard #(em/at %
-                                                                          [:.btn_del] (em/listen :click delete-button)
-                                                                          [:.btn_upd] (em/listen :click update-button)))
-                                           (restore-height 200))))
-                  (js/alert "Check at least one author and category")))))
+              (let [uid (em/from (.-currentTarget e) (em/get-attr :value))
+                    stype (name type)]
+                (js/console.log type  uid (str "#" stype "_" uid))
+                (when (js/confirm (str "This will PERMANENTLY erase the " stype))
+                  (fm/letrem [res (delete_rem type uid)]
+                    (em/at js/document [(str "#" stype "_" uid)] (em/chain
+                                                                   (em/resize :curwidth 0 200)
+                                                                   (em/remove-node))))))))
 
-          (delete-button [e]
-            (let [uid (em/from (.-currentTarget e) (em/get-attr :value))]
-              (when (js/confirm (str "This will PERMANENTLY erase the article #" uid " from the database."))
-                (fm/letrem [res (delete_article_rem uid)]
-                  (em/at js/document [(str "#article_" uid)] (em/substitute ""))))))
-
-          (update-button [e]
-            (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
-                  sel    (keyword (str "#article_" uid))]
-              (fm/letrem [div (get-page "update-article-div" uid)]
-                (em/at js/document
-                       [sel] (em/chain (em/resize :curwidth 0 200)
-                                       (em/html-content div)
-                                       (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit-article sel uid))))
-                                       (restore-height 200))))))]
+          (update-button [type]
+            (fn [e]
+              (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
+                    stype  (name type)
+                    sel    (keyword (str "#" stype "_" uid))]
+                (js/console.log (str "update-" stype "-div"))
+                (fm/letrem [div (get-page (str "update-" stype "-div") uid)]
+                  (em/at js/document
+                         [sel] (em/chain (em/resize :curwidth 0 200)
+                                         (em/html-content div)
+                                         (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit type sel uid))))
+                                         (restore-height 200)))))))]
     (em/at js/document
-      [:.btn_del] (em/listen :click delete-button)
-      [:.btn_upd] (em/listen :click update-button))))
+      [:.btn_del]         (em/listen :click (delete-button :article))
+      [:.btn_upd]         (em/listen :click (update-button :article))
+      [:.btn_del_comment] (em/listen :click (delete-button :comment))
+      [:.btn_upd_comment] (em/listen :click (update-button :comment))
+      )))
 
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)
