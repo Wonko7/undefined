@@ -48,7 +48,7 @@
                (comment_count_by_article article-uid))
           [{:tag :hr}]
           (if (username user-id)
-            (new-comment article-uid nil)
+            (new-comment article-uid 0 nil)
             [{:tag :center :content ["you must be logged in to comment"] }]))) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

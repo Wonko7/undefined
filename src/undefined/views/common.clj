@@ -79,8 +79,8 @@
   [:.btn_rst]         (html/set-attr :value uid))
 
 (html/defsnippet newarticle "templates/new_article.html" [:form.new-comment]
-  [article-id body]
-  [:button]           (html/set-attrs :data-article-id article-id)
+  [article-id comment-id body]
+  [:button]           (html/set-attr :value comment-id :data-article-id article-id)
   [:.txt_body]        (html/content body))
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]

@@ -289,7 +289,7 @@
             (where {:uid uid}))))
 
 (defn delete_comment [id uid]
-  (id (is-admin? id)
+  (id (is-admin? id);; FIXME is-author?
       (delete comments
               (where {:uid uid}))))
 
@@ -299,10 +299,9 @@
 (defremote insert_article_rem [title body tags authors categories] (insert_article (session/get :id) title body tags authors categories))
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 (defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
-(defremote update_comment_rem [comid authid content] (update_comment comid authid content))
 
-;(defremote delete_comment_rem [adminid comid] (delete_comment adminid comid)) ?? admindid?
-;(defremote delete_article_rem [uid] (delete_article (session/get :id) (str-to-int uid)))
+(defremote update_comment_rem [comid authid content]
+  (update_comment comid authid content))
 
 (defremote delete_rem [type uid]
   (let [id (session/get :id)]
