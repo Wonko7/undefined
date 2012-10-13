@@ -7,7 +7,7 @@
             [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
-        [undefined.misc   :only [get_keys send_email]]
+        [undefined.misc   :only [get_keys send_activation]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
