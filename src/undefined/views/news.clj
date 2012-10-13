@@ -55,8 +55,6 @@
 (defn mk-comment-count [uid]
   (str "Comment Count: " (:cnt (first (comment_count_by_article uid)))))
 
-(defn mk-comment-count [uid]
-  (str "Comment Count: " (:cnt (first (comment_count_by_article uid)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  News;
