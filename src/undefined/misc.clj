@@ -25,7 +25,7 @@
                    x)))
 
 (defn send_activation [email act]
-  (let [smtp_pass (get_conf :smtp_pass)]
+  (let [smtp_pass (get-conf :smtp_pass)]
   (ps/send-message ^{:host "smtp.gmail.com"
                      :user "defined@undefined.re"
                      :pass (if smtp_pass smtp_pass "placeholder")
