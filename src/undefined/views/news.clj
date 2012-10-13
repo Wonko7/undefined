@@ -45,7 +45,7 @@
                               (format-date (:birth %)) (when (:edit %)
                                                          (format-date (:edit %)))
                               (:content %))
-               (comment_count_by_article article-uid))
+               (comments_by_article article-uid))
           [{:tag :hr}]
           (if (username user-id)
             (new-comment article-uid 0 nil)
@@ -74,10 +74,7 @@
                          (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :username)) ;; count
-                         (str "Comment Count: " (if comments
-                                                  (count comments)
-                                                  (:cnt (first (comment_count_by_article (:uid %))))))
-                         comments)
+                         (str "Comment Count: " (:cnt (first (comment_count_by_article (:uid %))))) comments)
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))

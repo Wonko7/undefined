@@ -20,7 +20,7 @@
                                                             :pass [:form :input.pass] (em/get-prop :value))]
                                             (fm/letrem [[user roles] (auth-login id)]
                                               (if user
-                                                (page-click "newarticle" nil)
+                                                (page-click "new-article" nil)
                                                 (js/alert (str "log in failed. ")))))))))
 
 (add-page-init! "login" login-page)
