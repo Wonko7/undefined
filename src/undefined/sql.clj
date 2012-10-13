@@ -269,6 +269,10 @@
       (doseq [x auths]  (insert article_authors     (values {:artid uid :authid (Integer/parseInt x)})))
       (doseq [x cats]   (insert article_categories  (values {:artid uid :catid (Integer/parseInt x)})))))))
 
+(defn select_comment [uid]
+  (select comments
+          (where {:uid uid})))
+
 (defn update_comment [uid author content]
 ;  (if (is-admin? author)
     (update comments

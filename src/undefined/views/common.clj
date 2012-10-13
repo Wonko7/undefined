@@ -44,6 +44,7 @@
 
 (html/defsnippet user-comment "templates/article.html" [:div.comment]
   [uid is-admin? author date-birth date-edit comment]
+  [:.comment]    (html/set-attr :id (str "#comment_" uid))
   [:.author]     (html/content author)
   [:.date-birth] (html/content (str "Added: " date-birth))
   [:.date-edit]  (html/content (when date-edit (str " - Edited: " date-edit)))
@@ -76,6 +77,11 @@
   [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats))
   [:.btn_add_article] (html/set-attr :value uid)
   [:.btn_rst]         (html/set-attr :value uid))
+
+(html/defsnippet newarticle "templates/new_article.html" [:form.new-comment]
+  [article-id body]
+  [:button]           (html/set-attrs :data-article-id article-id)
+  [:.txt_body]        (html/content body))
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]
