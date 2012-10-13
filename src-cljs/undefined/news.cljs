@@ -54,7 +54,8 @@
             (fn [e]
               (let [uid (em/from (.-currentTarget e) (em/get-attr :value))
                     stype (name type)]
-                (when (js/confirm (str "This will PERMANENTLY erase the " stype " from the database."))
+                (js/console.log type  uid (str "#" stype "_" uid))
+                (when (js/confirm (str "This will PERMANENTLY erase the " stype))
                   (fm/letrem [res (delete_rem type uid)]
                     (em/at js/document [(str "#" stype "_" uid)] (em/chain
                                                                    (em/resize :curwidth 0 200)

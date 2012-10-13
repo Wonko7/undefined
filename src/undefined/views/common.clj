@@ -44,7 +44,7 @@
 
 (html/defsnippet user-comment "templates/article.html" [:div.comment]
   [uid is-admin? author date-birth date-edit comment]
-  [:.comment]    (html/set-attr :id (str "#comment_" uid))
+  [:.comment]    (html/set-attr :id (str "comment_" uid))
   [:.author]     (html/content author)
   [:.date-birth] (html/content (str "Added: " date-birth))
   [:.date-edit]  (html/content (when date-edit (str " - Edited: " date-edit)))
@@ -83,6 +83,9 @@
   [article-id comment-id body]
   [:button]           (html/set-attr :value comment-id :data-article-id article-id)
   [:.txt_body]        (html/content body))
+
+(html/defsnippet please-log-in "templates/new_article.html" [:div.please-log-in]
+  [])
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
   [data]

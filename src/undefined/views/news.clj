@@ -1,6 +1,6 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
-  (:use [undefined.views.common :only [add-page-init! page new-article new-comment article user-comment base a-link]]
+  (:use [undefined.views.common :only [add-page-init! page new-article new-comment please-log-in article user-comment base a-link]]
         [undefined.sql :only [select_articles select_article select_authors select_categories
                               tags_by_article articles_by_tags select_tags
                               categories_by_article authors_by_article
@@ -41,15 +41,14 @@
   (a-link (str (:label tag) " ") {:href (str "tag/" (:uid tag))}))
 
 (defn mk-comments [user-id article-uid]
-  (concat (map #(user-comment true (:uid %) (:author %) ;; FIXME s/true/(or is-author is-admin)
+  (concat (map #(user-comment (:uid %) true (:author %) ;; FIXME s/true/(or is-author is-admin)
                               (format-date (:birth %)) (when (:edit %)
                                                          (format-date (:edit %)))
                               (:content %))
                (comments_by_article article-uid))
-          [{:tag :hr}]
           (if (username user-id)
             (new-comment article-uid 0 nil)
-            [{:tag :center :content ["you must be logged in to comment"] }]))) 
+            (please-log-in)))) 
 
 (defn mk-comment-count [uid]
   (str "Comment Count: " (:cnt (first (comment_count_by_article uid)))))
