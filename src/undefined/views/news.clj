@@ -51,6 +51,9 @@
             (new-comment article-uid 0 nil)
             [{:tag :center :content ["you must be logged in to comment"] }]))) 
 
+(defn mk-comment-count [uid]
+  (str "Comment Count: " (:cnt (first (comment_count_by_article uid)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  News;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,7 +77,7 @@
                          (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
                          {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
                          (str "Authors: " (get_labels (authors_by_article (:uid %)) :username)) ;; count
-                         (str "Comment Count: " (:cnt (first (comment_count_by_article (:uid %))))) comments)
+                         (mk-comment-count (:uid %)) comments)
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
@@ -94,21 +97,15 @@
   (let [[comment] (select_comment uid)]
     (new-comment (:content comment))))
 
-(defn refresh-article-div [user-id href uid]
-  (let [category (if (= (take 4 href) (seq "blog")) :blog :news)
-        art      (first (select_article uid))]
-    (article (:uid art) category (:title art) (format-date (:birth art)) (remove-unsafe-tags (:body art))
-             {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid art))))}
-             (str "Authors: " (get_labels (authors_by_article (:uid art)) :username))
-             (is-admin? user-id))))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  routes;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-page-init! "update-article-div" update-article-div)
-(add-page-init! "refresh-article-div" refresh-article-div)
+(add-page-init! "refresh-article-div" #(let [uid %3
+                                             sel (keyword (str "#article_" uid))]
+                                         (html/select (news-page %1 %2 :single [uid]) [sel])))
 
 (add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.
 (add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))

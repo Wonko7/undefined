@@ -45,7 +45,7 @@
                                          :body       [sel :txt_body] (em/get-prop :value)
                                          :article-id [sel :txt_body] (em/get-attr :data-article-id))]
                     (if (re-find #"^\s*$" "")
-                      (fm/letrem [res (update_comment_rem uid article-id (:body article))
+                      (fm/letrem [res (update_comment_rem uid (:article-id comment) (:body comment))
                                   div (get-page "refresh-comment-div" uid)]
                         (animate-replace div))
                       (js/alert "Your comment is empty...")))))))
@@ -56,14 +56,17 @@
                     stype (name type)]
                 (when (js/confirm (str "This will PERMANENTLY erase the " stype " from the database."))
                   (fm/letrem [res (delete_rem type uid)]
-                    (em/at js/document [(str "#" stype "_" uid)] (em/resize :curwidth 0 200)))))))
+                    (em/at js/document [(str "#" stype "_" uid)] (em/chain
+                                                                   (em/resize :curwidth 0 200)
+                                                                   (em/remove-node))))))))
 
           (update-button [type]
             (fn [e]
               (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
                     stype  (name type)
                     sel    (keyword (str "#" stype "_" uid))]
-                (fm/letrem [div (get-page "update-" stype "-div" uid)]
+                (js/console.log (str "update-" stype "-div"))
+                (fm/letrem [div (get-page (str "update-" stype "-div") uid)]
                   (em/at js/document
                          [sel] (em/chain (em/resize :curwidth 0 200)
                                          (em/html-content div)
