@@ -4,30 +4,16 @@
             [clj-time.format :as time-format]
             [noir.session :as session]
             [noir.util.crypt :as nc]
-            [korma.sql.engine :as eng]
-            [postal.core :as ps])
+            [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
-        [undefined.misc   :only [get_keys]]
+        [undefined.misc   :only [get_keys send_email]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
         [undefined.content :only [str-to-int]]
         [undefined.auth :only [is-admin?]]))
 
-
-(defn send_activation [email act]
-  (ps/send-message ^{:host "smtp.gmail.com"
-                             :user "placeholder"
-                             :pass "placeholder"
-                             :ssl :yes!!!11}
-                           {:from "defined@undefined.re"
-                            :to email
-                            :subject "Welcome to undefined.re, please activate your account"
-                            :body (str "Thank you for registering an account at undefined.re,\n\n
-                                  follow the link below to activate your account and start posting comments\n
-                                  http://undefined.re/activate/" act
-                                       "\n\nRegards,\n\n~The undefined team.")}))
 ;;;;;;;;;;;;;
 ;; Helpers ;;
 ;;;;;;;;;;;;;
