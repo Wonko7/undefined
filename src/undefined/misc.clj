@@ -3,7 +3,7 @@
             [clj-time.coerce :as time-conv]
             [clj-time.format :as time-format]
             [postal.core :as ps])
-  (:import  (java.io File)))
+  (:use undefined.config [:only get-conf])
 
 (def w3c-date-format (time-format/formatter "yyyy-MM-dd'T'HH:mm:ss'Z'"))
 (def date-format (time-format/formatter "EEEE, dd MMMM yyyy - HH:mm"))
@@ -24,13 +24,8 @@
                          ">" (k %) "</input><br/>")
                    x)))
 
-
-(defn get_conf [file]
-  (if (.exists (File. file))
-    (slurp "file")))
-
 (defn send_activation [email act]
-  (let [smtp_pass (get_conf "smtp_conf")]
+  (let [smtp_pass (get_conf :smtp_pass)]
   (ps/send-message ^{:host "smtp.gmail.com"
                      :user "defined@undefined.re"
                      :pass (if smtp_pass smtp_pass "placeholder")
