@@ -17,7 +17,7 @@
 
 
 (defn send_activation [email act]
-  (ps/send-message ^{:host "placeholder"
+  (ps/send-message ^{:host "smtp.gmail.com"
                              :user "placeholder"
                              :pass "placeholder"
                              :ssl :yes!!!11}
@@ -292,27 +292,31 @@
         "This link is not valid."))))
 
 (defn create_temp_user [username email password]
-  (do
-    (remove_expired_temp_authors) ;TODO move to activation link click, before checking the link
-    (if (first (get_user :username username))
-      "This username isn't available anymore."
-      (if (first (get_user :email email))
-        "This email has already been used to create an account."
-        (if (first (get_temp_user :email email))
-          "You should have already received an activation email."
-          (do
-            (if (first (get_temp_user :username username))
-              (delete temp_authors (where {:username username})))
-            (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
-                  act   (nc/encrypt (str username email birth))]
-              (insert temp_authors
-                      (values {:username    username
-                               :email       email
-                               :password    (nc/encrypt password)
-                               :salt        "NO SALT"
-                               :birth       birth
-                               :activation  act}))
-              (str "User added to temp table, send activation link: " act))))))))
+  (if (first (get_user :username username))
+    "This username isn't available anymore."
+    (if (first (get_user :email email))
+      "This email has already been used to create an account."
+      (if (first (get_temp_user :email email))
+        "You should have already received an activation email."
+        (do
+          (if (first (get_temp_user :username username))
+            (delete temp_authors (where {:username username})))
+          (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
+                act   (nc/encrypt (str username email birth))]
+            (insert temp_authors
+                    (values {:username    username
+                             :email       email
+                             :password    (nc/encrypt password)
+                             :salt        "NO SALT"
+                             :birth       birth
+                             :activation  act}))
+            (do
+              (let [res           (send_activation email act)
+                    [error code]  [(:error res) (:code res)]]
+              (if (= :SUCCESS error)
+                "User added to temp table, activation link sent."
+                (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
+
 
 ;(println (str "\n\n" (create_temp_user "hjaalskdjsdasd" "tlskjhlkhjt" "lkasjdaslkdj")"\n"))
 ;(println (str "\n\n" (activate_user "$2a$10$Fih3cT5AsoaoOUDvgyQoA.Vx3joVsOAIFfSYCVHv6ExLRMs/pTOiy")))
