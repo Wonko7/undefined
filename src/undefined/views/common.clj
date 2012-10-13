@@ -50,7 +50,8 @@
   [:.date-edit]  (html/content (when date-edit (str " - Edited: " date-edit)))
   [:.content]    (html/content comment)
   [:.admin]      (html/append (when is-admin?
-                                [{:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}])))
+                                [{:tag :button :attrs {:class "btn_upd_comment" :value (str uid)} :content "Edit"}
+                                 {:tag :button :attrs {:class "btn_del_comment" :value (str uid)} :content "Delete"}])))
 
 (html/defsnippet project "templates/project.html" [:div.whole-article]
   [title link article sc restrictions] ;; FIXME this is probably temporary. we need more usecases on restrictions to realise.
