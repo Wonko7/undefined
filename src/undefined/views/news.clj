@@ -1,11 +1,11 @@
 (ns undefined.views.news
   (:require [net.cgrand.enlive-html :as html])
-  (:use [undefined.views.common :only [add-page-init! page newarticle article user-comment base a-link]]
+  (:use [undefined.views.common :only [add-page-init! page new-article new-comment article user-comment base a-link]]
         [undefined.sql :only [select_articles select_article select_authors select_categories
                               tags_by_article articles_by_tags select_tags
                               categories_by_article authors_by_article
                               comments_by_article comment_count_by_article select_comment]]
-        [undefined.auth :only [is-admin?]]
+        [undefined.auth :only [is-admin? username]]
         [undefined.misc :only [format-date get_labels]]
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
@@ -41,7 +41,7 @@
   (a-link (str (:label tag) " ") {:href (str "tag/" (:uid tag))}))
 
 (defn mk-comments [user-id article-uid]
-  (concat (map #(user-comment admin? (:uid %) (:author %)
+  (concat (map #(user-comment true (:uid %) (:author %) ;; FIXME s/true/(or is-author is-admin)
                               (format-date (:birth %)) (when (:edit %)
                                                          (format-date (:edit %)))
                               (:content %))
@@ -60,7 +60,7 @@
         category                   (get-category href type)
         nb-articles                10
         [offset articles comments] (condp = type
-                                     :single [nil         (select_article arg1) (concat (comments_by_article arg1))]
+                                     :single [nil         (select_article arg1) (mk-comments user-id arg1)]
                                      :page   [arg1        (select_articles arg1 (inc nb-articles) (name category)) nil]
                                      :tag    [(or arg2 0) (articles_by_tags arg1 arg2 (inc nb-articles))] nil)
         [nx articles]              (if (> (count articles) nb-articles)
@@ -68,8 +68,7 @@
                                      [nil articles])
         pv                         (when (and offset (> offset 0))
                                      (- offset nb-articles))
-        admin?                     (is-admin? user-id)
-        ]
+        admin?                     (is-admin? user-id)]
     (page (mk-blog-cat-title category arg1)
           (map #(article (:uid %) category admin?
                          (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
@@ -78,7 +77,7 @@
                          (str "Comment Count: " (if comments
                                                   (count comments)
                                                   (:cnt (first (comment_count_by_article (:uid %))))))
-                         (map mk-comment comments))
+                         comments)
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
@@ -90,9 +89,9 @@
 
 (defn update-article-div [user-id href uid]
   (let [[article] (select_article uid)]
-    (newarticle (select_authors) (select_categories) (:title article) (:body article)
-                (get_labels (tags_by_article (:uid article)) :label) (:uid article)
-                (authors_by_article (:uid article)) (categories_by_article (:uid article)))))
+    (new-article (select_authors) (select_categories) (:title article) (:body article)
+                 (get_labels (tags_by_article (:uid article)) :label) (:uid article)
+                 (authors_by_article (:uid article)) (categories_by_article (:uid article)))))
 
 (defn update-comment-div [user-id href uid]
   (let [[comment] (select_comment uid)]

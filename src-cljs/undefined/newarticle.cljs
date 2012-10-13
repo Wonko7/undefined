@@ -24,4 +24,4 @@
                                      (fm/letrem [res (insert_article_rem title body tags authors categories)] 
                                        (page-click redirect nil)))))))
 
-(add-page-init! "newarticle" newarticlepage)
+(add-page-init! "new-article" newarticlepage)

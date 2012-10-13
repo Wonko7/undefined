@@ -68,7 +68,7 @@
 (html/defsnippet login "templates/login.html" [:form]
   [])
 
-(html/defsnippet newarticle "templates/new_article.html" [:form.newarticle]
+(html/defsnippet new-article "templates/new_article.html" [:form.newarticle]
   [authors categories title body tags uid sel_auths sel_cats]
   [:.inp_title]       (html/set-attr :value title)
   [:.txt_body]        (html/content body)
@@ -78,7 +78,7 @@
   [:.btn_add_article] (html/set-attr :value uid)
   [:.btn_rst]         (html/set-attr :value uid))
 
-(html/defsnippet newarticle "templates/new_article.html" [:form.new-comment]
+(html/defsnippet new-comment "templates/new_article.html" [:form.new-comment]
   [article-id comment-id body]
   [:button]           (html/set-attr :value comment-id :data-article-id article-id)
   [:.txt_body]        (html/content body))

@@ -70,8 +70,11 @@
                                          (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit type sel uid))))
                                          (restore-height 200)))))))]
     (em/at js/document
-      [:.btn_del] (em/listen :click (delete-button :article))
-      [:.btn_upd] (em/listen :click (update-button :article)))))
+      [:.btn_del]         (em/listen :click (delete-button :article))
+      [:.btn_upd]         (em/listen :click (update-button :article))
+      [:.btn_del_comment] (em/listen :click (delete-button :comment))
+      [:.btn_upd_comment] (em/listen :click (update-button :comment))
+      )))
 
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)
