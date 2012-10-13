@@ -20,7 +20,7 @@
                                                             :pass [:form :input.pass] (em/get-prop :value))]
                                             (fm/letrem [[user roles] (auth-login id)]
                                               (if user
-                                                (page-click "new-article" nil)
+                                                (page-click "news" nil) ;; FIXME: find previous page in history
                                                 (js/alert (str "log in failed. ")))))))))
 
 (add-page-init! "login" login-page)
