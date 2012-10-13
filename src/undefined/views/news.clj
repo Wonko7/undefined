@@ -97,7 +97,7 @@
 
 (defn update-comment-div [user-id href uid]
   (let [[comment] (select_comment uid)]
-    (new-comment (:content comment))))
+    (new-comment nil uid (:content comment))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -105,6 +105,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-page-init! "update-article-div" update-article-div)
+(add-page-init! "update-comment-div" update-comment-div)
 (add-page-init! "refresh-article-div" #(html/select (news-page %1 %2 :single [%3]) [(keyword (str "#article_" %3))]))
 
 (add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.

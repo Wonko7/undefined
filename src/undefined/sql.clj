@@ -273,8 +273,8 @@
   (select comments
           (where {:uid uid})))
 
-(defn update_comment [uid author content]
-;  (if (is-admin? author)
+(defn update_comment [userid uid content]
+;  (if (is-admin? userid) or author
     (update comments
             (set-fields {:content content :edit (java.sql.Timestamp/valueOf
                                                   (time-format/unparse
@@ -300,8 +300,8 @@
 (defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 (defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
 
-(defremote update_comment_rem [comid authid content]
-  (update_comment comid authid content))
+(defremote update_comment_rem [comid content]
+  (update_comment (session/get :id) comid content))
 
 (defremote delete_rem [type uid]
   (let [id (session/get :id)]

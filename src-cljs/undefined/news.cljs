@@ -11,7 +11,8 @@
   (letfn [(submit [type sel uid]
             (letfn [(animate-replace [div]
                       (em/at js/document
-                             [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
+                             [sel] (em/chain ;() FIXME: fix position
+                                             (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
                                              (em/substitute div)
                                              (ef/chainable-standard #(em/at %
                                                                             [:.btn_del] (em/listen :click (delete-button type))
@@ -41,11 +42,10 @@
                       (js/alert "Check at least one author and category"))))
                 (fn [e]
                   (.preventDefault e)
-                  (let [comment (em/from js/document
-                                         :body       [sel :txt_body] (em/get-prop :value)
-                                         :article-id [sel :txt_body] (em/get-attr :data-article-id))]
+                  (let [{:keys [comment]} (em/from js/document :comment [sel :.txt_body] (em/get-prop :value))]
+                    (js/console.log (str uid " " comment) )
                     (if (re-find #"^\s*$" "")
-                      (fm/letrem [res (update_comment_rem uid (:article-id comment) (:body comment))
+                      (fm/letrem [res (update_comment_rem uid comment)
                                   div (get-page "refresh-comment-div" uid)]
                         (animate-replace div))
                       (js/alert "Your comment is empty...")))))))
@@ -66,7 +66,6 @@
               (let [uid    (int (em/from (.-currentTarget e) (em/get-attr :value)))
                     stype  (name type)
                     sel    (keyword (str "#" stype "_" uid))]
-                (js/console.log (str "update-" stype "-div"))
                 (fm/letrem [div (get-page (str "update-" stype "-div") uid)]
                   (em/at js/document
                          [sel] (em/chain (em/resize :curwidth 0 200)
@@ -77,8 +76,7 @@
       [:.btn_del]         (em/listen :click (delete-button :article))
       [:.btn_upd]         (em/listen :click (update-button :article))
       [:.btn_del_comment] (em/listen :click (delete-button :comment))
-      [:.btn_upd_comment] (em/listen :click (update-button :comment))
-      )))
+      [:.btn_upd_comment] (em/listen :click (update-button :comment)))))
 
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)
