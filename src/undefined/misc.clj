@@ -3,7 +3,7 @@
             [clj-time.coerce :as time-conv]
             [clj-time.format :as time-format]
             [postal.core :as ps])
-  (:use undefined.config [:only get-conf])
+  (:use     [undefined.config :only [get-conf]]))
 
 (def w3c-date-format (time-format/formatter "yyyy-MM-dd'T'HH:mm:ss'Z'"))
 (def date-format (time-format/formatter "EEEE, dd MMMM yyyy - HH:mm"))
@@ -36,4 +36,4 @@
                     :body (str "Thank you for registering an account at undefined.re,\n\n
                                follow the link below to activate your account and start posting comments\n
                                http://undefined.re/activate/" act
-                               "\n\nRegards,\n\n~The undefined team.")}))
+                               "\n\nRegards,\n\n~The undefined team.")})))
