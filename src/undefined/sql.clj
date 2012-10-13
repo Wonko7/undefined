@@ -3,6 +3,7 @@
   (:require [clojure.string :as string]
             [clj-time.format :as time-format]
             [noir.session :as session]
+            [noir.util.crypt :as nc]
             [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
@@ -262,43 +263,49 @@
                        :birth    (:birth newuser)}))
       (delete temp_authors (where {:username username})))))
 
-(defn get_temp_user [username]
-  (select temp_authors (where {:username username})))
+(defn get_temp_user [& {:keys [username email] :or {username nil email nil}}]
+  (if username
+    (select temp_authors (where {:username  username}))
+    (select temp_authors (where {:email     email}))))
 
-(defn activate_user [link username]
+(defn activate_user [link]
   (do
     (remove_expired_temp_authors)
-    (if (first (select temp_authors
-                       (where {:activation link :username username})))
-      (do
-        (promote_temp_user username)
-        "The account has been succesfully activated")
-      "This link is not valid.")))
-
-(println (activate_user "jjgg" "Him"))
+    (let [res (first (select temp_authors (where {:activation link})))]
+      (if res
+        (do
+          (promote_temp_user (:username res))
+          "The account has been succesfully activated")
+        "This link is not valid."))))
 
 (defn create_temp_user [username email password]
   (do
     (remove_expired_temp_authors) ;TODO move to activation link click, before checking the link
-  (if (first (get_user :username username))
-    "This username isn't available anymore."
-    (if (first (get_user :email email))
-      "This email has already been used to create an account."
-      (do
-        (if (first (get_temp_user username))
-          (delete temp_authors (where {:username username})))
-        (insert temp_authors
-                (values {:username    username
-                         :email       email
-                         :password    password
-                         :salt        "NO SALT"
-                         :birth       (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
-                         :activation  "NO ACTIVATION"}))
-        "User added to temp table, send activation link")))))
+    (if (first (get_user :username username))
+      "This username isn't available anymore."
+      (if (first (get_user :email email))
+        "This email has already been used to create an account."
+        (if (first (get_temp_user :email email))
+          "You should have already received an activation email."
+          (do
+            (if (first (get_temp_user :username username))
+              (delete temp_authors (where {:username username})))
+            (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
+                  act   (nc/encrypt (str username email birth))]
+              (insert temp_authors
+                      (values {:username    username
+                               :email       email
+                               :password    (nc/encrypt password)
+                               :salt        "NO SALT"
+                               :birth       birth
+                               :activation  act}))
+              (str "User added to temp table, send activation link: " act))))))))
+
+;(println (str "\n\n" (create_temp_user "hjaalskdjsdasd" "tlskjhlkhjt" "lkasjdaslkdj")"\n"))
+;(println (str "\n\n" (activate_user "$2a$10$Fih3cT5AsoaoOUDvgyQoA.Vx3joVsOAIFfSYCVHv6ExLRMs/pTOiy")))
 
 ;INSERT
 
-;TODO this has to be prettyfiable
 (defn weed_tags [tag_input artid]
   (let [tag_array       (distinct (clojure.string/split tag_input #" "))
         existing_tags   (map #(:label %) (select_tags))
