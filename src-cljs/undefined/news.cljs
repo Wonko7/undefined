@@ -11,11 +11,10 @@
   (letfn [(submit [type sel uid]
             (letfn [(animate-replace [div]
                       (em/at js/document
-                             [sel] (em/chain ;() FIXME: fix position
-                                             (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
+                             [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
                                              (em/substitute div)
                                              (ef/chainable-standard #(em/at %
-                                                                            [:.btn_del] (em/listen :click (delete-button type))
+                                                                            [:.btn_del] (em/listen :click (delete-button type)) ; FIXME -> comments
                                                                             [:.btn_upd] (em/listen :click (update-button type))))
                                              (restore-height 200))))]
               (if (= type :article)
@@ -43,7 +42,6 @@
                 (fn [e]
                   (.preventDefault e)
                   (let [{:keys [comment]} (em/from js/document :comment [sel :.txt_body] (em/get-prop :value))]
-                    (js/console.log (str uid " " comment) )
                     (if (re-find #"^\s*$" "")
                       (fm/letrem [res (update_comment_rem uid comment)
                                   div (get-page "refresh-comment-div" uid)]

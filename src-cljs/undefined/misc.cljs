@@ -17,12 +17,13 @@
   (ef/chainable-standard
     (fn [node]
       (let [h (:size (em/from node
-                              :size [:> :*] (fn [children]
-                                              (reduce #(let [marg ((ef/extr-multi-node style/getPaddingBox) %2)
-                                                             bord ((ef/extr-multi-node style/getBorderBox) %2)
-                                                             size ((ef/extr-multi-node style/getSize) %2)]
-                                                         (+ %1 (.-top marg) (.-bottom marg) (.-top bord) (.-bottom bord) (.-height size)))
-                                                      0
-                                                      (if (seq? children) children [children])))))]
+                              :size [:>] (fn [children]
+                                           (let [red-bot-top   #(+ %1 (.-top %2) (.-bottom %2))
+                                                 nodes-or-node #(if (seq? %1) %1 [%1])
+                                                 marg (reduce red-bot-top 0 (nodes-or-node ((ef/extr-multi-node style/getPaddingBox) children)))
+                                                 bord (reduce red-bot-top 0 (nodes-or-node ((ef/extr-multi-node style/getBorderBox) children)))
+                                                 size (reduce #(+ %1 (.-height %2)) 0 (nodes-or-node ((ef/extr-multi-node style/getSize) children)))]
+                                             (+ marg bord size)))))]
+        (js/console.log h speed)
         ((em/chain (em/resize :curwidth h speed)
                    (em/remove-style :height :width)) node)))))
