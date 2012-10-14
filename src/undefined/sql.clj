@@ -7,11 +7,11 @@
             [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
-        [undefined.misc   :only [get_keys send_activation]]
+        [undefined.misc   :only [get_keys send_activation to_html]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
-        [undefined.content :only [str-to-int to_html]]
+        [undefined.content :only [str-to-int]]
         [undefined.auth :only [is-admin?]]))
 
 ;;;;;;;;;;;;;

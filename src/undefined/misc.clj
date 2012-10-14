@@ -1,5 +1,6 @@
 (ns undefined.misc
   (:require [net.cgrand.enlive-html :as html]
+            [clojure.string :as string]
             [clj-time.coerce :as time-conv]
             [clj-time.format :as time-format]
             [postal.core :as ps])
@@ -23,6 +24,9 @@
                            "checked=\"CHECKED\"")
                          ">" (k %) "</input><br/>")
                    x)))
+
+(defn from_html [input] (string/replace input #"<br/>" "\n"))
+(defn to_html   [input] (string/replace input #"\n" "<br/>"))
 
 (defn send_activation [email act]
   (let [smtp_pass (get-conf :smtp_pass)]

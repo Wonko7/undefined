@@ -2,6 +2,7 @@
   (:use [noir.fetch.remotes]
         [undefined.auth :only [is-admin?]]
         [undefined.config :only [get-config]]
+        [undefined.misc :only [from_html]]
         [noir.core :only [defpage]]
         [undefined.misc :only [options_list]])
   (:require [net.cgrand.enlive-html :as html]
@@ -72,7 +73,7 @@
 (html/defsnippet new-article "templates/new_article.html" [:form.newarticle]
   [authors categories title body tags uid sel_auths sel_cats]
   [:.inp_title]       (html/set-attr :value title)
-  [:.txt_body]        (html/content body)
+  [:.txt_body]        (html/content (from_html body))
   [:.inp_tags]        (html/set-attr :value tags)
   [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :username sel_auths))
   [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats))
@@ -82,7 +83,7 @@
 (html/defsnippet new-comment "templates/new_article.html" [:form.new-comment]
   [article-id comment-id body]
   [:button]           (html/set-attr :value comment-id :data-article-id article-id)
-  [:.txt_body]        (html/content body))
+  [:.txt_body]        (html/content (from_html body)))
 
 (html/defsnippet please-log-in "templates/new_article.html" [:div.please-log-in]
   [])
