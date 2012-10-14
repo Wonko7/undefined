@@ -85,6 +85,7 @@
 
 (html/defsnippet new-comment "templates/new_article.html" [:form.new-comment]
   [article-id comment-id body]
+  [:form]             (html/set-attr :data-article-id article-id)
   [:button]           (html/set-attr :value comment-id :data-article-id article-id)
   [:.txt_body]        (html/content (from_html body)))
 

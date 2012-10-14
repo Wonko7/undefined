@@ -14,8 +14,9 @@
                              [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
                                              (em/content div)
                                              (ef/chainable-standard #(em/at %
-                                                                            [:.btn_del_c_and_a] (em/listen :click (delete-button type)) ; FIXME -> comments
-                                                                            [:.btn_upd_c_and_a] (em/listen :click (update-button type))))
+                                                                            [:.btn_del_c_and_a] (em/listen :click (delete-button type))
+                                                                            [:.btn_upd_c_and_a] (em/listen :click (update-button type))
+                                                                            [:form.new-comment] (em/listen :submit new-comment)))
                                              (restore-height 200))))]
               (if (= type :article)
                 (fn [e]
@@ -54,9 +55,8 @@
                     stype (name type)]
                 (when (js/confirm (str "This will PERMANENTLY erase the " stype))
                   (fm/letrem [res (delete_rem type uid)]
-                    (em/at js/document [(str "#" stype "_" uid)] (em/chain
-                                                                   (em/resize :curwidth 0 200)
-                                                                   (em/remove-node))))))))
+                    (em/at js/document [(str "#" stype "_" uid)] (em/chain (em/resize :curwidth 0 200)
+                                                                           (em/remove-node))))))))
 
           (update-button [type]
             (fn [e]
@@ -69,20 +69,26 @@
                                          (em/html-content div)
                                          (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit type sel uid))))
                                          (restore-height 200)))))))
-          
+
           (new-comment [e]
             (.preventDefault e)
-            (let [form     (.-currentTarget e)
-                  textarea (em/select form [:textarea])
-                  comment  (em/from textarea (em/get-attr :value))]
-              (if (re-find #"^\s*$" comment)
+            (let [form       [(.-currentTarget e)]
+                  {:keys [body id]} (em/from form
+                                             :id   [:.btn_add_comment] (em/get-attr :data-article-id)
+                                             :body [:textarea]         (em/get-prop :value))]
+              (if (re-find #"^\s*$" body)
                 (js/alert "Your comment is empty...")
-                (em/at form
                 (do
-                  (fm/letrem [res ]
-                    ((em/set-attr :value "") textarea)
-                    ((em/before) ) form))))
-              ))]
+                  (fm/letrem [res (insert_comment_rem id body)
+                              div (get-page "fetch-comment-div" res)]
+                    (em/at form [:textarea] (em/set-prop :value ""))
+                    (em/at form (em/before div))
+                    (em/at js/document [(str "#comment_" res)] (em/chain (em/resize :curwidth 0 0)
+                                                                         (em/remove-class "hidden")
+                                                                         (ef/chainable-standard #(em/at %
+                                                                                                        [:.btn_del_c_and_a] (em/listen :click (delete-button :comment))
+                                                                                                        [:.btn_upd_c_and_a] (em/listen :click (update-button :comment))))
+                                                                         (restore-height 200))))))))]
 
     (em/at js/document
       [:.btn_del]         (em/listen :click (delete-button :article))
@@ -91,5 +97,5 @@
       [:.btn_upd_comment] (em/listen :click (update-button :comment))
       [:form.new-comment] (em/listen :submit new-comment))))
 
+
 (add-page-init! "news" newspage)
-(add-page-init! "blog" newspage)

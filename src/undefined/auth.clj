@@ -41,3 +41,6 @@
 
 (defn username [id]
   (:username (friend/current-authentication id)))
+
+(defn userid [id]
+  (:uid (friend/current-authentication id)))

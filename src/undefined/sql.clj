@@ -12,7 +12,7 @@
         [korma.db]
         [korma.core]
         [undefined.content :only [str-to-int]]
-        [undefined.auth :only [is-admin?]]))
+        [undefined.auth :only [is-admin? userid]]))
 
 ;;;;;;;;;;;;;
 ;; Helpers ;;
@@ -20,7 +20,7 @@
 
 ;TODO add to_psql_time wrapper (js+time-format+time-zone?)
 
-(defn ilike [k v] 
+(defn ilike [k v]
   (eng/infix k "ILIKE" v))
 
 ;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
@@ -143,7 +143,7 @@
   (select article_tags
           (fields [:article_tags.artid :uid]
                   [:articles.title :title] [:articles.body :body] [:articles.birth :birth])
-          (join articles (= :articles.uid :article_tags.artid))          
+          (join articles (= :articles.uid :article_tags.artid))
           (where {:article_tags.tagid id})
           (limit n)
           (offset off)
@@ -182,7 +182,7 @@
 
 (defn select_tags [& [id]]
   (if id
-    (select tags 
+    (select tags
             (where {:uid id}))
     (select tags)))
 
@@ -204,7 +204,7 @@
           (join categories)
           (where {:artid id})))
 
-(defn select_authors [] 
+(defn select_authors []
   (select authors
           (join author_roles  (= :author_roles.authid :authors.uid))
           (join roles         (= :author_roles.roleid :roles.uid))
@@ -258,7 +258,7 @@
 (defn remove_expired_temp_authors []
   (let [treshold (minus (now) (days 1) (hours -2))]
     (delete temp_authors
-            (where {:birth [< (psqltime treshold)]})))) 
+            (where {:birth [< (psqltime treshold)]}))))
 
 (defn promote_temp_user [username]
   (let [newuser (first (select temp_authors (where {:username username})))]
@@ -379,8 +379,8 @@
       artid)))
 
 (defn insert_comment [id author content]
-  (if (is-admin? author)
-    (let [res (insert comments (values {:artid id :authid author :content (to_html content)}))]
+  (if (is-admin? author) ;; FIXME ; replace by is-user
+    (let [res (insert comments (values {:artid id :authid (userid author) :content (to_html content)}))]
       (:uid res))))
 
 ;UPDATE
@@ -435,7 +435,7 @@
   (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 
 (defremote insert_comment_rem [artid content]
-  (insert_comment  artid (session/get :id) content))
+  (insert_comment (str-to-int artid) (session/get :id) content))
 
 (defremote update_comment_rem [comid content]
   (update_comment (session/get :id) comid content))
