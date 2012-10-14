@@ -318,9 +318,12 @@
           (where {:uid uid})))
 
 (defn update_password [uid newpass]
-  (update authors
-          (set-fields {:password (nc/encrypt newpass)})
-          (where {:uid uid})))
+  (transaction
+    (delete reset_links
+            (where {:userid uid}))
+    (update authors
+            (set-fields {:password (nc/encrypt newpass)})
+            (where {:uid uid}))))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Reset password ;;
@@ -350,7 +353,7 @@
         (store_reset_link (:uid user) resetlink)
         (send_reset_pass (:email user) resetlink)
         "An email with instructions to reset your password has been sent.")
-      "There's been an issue sending your password reset link.")))
+      "There's been an issue sending your reset link.")))
 
 
 ;(send_activation "grimskunk@gmail.com" "lkasjfas")
