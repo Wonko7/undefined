@@ -42,11 +42,11 @@
                 (fn [e]
                   (.preventDefault e)
                   (let [{:keys [comment]} (em/from js/document :comment [sel :.txt_body] (em/get-prop :value))]
-                    (if (re-find #"^\s*$" "")
+                    (if (re-find #"^\s*$" comment)
+                      (js/alert "Your comment is empty...")
                       (fm/letrem [res (update_comment_rem uid comment)
                                   div (get-page "refresh-comment-div" uid)]
-                        (animate-replace div))
-                      (js/alert "Your comment is empty...")))))))
+                        (animate-replace div))))))))
 
           (delete-button [type]
             (fn [e]
@@ -68,12 +68,28 @@
                          [sel] (em/chain (em/resize :curwidth 0 200)
                                          (em/html-content div)
                                          (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit type sel uid))))
-                                         (restore-height 200)))))))]
+                                         (restore-height 200)))))))
+          
+          (new-comment [e]
+            (.preventDefault e)
+            (let [form     (.-currentTarget e)
+                  textarea (em/select form [:textarea])
+                  comment  (em/from textarea (get-attr :value))]
+              (if (re-find #"^\s*$" comment)
+                (js/alert "Your comment is empty...")
+                (em/at form
+                (do
+                  (fm/letrem [res ]
+                    ((em/set-attr :value "") textarea)
+                    ((em/before) ) form))))
+              ))]
+
     (em/at js/document
       [:.btn_del]         (em/listen :click (delete-button :article))
       [:.btn_upd]         (em/listen :click (update-button :article))
       [:.btn_del_comment] (em/listen :click (delete-button :comment))
-      [:.btn_upd_comment] (em/listen :click (update-button :comment)))))
+      [:.btn_upd_comment] (em/listen :click (update-button :comment))
+      [:form.new-comment] (em/listen :submit new-comment))))
 
 (add-page-init! "news" newspage)
 (add-page-init! "blog" newspage)
