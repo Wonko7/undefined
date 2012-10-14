@@ -77,17 +77,13 @@
                   {:keys [body id]} (em/from form
                                              :id    [:.btn_add_comment] (em/get-attr :data-article-id)
                                              :body  [:textarea] (em/get-prop :value))]
-              (js/console.log "test:" id body)
               (if (re-find #"^\s*$" comment)
                 (js/alert "Your comment is empty...")
                 (do
                   (fm/letrem [res (insert_comment_rem id body)
-                              ;div (get-page "refresh-comment-div" res)
-                              ]
+                              div (get-page "refresh-comment-div" res) ]
                     (em/at  (em/set-attr :value ""))
-                    ;(em/at form     (em/before div))
-                    (js/console.log res)
-                    )))))]
+                    (em/at form (em/before div)))))))]
 
     (em/at js/document
       [:.btn_del]         (em/listen :click (delete-button :article))

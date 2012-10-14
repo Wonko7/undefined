@@ -363,8 +363,7 @@
 
 (defn select_comment [uid]
   (select comments
-          (where {:uid uid})
-          (order {:birth :ASC})))
+          (where {:uid uid})))
 
 (defn update_comment [userid uid content]
 ;  (if (is-admin? userid) or author
