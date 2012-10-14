@@ -14,7 +14,7 @@
 
 ;; WARNING: only works if node has ONE child.
 ;; FIXME this should be extendend to restore-size with :curw/h à la em/resize to select w and/or h.
-;;       this should be extendend to support multiple children on then node. 
+;;       this should be extendend to support multiple children on the node. --> add all children w/ same style to a div outside the screen?
 (defn restore-height [speed]
   (ef/chainable-standard
     (fn [node]
