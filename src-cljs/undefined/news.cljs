@@ -80,7 +80,7 @@
                 (js/alert "Your comment is empty...")
                 (do
                   (fm/letrem [res (insert_comment_rem id body)
-                              div (get-page "refresh-comment-div" res)]
+                              div (get-page "fetch-comment-div" res)]
                     (em/at form [:textarea] (em/set-prop :value "")) 
                     (em/at form (em/before div))
                     (em/at js/document [(str "#comment_" res)] (em/chain (em/resize :curwidth 0 0)

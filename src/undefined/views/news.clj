@@ -107,7 +107,8 @@
 (add-page-init! "update-article-div" update-article-div)
 (add-page-init! "update-comment-div" update-comment-div)
 (add-page-init! "refresh-article-div" #(html/select (news-page %1 %2 :single [%3]) [(keyword (str "#article_" %3))]))
-(add-page-init! "refresh-comment-div" #((html/add-class "hidden") (first (mk-comment (first (select_comment (str-to-int %3)))))) 1)
+(add-page-init! "refresh-comment-div" #(mk-comment (first (select_comment (str-to-int %3)))) 1)
+(add-page-init! "fetch-comment-div" #((html/add-class "hidden") (first (mk-comment (first (select_comment (str-to-int %3)))))) 1)
 
 (add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.
 (add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))
