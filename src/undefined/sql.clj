@@ -7,7 +7,7 @@
             [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
-        [undefined.misc   :only [get_keys send_activation to_html]]
+        [undefined.misc   :only [get_keys send_reset_pass send_activation to_html]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
@@ -82,6 +82,11 @@
   (pk :uid)
   (entity-fields :username :email :birth)
   (database undef-db))
+
+(defentity reset_links
+  (table :reset_links)
+  (fields :userid :resetlink :birth)
+  (pk :uid))
 
 (defentity temp_authors
   (table :temp_authors)
@@ -307,6 +312,42 @@
                 "User added to temp table, activation link sent."
                 (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
 
+(defn update_email [uid newemail]
+  (update authors
+          (set-fields {:email newemail})
+          (where {:uid uid})))
+
+(defn update_password [uid newpass]
+  (update authors
+          (set-fields {:password (nc/encrypt newpass)})
+          (where {:uid uid})))
+
+;;;;;;;;;;;;;;;;;;;;
+;; Reset password ;;
+;;;;;;;;;;;;;;;;;;;;
+
+(defn remove_expired_reset_links []
+  (let [treshold (minus (now) (days 1) (hours -2))]
+    (delete reset_links
+            (where {:birth [< (psqltime treshold)]})))) 
+
+;Erases any previous demands made for the same user
+(defn store_reset_link [userid link]
+  (do
+    (remove_expired_reset_links)
+    (transaction
+      (delete reset_links
+              (where {:userid userid}))
+      (insert reset_links
+              (values {:userid userid :resetlink link})))))
+
+
+(defn reset_password [uid]
+  (let [[user]      (select authors (where {:uid uid}))
+        resetlink (if user (nc/encrypt (str (:uid user) (:username user) (:password user) (now))))]
+    (if resetlink
+      (store_reset_link (:uid user) resetlink
+      (send_reset_pass (:email user) resetlink))))
 
 ;(println (str "\n\n" (create_temp_user "Cyrille" "cyrille.jj@free.fr" "pass")"\n"))
 ;(println (str "\n\n" (activate_user "$2a$10$ck2d9kwn9OFtTNF8hMo71.iN2F61uGuR1eV2Z9L8hmxqAbNe.Fej6")))
@@ -370,16 +411,6 @@
     (update comments
             (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
             (where {:uid uid})))
-
-(defn update_email [uid newemail]
-  (update authors
-          (set-fields {:email newemail})
-          (where {:uid uid})))
-
-(defn update_password [uid newpass]
-  (update authors
-          (set-fields {:password (nc/encrypt newpass)})
-          (where {:uid uid})))
 
 ;DELETE
 (defn delete_article [id uid]

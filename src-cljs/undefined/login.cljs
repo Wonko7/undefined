@@ -8,32 +8,27 @@
 
 (defn login-page [href & [args]]
   (let [login #(em/at js/document
-                            [:#page :a.logout] (em/listen :click (fn [e]
-                                                                   (.preventDefault e)
-                                                                   (fm/letrem [res (auth-logout)]
-                                                                     (page-click "news" nil))))
-                            [:#inp_usr] (em/focus)
-                            [:form] (em/listen :submit (fn [e]
-                                                         (.preventDefault e)
-                                                         (let [id (em/from js/document
-                                                                           :user [:form :input.user] (em/get-prop :value)
-                                                                           :pass [:form :input.pass] (em/get-prop :value))]
-                                                           (fm/letrem [[user roles] (auth-login id)]
-                                                             (if user
-                                                               (page-click "news" nil)
-                                                               (js/alert (str "log in failed. "))))))))
+                      [:#inp_usr]     (em/focus)
+                      [:#reset_pass]  (em/listen :click (fn [e]
+                                                          (.preventDefault e)
+                                                          (js/alert "Blaerliqjwrpqwnir")))
+                      [:form]         (em/listen :submit (fn [e]
+                                                   (.preventDefault e)
+                                                   (let [id (em/from js/document
+                                                                     :user [:form :input.user] (em/get-prop :value)
+                                                                     :pass [:form :input.pass] (em/get-prop :value))]
+                                                     (fm/letrem [[user roles] (auth-login id)]
+                                                       (if user
+                                                         (page-click "news" nil)
+                                                         (js/alert (str "log in failed. "))))))))
         profile #(em/at js/document
-                              [:#page :a.logout] (em/listen :click (fn [e]
-                                                                     (.preventDefault e)
-                                                                     (fm/letrem [res (auth-logout)]
-                                                                       (page-click "news" nil)))))]
+                        [:#page :a.logout] (em/listen :click (fn [e]
+                                                               (.preventDefault e)
+                                                               (fm/letrem [res (auth-logout)]
+                                                                 (page-click "news" nil)))))]
     (fm/letrem [[user roles] (get-user)]
       (if user
-        (do
-          (js/console.log (str "Logged in -> profile"))
-          (profile))
-        (do
-          (js/console.log (str "Not logged-> login"))
-          (login))))))
+        (profile)
+        (login)))))
 
 (add-page-init! "login" login-page)
