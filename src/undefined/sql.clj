@@ -394,9 +394,14 @@
 
 ;; Remotes
 
-(defremote insert_article_rem [title body tags authors categories] (insert_article (session/get :id) title body tags authors categories))
-(defremote update_article_rem [uid title body tags authors categories] (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
-(defremote insert_comment_rem [artid authid content] (insert_comment artid authid content))
+(defremote insert_article_rem [title body tags authors categories]
+  (insert_article (session/get :id) title body tags authors categories))
+
+(defremote update_article_rem [uid title body tags authors categories]
+  (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
+
+(defremote insert_comment_rem [artid content]
+  (insert_comment (session/get :id) artid authid content))
 
 (defremote update_comment_rem [comid content]
   (update_comment (session/get :id) comid content))
@@ -407,15 +412,7 @@
     (delete_article id (str-to-int uid))
     (delete_comment id (str-to-int uid)))))
 
-(defremote comment_count_rem  [id] (comment_count_by_article id))
-;(defremote tags_by_article_rem [id] (tags_by_article (str-to-int id)))
-;(defremote select_article_rem [id] (select_article (str-to-int id)))
-;(defremote select_authors_rem [] (select authors))
-;(defremote select_categories_rem [] (select categories))
-;(defremote get_user_rem [& {:keys [id username] :or {id nil username nil}}] (get_user :id id :username username))
-;(defremote select_projects_rem [] (select_projects))
-;(defremote get_user_roles_rem [id] (get_user_roles id))
-;(defremote is_user_admin_rem? [id] (is_user_admin? id))
+(defremote comment_count_rem [id]
+  (comment_count_by_article id))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))
-;(defremote articles_by_tags_rem [id] (articles_by_tags id))
