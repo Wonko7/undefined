@@ -31,12 +31,15 @@
                                                                     (page-click "news" nil))))
                         [:form#update_pass]   (em/listen :submit (fn [e]
                                                                    (.preventDefault e)
+                                                                   ;TODO check that cur pass is good, that both new passes are the same
                                                                    (js/console.log "Don't you wish you could update your password?")))
                         [:form#update_email]  (em/listen :submit (fn [e]
                                                                    (.preventDefault e)
+                                                                   ;TODO check cur email is valid, check both new emails are the same and valid
                                                                    (js/console.log "Don't you wish you could update your email?")))
                         [:form#del_account]   (em/listen :submit (fn [e]
                                                                    (.preventDefault e)
+                                                                   ;TODO warn the fucking user
                                                                    (js/console.log "Don't you wish you could delete your account?"))))]
     (fm/letrem [[user roles] (get-user)]   
       (if user

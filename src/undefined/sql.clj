@@ -313,18 +313,20 @@
                   "User added to temp table, activation link sent."
                   (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
 
-(defn update_email [uid newemail]
-  (update authors
-          (set-fields {:email newemail})
-          (where {:uid uid})))
+(defn update_email [username newemail]
+  (let [[user] (select authors (where {:username username}))]
+    (update authors
+            (set-fields {:email newemail})
+            (where {:uid uid}))))
 
-(defn update_password [uid newpass]
+(defn update_password [username newpass]
+  (let [[user] (select authors (where {:username username}))]
   (transaction
     (delete reset_links
             (where {:userid uid}))
     (update authors
             (set-fields {:password (nc/encrypt newpass)})
-            (where {:uid uid}))))
+            (where {:uid uid})))))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Reset password ;;
