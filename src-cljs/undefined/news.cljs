@@ -55,9 +55,8 @@
                     stype (name type)]
                 (when (js/confirm (str "This will PERMANENTLY erase the " stype))
                   (fm/letrem [res (delete_rem type uid)]
-                    (em/at js/document [(str "#" stype "_" uid)] (em/chain
-                                                                   (em/resize :curwidth 0 200)
-                                                                   (em/remove-node))))))))
+                    (em/at js/document [(str "#" stype "_" uid)] (em/chain (em/resize :curwidth 0 200)
+                                                                           (em/remove-node))))))))
 
           (update-button [type]
             (fn [e]
@@ -75,8 +74,8 @@
             (.preventDefault e)
             (let [form       [(.-currentTarget e)]
                   {:keys [body id]} (em/from form
-                                             :id    [:.btn_add_comment] (em/get-attr :data-article-id)
-                                             :body  [:textarea] (em/get-prop :value))]
+                                             :id   [:.btn_add_comment] (em/get-attr :data-article-id)
+                                             :body [:textarea]         (em/get-prop :value))]
               (if (re-find #"^\s*$" body)
                 (js/alert "Your comment is empty...")
                 (do
@@ -84,10 +83,9 @@
                               div (get-page "refresh-comment-div" res)]
                     (em/at form [:textarea] (em/set-prop :value "")) 
                     (em/at form (em/before div))
-                    (em/at js/document [(str "#comment_" res)] (em/chain
-                                                                 (em/resize :curwidth 0 0)
-                                                                 (em/remove-class "hidden")
-                                                                 (restore-height 200))))))))]
+                    (em/at js/document [(str "#comment_" res)] (em/chain (em/resize :curwidth 0 0)
+                                                                         (em/remove-class "hidden")
+                                                                         (restore-height 200))))))))]
 
     (em/at js/document
       [:.btn_del]         (em/listen :click (delete-button :article))
@@ -95,5 +93,6 @@
       [:.btn_del_comment] (em/listen :click (delete-button :comment))
       [:.btn_upd_comment] (em/listen :click (update-button :comment))
       [:form.new-comment] (em/listen :submit new-comment))))
+
 
 (add-page-init! "news" newspage)
