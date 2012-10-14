@@ -355,15 +355,6 @@
         "An email with instructions to reset your password has been sent.")
       "There's been an issue sending your reset link.")))
 
-
-;(send_activation "grimskunk@gmail.com" "lkasjfas")
-;(send_reset_pass "grimskunk@gmail.com" "laksjfas;lfkjas")
-;(reset_password 1)
-
-;(println (str "\n\n" (create_temp_user "Cyrille" "cyrille@free.fr" "pass")"\n"))
-;(println (str "\n\n" (activate_user "$2a$10$ck2d9kwn9OFtTNF8hMo71.iN2F61uGuR1eV2Z9L8hmxqAbNe.Fej6")))
-;(println (nc/compare "pass" "$2a$10$oVt.b1XOJX7x6y0KoyQwH.wUv72/dfsgeLtdNhC.1kgupOZOohc2y"))
-
 ;INSERT
 
 (defn weed_tags [tag_input artid]

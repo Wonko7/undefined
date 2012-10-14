@@ -21,40 +21,52 @@
 		</div>
 	</div>
 	<div class="whole-article">
-		Account administration
-		<form id="update_pass">
-			<fieldset>
-				<div>
-					<label>Current password:</label>
-					<input class="pass" type="password" name="cur_pass" />
-				</div>
-				<div>
-					<label>New password:</label>
-					<input class="pass" type="password" name="new_pass" /><br/>
-					<label>Confirm password:</label>
-					<input class="pass" type="password" name="conf_pass" /><br/>
-				</div>
-				<input type="submit" value="Confirm">
-			</fieldset>
-		</form>
-		<form id="update_email">
-			<fieldset>
-				<div>
-					<label>Current email:</label>
-					<input class="pass" type="text" name="cur_email" />
-				</div>
-				<div>
-					<label>New email:</label>
-					<input class="pass" type="text" name="new_email" /><br/>
-					<label>Confirm email:</label>
-					<input class="pass" type="text" name="conf_email" /><br/>
-				</div>
-				<input type="submit" value="Confirm">
+		<div class="article-title">Account administration</div>
+		<hr>
+		<div class="article">
+			<div class="article-title"> Reset your password </div>
+			<form id="update_pass">
+				<fieldset>
+					<div>
+						<label>Current password:</label>
+						<input class="pass" type="password" name="cur_pass" />
+					</div>
+					<div>
+						<label>New password:</label>
+						<input class="pass" type="password" name="new_pass" /><br/>
+						<label>Confirm password:</label>
+						<input class="pass" type="password" name="conf_pass" /><br/>
+					</div>
+					<input type="submit" value="Confirm">
+				</fieldset>
+			</form>
+		</div>
+		<div class="article">
 
-			</fieldset>
-		</form>
-		<form id="del_account">
-			<label>Delete account</label><input type="submit" value="Delete">
-		</form>
+			<form id="update_email">
+				<div class="article-title"> Update your email address</div>
+
+				<fieldset>
+					<div>
+						<label>Current email:</label>
+						<input class="pass" type="text" name="cur_email" />
+					</div>
+					<div>
+						<label>New email:</label>
+						<input class="pass" type="text" name="new_email" /><br/>
+						<label>Confirm email:</label>
+						<input class="pass" type="text" name="conf_email" /><br/>
+					</div>
+					<input type="submit" value="Confirm">
+
+				</fieldset>
+			</form>
+		</div>
+		<div class="article">
+			<div class="article-title"> Delete your account </div>
+			<form id="del_account">
+				<label>Delete account</label><input type="submit" value="Delete">
+			</form>
+		</div>
 	</div>
 </div>
