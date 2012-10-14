@@ -347,7 +347,7 @@
       (insert reset_links
               (values {:userid userid :resetlink link})))))
 
-;TODO implement..duh..
+;TODO implement..duh.. (actually.. what else is there to do?)
 (defn check_reset_token [token]
   (let [[res] (select reset_links
                       (where {:resetlink (first token)}))]
