@@ -9,7 +9,7 @@
 			<input class="pass" type="password" name="password" />
 		</div>
 		<input type="submit" value="Log In">
-	</div>
+	</fieldset>
 </form>
 
 
@@ -17,8 +17,46 @@
 	<div class="whole-article">
 		<div class="article">Logged in as: Landolphia<br/>
 			<a href="logout" class="logout">Log Out</a>
-			Testing tests with test
-
 		</div>
+	</div>
+	<div class="whole-article">
+		Account administration
+		<form id="update_pass">
+			<fieldset>
+				<div>
+					<label>Current password:</label>
+					<input class="pass" type="password" name="cur_pass" />
+				</div>
+				<div>
+					<label>New password:</label>
+					<input class="pass" type="password" name="new_pass" /><br/>
+					<label>Confirm password:</label>
+					<input class="pass" type="password" name="conf_pass" /><br/>
+				</div>
+				<input type="submit" value="Confirm">
+			</fieldset>
+		</form>
+		<form id="update_email">
+			<fieldset>
+				<div>
+					<label>Current email:</label>
+					<input class="pass" type="text" name="cur_email" />
+				</div>
+				<div>
+					<label>New email:</label>
+					<input class="pass" type="text" name="new_email" /><br/>
+					<label>Confirm email:</label>
+					<input class="pass" type="text" name="conf_email" /><br/>
+				</div>
+				<input type="submit" value="Confirm">
+
+			</fieldset>
+		</form>
+		<form id="reset_password">
+			<label>Reset password</label><input type="submit" value="Reset">
+		</form>
+		<form id="del_account">
+			<label>Delete account</label><input type="submit" value="Delete">
+		</form>
 	</div>
 </div>
