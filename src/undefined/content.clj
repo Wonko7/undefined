@@ -2,9 +2,9 @@
   (:use [undefined.views.common])
   (:require [net.cgrand.enlive-html :as html]))
 
-(html/defsnippet as-tree "templates/article.html" [:div.content]
+(html/defsnippet as-tree "templates/article.html" [:div.hack]
   [article]
-  [:div.content] (html/html-content article))
+  [:div.hack] (html/html-content article))
 
 (def unsafe
   (let [safe-tags #{:a :div :span :section :p :article :br :big :small :center :img}]

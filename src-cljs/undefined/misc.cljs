@@ -12,17 +12,19 @@
                        (em/remove-class "hidden")
                        (em/add-class "hidden")))))
 
+;; WARNING: only works if node has ONE child.
 ;; FIXME this should be extendend to restore-size with :curw/h à la em/resize to select w and/or h.
+;;       this should be extendend to support multiple children on then node. 
 (defn restore-height [speed]
   (ef/chainable-standard
     (fn [node]
       (let [h (:size (em/from node
-                              :size [:>] (fn [children]
-                                           (let [red-bot-top   #(+ %1 (.-top %2) (.-bottom %2))
-                                                 nodes-or-node #(if (seq? %1) %1 [%1])
-                                                 marg (reduce red-bot-top 0 (nodes-or-node ((ef/extr-multi-node style/getPaddingBox) children)))
-                                                 bord (reduce red-bot-top 0 (nodes-or-node ((ef/extr-multi-node style/getBorderBox) children)))
-                                                 size (reduce #(+ %1 (.-height %2)) 0 (nodes-or-node ((ef/extr-multi-node style/getSize) children)))]
-                                             (+ marg bord size)))))]
+                              :size [:> :*] (fn [child]
+                                              (let [+-bot-top   #(+ (.-top %1) (.-bottom %1))
+                                                    marg (+-bot-top ((ef/extr-multi-node style/getPaddingBox) child))
+                                                    bord (+-bot-top ((ef/extr-multi-node style/getBorderBox) child))
+                                                    size (.-height ((ef/extr-multi-node style/getSize) child))]
+                                                (+ marg bord size)))))]
+        (js/console.log h)
         ((em/chain (em/resize :curwidth h speed)
                    (em/remove-style :height :width)) node)))))
