@@ -342,14 +342,22 @@
               (values {:userid userid :resetlink link})))))
 
 
-(defn reset_password [uid]
-  (let [[user]      (select authors (where {:uid uid}))
+(defn reset_password [username]
+  (let [[user]      (select authors (where {:username username}))
         resetlink (if user (nc/encrypt (str (:uid user) (:username user) (:password user) (now))))]
     (if resetlink
-      (store_reset_link (:uid user) resetlink
-      (send_reset_pass (:email user) resetlink))))
+      (do
+        (store_reset_link (:uid user) resetlink)
+        (send_reset_pass (:email user) resetlink)
+        "An email with instructions to reset your password has been sent.")
+      "There's been an issue sending your password reset link.")))
 
-;(println (str "\n\n" (create_temp_user "Cyrille" "cyrille.jj@free.fr" "pass")"\n"))
+
+;(send_activation "grimskunk@gmail.com" "lkasjfas")
+;(send_reset_pass "grimskunk@gmail.com" "laksjfas;lfkjas")
+;(reset_password 1)
+
+;(println (str "\n\n" (create_temp_user "Cyrille" "cyrille@free.fr" "pass")"\n"))
 ;(println (str "\n\n" (activate_user "$2a$10$ck2d9kwn9OFtTNF8hMo71.iN2F61uGuR1eV2Z9L8hmxqAbNe.Fej6")))
 ;(println (nc/compare "pass" "$2a$10$oVt.b1XOJX7x6y0KoyQwH.wUv72/dfsgeLtdNhC.1kgupOZOohc2y"))
 
@@ -404,7 +412,8 @@
 
 (defn select_comment [uid]
   (select comments
-          (where {:uid uid})))
+          (where {:uid uid})
+          (order {:birth :ASC})))
 
 (defn update_comment [userid uid content]
 ;  (if (is-admin? userid) or author
@@ -422,7 +431,6 @@
   (id (is-admin? id);; FIXME is-author?
       (delete comments
               (where {:uid uid}))))
-
 
 ;; Remotes
 
@@ -444,7 +452,8 @@
     (delete_article id (str-to-int uid))
     (delete_comment id (str-to-int uid)))))
 
-(defremote comment_count_rem [id]
-  (comment_count_by_article id))
+(defremote comment_count_rem [id] (comment_count_by_article id))
+
+(defremote reset_pass_rem [username] (reset_password username))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))

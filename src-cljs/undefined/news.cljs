@@ -74,7 +74,7 @@
             (.preventDefault e)
             (let [form     (.-currentTarget e)
                   textarea (em/select form [:textarea])
-                  comment  (em/from textarea (get-attr :value))]
+                  comment  (em/from textarea (em/get-attr :value))]
               (if (re-find #"^\s*$" comment)
                 (js/alert "Your comment is empty...")
                 (em/at form

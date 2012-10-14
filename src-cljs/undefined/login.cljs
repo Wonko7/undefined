@@ -11,22 +11,25 @@
                       [:#inp_usr]     (em/focus)
                       [:#reset_pass]  (em/listen :click (fn [e]
                                                           (.preventDefault e)
-                                                          (js/alert "Blaerliqjwrpqwnir")))
+                                                          (let [username (em/from (em/select [:#inp_usr]) (em/get-prop :value))]
+                                                            (if (js/confirm (str "Are you sure you want to reset your password?"))
+                                                              (fm/letrem [res (reset_pass_rem username)]
+                                                                (js/alert res))))))
                       [:form]         (em/listen :submit (fn [e]
-                                                   (.preventDefault e)
-                                                   (let [id (em/from js/document
-                                                                     :user [:form :input.user] (em/get-prop :value)
-                                                                     :pass [:form :input.pass] (em/get-prop :value))]
-                                                     (fm/letrem [[user roles] (auth-login id)]
-                                                       (if user
-                                                         (page-click "news" nil)
-                                                         (js/alert (str "log in failed. "))))))))
+                                                           (.preventDefault e)
+                                                           (let [id (em/from js/document
+                                                                             :user [:form :input.user] (em/get-prop :value)
+                                                                             :pass [:form :input.pass] (em/get-prop :value))]
+                                                             (fm/letrem [[user roles] (auth-login id)]
+                                                               (if user
+                                                                 (page-click "news" nil)
+                                                                 (js/alert (str "log in failed. "))))))))
         profile #(em/at js/document
                         [:#page :a.logout] (em/listen :click (fn [e]
                                                                (.preventDefault e)
                                                                (fm/letrem [res (auth-logout)]
                                                                  (page-click "news" nil)))))]
-    (fm/letrem [[user roles] (get-user)]
+    (fm/letrem [[user roles] (get-user)]   
       (if user
         (profile)
         (login)))))
