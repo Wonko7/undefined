@@ -199,7 +199,11 @@
           (join categories)
           (where {:artid id})))
 
-(defn select_authors [] (select authors))
+(defn select_authors [] 
+  (select authors
+          (join author_roles  (= :author_roles.authid :authors.uid))
+          (join roles         (= :author_roles.roleid :roles.uid))
+          (where {:roles.label "admin"})))
 
 (defn authors_by_article [id]
   (select article_authors
@@ -365,6 +369,16 @@
     (update comments
             (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
             (where {:uid uid})))
+
+(defn update_email [uid newemail]
+  (update authors
+          (set-fields {:email newemail})
+          (where {:uid uid})))
+
+(defn update_password [uid newpass]
+  (update authors
+          (set-fields {:password (nc/encrypt newpass)})
+          (where {:uid uid})))
 
 ;DELETE
 (defn delete_article [id uid]

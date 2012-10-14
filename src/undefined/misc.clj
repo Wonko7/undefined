@@ -25,8 +25,8 @@
                          ">" (k %) "</input><br/>")
                    x)))
 
-(defn from_html [input] (string/replace input #"<br/>" "\n"))
-(defn to_html   [input] (string/replace input #"\n" "<br/>"))
+(defn from_html [input] (if input (string/replace input #"<br/>" "\n")))
+(defn to_html   [input] (if input (string/replace input #"\n" "<br/>")))
 
 (defn send_activation [email act]
   (let [smtp_pass (get-conf :smtp_pass)]

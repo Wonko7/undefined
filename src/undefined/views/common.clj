@@ -37,22 +37,22 @@
   [:.tags]              (html/append tags)
   [:.authors]           (html/content authors)
   [:.admin]             (html/append (when is-admin?
-                                       [{:tag :button :attrs {:class "btn_upd" :value (str uid)} :content "Edit"}
-                                        {:tag :button :attrs {:class "btn_del" :value (str uid)} :content "Delete"}]))
+                                       [{:tag :button :attrs {:class "btn_upd btn_upd_c_and_a" :value (str uid)} :content "Edit"}
+                                        {:tag :button :attrs {:class "btn_del btn_del_c_and_a" :value (str uid)} :content "Delete"}]))
   [:.comment-count :a]  (html/do-> (html/content comment_count)
                                    (html/set-attr :href url))
   [:.comments]          (html/append comments))
 
-(html/defsnippet user-comment "templates/article.html" [:div.comment]
+(html/defsnippet user-comment "templates/article.html" [:div.comment_wrapper]
   [uid is-admin? author date-birth date-edit comment]
-  [:.comment]    (html/set-attr :id (str "comment_" uid))
-  [:.author]     (html/content author)
-  [:.date-birth] (html/content (str "Added: " date-birth))
-  [:.date-edit]  (html/content (when date-edit (str " - Edited: " date-edit)))
-  [:.content]    (html/content comment)
-  [:.admin]      (html/append (when is-admin?
-                                [{:tag :button :attrs {:class "btn_upd_comment" :value (str uid)} :content "Edit"}
-                                 {:tag :button :attrs {:class "btn_del_comment" :value (str uid)} :content "Delete"}])))
+  [:.comment_wrapper] (html/set-attr :id (str "comment_" uid))
+  [:.author]          (html/content author)
+  [:.date-birth]      (html/content (str "Added: " date-birth))
+  [:.date-edit]       (html/content (when date-edit (str " - Edited: " date-edit)))
+  [:.content]         (html/content comment)
+  [:.admin]           (html/append (when is-admin?
+                                     [{:tag :button :attrs {:class "btn_upd_comment btn_upd_c_and_a" :value (str uid)} :content "Edit"}
+                                      {:tag :button :attrs {:class "btn_del_comment btn_del_c_and_a" :value (str uid)} :content "Delete"}])))
 
 (html/defsnippet project "templates/project.html" [:div.whole-article]
   [title link article sc restrictions] ;; FIXME this is probably temporary. we need more usecases on restrictions to realise.
@@ -88,7 +88,7 @@
   [:button]           (html/set-attr :value comment-id :data-article-id article-id)
   [:.txt_body]        (html/content (from_html body)))
 
-(html/defsnippet please-log-in "templates/new_article.html" [:div.please-log-in]
+(html/defsnippet please-log-in "templates/new_article.html" [:div.please-log-in-wrapper]
   [])
 
 (html/defsnippet metadata "templates/metadata.html" [:#metadata]
