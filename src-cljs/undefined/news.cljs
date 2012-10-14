@@ -69,20 +69,20 @@
                                          (em/html-content div)
                                          (ef/chainable-standard #(em/at % [:form] (em/listen :submit (submit type sel uid))))
                                          (restore-height 200)))))))
-          
+
           (new-comment [e]
             (.preventDefault e)
             (let [form     (.-currentTarget e)
                   textarea (em/select form [:textarea])
-                  comment  (em/from textarea (get-attr :value))]
+                  comment  (em/from textarea (get-attr :value))
+                  article-id]
               (if (re-find #"^\s*$" comment)
                 (js/alert "Your comment is empty...")
-                (em/at form
                 (do
-                  (fm/letrem [res ]
-                    ((em/set-attr :value "") textarea)
-                    ((em/before) ) form))))
-              ))]
+                  (fm/letrem [res (insert_comment_rem article-id res)
+                              div (get-page "refresh-comment-div" res)]
+                    (em/at textarea (em/set-attr :value ""))
+                    (em/at form     (em/before div)))))))]
 
     (em/at js/document
       [:.btn_del]         (em/listen :click (delete-button :article))
