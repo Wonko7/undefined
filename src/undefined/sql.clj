@@ -336,7 +336,7 @@
       artid)))
 
 (defn insert_comment [id author content]
-  (if true;(is-admin? author)
+  (if (is-admin? author)
     (let [res (insert comments (values {:artid id :authid author :content (to_html content)}))]
       (:uid res))))
 
