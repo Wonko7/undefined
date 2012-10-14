@@ -4,7 +4,7 @@
             [clj-time.coerce :as time-conv]
             [clj-time.format :as time-format]
             [postal.core :as ps])
-  (:use     [undefined.config :only [get-conf]]))
+  (:use [undefined.config :only [get-conf]]))
 
 (def w3c-date-format (time-format/formatter "yyyy-MM-dd'T'HH:mm:ss'Z'"))
 (def date-format (time-format/formatter "EEEE, dd MMMM yyyy - HH:mm"))
