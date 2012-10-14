@@ -14,7 +14,7 @@
                              [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
                                              (em/content div)
                                              (ef/chainable-standard #(em/at %
-                                                                            [:.btn_del_c_and_a] (em/listen :click (delete-button type)) ; FIXME -> comments
+                                                                            [:.btn_del_c_and_a] (em/listen :click (delete-button type))
                                                                             [:.btn_upd_c_and_a] (em/listen :click (update-button type))
                                                                             [:form.new-comment] (em/listen :submit new-comment)))
                                              (restore-height 200))))]
@@ -81,10 +81,13 @@
                 (do
                   (fm/letrem [res (insert_comment_rem id body)
                               div (get-page "fetch-comment-div" res)]
-                    (em/at form [:textarea] (em/set-prop :value "")) 
+                    (em/at form [:textarea] (em/set-prop :value ""))
                     (em/at form (em/before div))
                     (em/at js/document [(str "#comment_" res)] (em/chain (em/resize :curwidth 0 0)
                                                                          (em/remove-class "hidden")
+                                                                         (ef/chainable-standard #(em/at %
+                                                                                                        [:.btn_del_c_and_a] (em/listen :click (delete-button :comment))
+                                                                                                        [:.btn_upd_c_and_a] (em/listen :click (update-button :comment))))
                                                                          (restore-height 200))))))))]
 
     (em/at js/document
