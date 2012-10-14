@@ -25,10 +25,19 @@
                                                                  (page-click "news" nil)
                                                                  (js/alert (str "log in failed. "))))))))
         profile #(em/at js/document
-                        [:#page :a.logout] (em/listen :click (fn [e]
-                                                               (.preventDefault e)
-                                                               (fm/letrem [res (auth-logout)]
-                                                                 (page-click "news" nil)))))]
+                        [:#page :a.logout]    (em/listen :click (fn [e]
+                                                                  (.preventDefault e)
+                                                                  (fm/letrem [res (auth-logout)]
+                                                                    (page-click "news" nil))))
+                        [:form#update_pass]   (em/listen :submit #(fn [e]
+                                                                    (.preventDefault e)
+                                                                    (js/console.log "Don't you wish you could update your password?")))
+                        [:form#update_email]  (em/listen :submit #(fn [e]
+                                                                    (.preventDefault e)
+                                                                    (js/console.log "Don't you wish you could update your email?")))
+                        [:form#del_account]   (em/listen :submit #(fn [e]
+                                                                    (.preventDefault e)
+                                                                    (js/console.log "Don't you wish you could delete your account?"))))]
     (fm/letrem [[user roles] (get-user)]   
       (if user
         (profile)
