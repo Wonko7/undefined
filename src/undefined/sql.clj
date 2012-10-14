@@ -11,7 +11,7 @@
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
-        [undefined.content :only [str-to-int]]
+        [undefined.content :only [str-to-int to_html]]
         [undefined.auth :only [is-admin?]]))
 
 ;;;;;;;;;;;;;
@@ -323,7 +323,7 @@
 ;TODO transaction
 (defn insert_article [current-id title body tags authors categories]
   (if (is-admin? current-id)
-    (let [artid     (:uid (insert articles (values {:title title :body body})))
+    (let [artid     (:uid (insert articles (values {:title title :body (to_html body)})))
           auths     (get_keys authors)
           cats      (get_keys categories)]
       (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
@@ -333,7 +333,7 @@
 
 (defn insert_comment [id author content]
   (if (is-admin? author)
-    (insert comments (values {:artid id :authid author :content content}))))
+    (insert comments (values {:artid id :authid author :content (to_html content)}))))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
@@ -344,7 +344,7 @@
           cats      (get_keys categories)]
     (transaction
       (update articles
-              (set-fields {:title title :body body})
+              (set-fields {:title title :body (to_html body)})
               (where {:articles.uid uid}))
       (delete article_tags
               (where {:artid uid}))
@@ -363,7 +363,7 @@
 (defn update_comment [userid uid content]
 ;  (if (is-admin? userid) or author
     (update comments
-            (set-fields {:content content :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
+            (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
             (where {:uid uid})))
 
 ;DELETE
