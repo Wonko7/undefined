@@ -25,5 +25,5 @@
                                                     bord (+-bot-top ((ef/extr-multi-node style/getBorderBox) child))
                                                     size (.-height ((ef/extr-multi-node style/getSize) child))]
                                                 (+ marg bord size)))))]
-        ((em/chain (em/resize :curwidth h 600)
+        ((em/chain (em/resize :curwidth h speed)
                    (em/remove-style :height :width)) node)))))
