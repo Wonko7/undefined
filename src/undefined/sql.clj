@@ -380,8 +380,6 @@
           (set-fields {:password (nc/encrypt newpass)})
           (where {:uid uid})))
 
-(println (update_password 1 "testing"))
-
 ;DELETE
 (defn delete_article [id uid]
   (if (is-admin? id)
