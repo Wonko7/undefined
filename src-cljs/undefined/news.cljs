@@ -12,7 +12,7 @@
             (letfn [(animate-replace [div]
                       (em/at js/document
                              [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
-                                             (em/substitute div)
+                                             (em/content div)
                                              (ef/chainable-standard #(em/at %
                                                                             [:.btn_del_c_and_a] (em/listen :click (delete-button type)) ; FIXME -> comments
                                                                             [:.btn_upd_c_and_a] (em/listen :click (update-button type))))
@@ -52,7 +52,6 @@
             (fn [e]
               (let [uid (em/from (.-currentTarget e) (em/get-attr :value))
                     stype (name type)]
-                (js/console.log type  uid (str "#" stype "_" uid))
                 (when (js/confirm (str "This will PERMANENTLY erase the " stype))
                   (fm/letrem [res (delete_rem type uid)]
                     (em/at js/document [(str "#" stype "_" uid)] (em/chain
