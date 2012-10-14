@@ -11,12 +11,11 @@
   (letfn [(submit [type sel uid]
             (letfn [(animate-replace [div]
                       (em/at js/document
-                             [sel] (em/chain ;() FIXME: fix position
-                                             (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
-                                             (em/substitute div)
+                             [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
+                                             (em/content div)
                                              (ef/chainable-standard #(em/at %
-                                                                            [:.btn_del] (em/listen :click (delete-button type))
-                                                                            [:.btn_upd] (em/listen :click (update-button type))))
+                                                                            [:.btn_del_c_and_a] (em/listen :click (delete-button type)) ; FIXME -> comments
+                                                                            [:.btn_upd_c_and_a] (em/listen :click (update-button type))))
                                              (restore-height 200))))]
               (if (= type :article)
                 (fn [e]
@@ -43,7 +42,6 @@
                 (fn [e]
                   (.preventDefault e)
                   (let [{:keys [comment]} (em/from js/document :comment [sel :.txt_body] (em/get-prop :value))]
-                    (js/console.log (str uid " " comment) )
                     (if (re-find #"^\s*$" "")
                       (fm/letrem [res (update_comment_rem uid comment)
                                   div (get-page "refresh-comment-div" uid)]
@@ -54,7 +52,6 @@
             (fn [e]
               (let [uid (em/from (.-currentTarget e) (em/get-attr :value))
                     stype (name type)]
-                (js/console.log type  uid (str "#" stype "_" uid))
                 (when (js/confirm (str "This will PERMANENTLY erase the " stype))
                   (fm/letrem [res (delete_rem type uid)]
                     (em/at js/document [(str "#" stype "_" uid)] (em/chain
