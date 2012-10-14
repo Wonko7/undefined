@@ -28,6 +28,12 @@
                                                                      (fm/letrem [res (auth-logout)]
                                                                        (page-click "news" nil)))))]
     (fm/letrem [[user roles] (get-user)]
-      (js/console.log (str "test" user roles)))))
+      (if user
+        (do
+          (js/console.log (str "Logged in -> profile"))
+          (profile))
+        (do
+          (js/console.log (str "Not logged-> login"))
+          (login))))))
 
 (add-page-init! "login" login-page)
