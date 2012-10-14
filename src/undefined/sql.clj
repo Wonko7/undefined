@@ -12,7 +12,7 @@
         [korma.db]
         [korma.core]
         [undefined.content :only [str-to-int]]
-        [undefined.auth :only [is-admin?]]))
+        [undefined.auth :only [is-admin? userid]]))
 
 ;;;;;;;;;;;;;
 ;; Helpers ;;
