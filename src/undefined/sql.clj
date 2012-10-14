@@ -370,6 +370,18 @@
             (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
             (where {:uid uid})))
 
+(defn update_email [uid newemail]
+  (update authors
+          (set-fields {:email newemail})
+          (where {:uid uid})))
+
+(defn update_password [uid newpass]
+  (update authors
+          (set-fields {:password (nc/encrypt newpass)})
+          (where {:uid uid})))
+
+(println (update_password 1 "testing"))
+
 ;DELETE
 (defn delete_article [id uid]
   (if (is-admin? id)
