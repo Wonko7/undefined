@@ -1,4 +1,12 @@
-(ns undefined.config)
+(ns undefined.config
+  (:require [clojure.java.io :as io])
+  (:import  [java.io PushbackReader]
+            [java.io File]))
+           
+(defn get-conf [k]
+  (if (.exists (File. "conf"))
+    (with-open [r (io/reader "conf")]
+            (k (read (PushbackReader. r))))))
 
 (def config {})
 

@@ -2,16 +2,35 @@
   (:refer-clojure :exclude [extend])
   (:require [clojure.string :as string]
             [clj-time.format :as time-format]
-            [noir.session :as session])
+            [noir.session :as session]
+            [noir.util.crypt :as nc]
+            [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
-        [undefined.misc   :only [get_keys]]
+        [undefined.misc   :only [get_keys send_activation to_html]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
         [undefined.content :only [str-to-int]]
         [undefined.auth :only [is-admin?]]))
 
+;;;;;;;;;;;;;
+;; Helpers ;;
+;;;;;;;;;;;;;
+
+;TODO add to_psql_time wrapper (js+time-format+time-zone?)
+
+(defn ilike [k v] 
+  (eng/infix k "ILIKE" v))
+
+;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+
+(defn psqltime [t] (java.sql.Timestamp/valueOf
+                     (time-format/unparse
+                       (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+                       t)))
+
+;;;;;;;;;;;;;
 
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
@@ -61,8 +80,12 @@
 (defentity authors
   (table :authors)
   (pk :uid)
-  (entity-fields :username)
+  (entity-fields :username :email :birth)
   (database undef-db))
+
+(defentity temp_authors
+  (table :temp_authors)
+  (pk :uid))
 
 (defentity roles
   (table :roles)
@@ -110,15 +133,7 @@
   (database undef-db))
 
 ;SELECT
-
-(defn tag_cloud []
-  (select article_tags
-          ;(aggregate (count :*) :artid :cnt)
-          (fields :tags.label :tags.uid)
-          (group :tags.label :tags.uid)
-          (aggregate (count :*) :cnt :tags.label)
-          (join tags (= :tags.uid :article_tags.tagid))))
-
+;
 (defn articles_by_tags [id off n]
   (select article_tags
           (fields [:article_tags.artid :uid]
@@ -153,6 +168,13 @@
           (where {:artid id})
           (order :articles.birth :DESC)))
 
+(defn tag_cloud []
+  (select article_tags
+          (fields :tags.label :tags.uid)
+          (group :tags.label :tags.uid)
+          (aggregate (count :*) :cnt :tags.label)
+          (join tags (= :tags.uid :article_tags.tagid))))
+
 (defn select_tags [& [id]]
   (if id
     (select tags 
@@ -177,24 +199,29 @@
           (join categories)
           (where {:artid id})))
 
-(defn select_authors [] (select authors))
+(defn select_authors [] 
+  (select authors
+          (join author_roles  (= :author_roles.authid :authors.uid))
+          (join roles         (= :author_roles.roleid :roles.uid))
+          (where {:roles.label "admin"})))
 
 (defn authors_by_article [id]
   (select article_authors
-          (fields :authors.username)
+          (fields :authors.username :authors.email)
           (join authors)
           (where {:artid id})))
 
-(defn get_user [& {:keys [id username] :or {id nil username nil}}]
-  (let [[col val] (if (nil? username)
-                    [:uid id]
-                    [:username username])]
+(defn get_user [& {:keys [id username email] :or {id nil username nil email nil}}]
+  (let [[col op val] (if username   [:username ilike username]
+                    (if id          [:authors.uid = id]
+                                    [:email ilike email]))]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
-            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass]
+            (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass] [:authors.email :email]
                     [:authors.salt :salt] [:roles.label :roles])
-            (where {col val}))))
+
+            (where {col [op val]}))))
 
 (defn select_projects [] (select projects))
 
@@ -219,9 +246,74 @@
           (order :birth :ASC)
           (where {:artid id})))
 
+;;;;;;;;;;;;
+;; SIGNUP ;;
+;;;;;;;;;;;;
+
+(defn remove_expired_temp_authors []
+  (let [treshold (minus (now) (days 1) (hours -2))]
+    (delete temp_authors
+            (where {:birth [< (psqltime treshold)]})))) 
+
+(defn promote_temp_user [username]
+  (let [newuser (first (select temp_authors (where {:username username})))]
+    (transaction
+      (insert authors
+              (values {:username (:username newuser)
+                       :email    (:email newuser)
+                       :password (:password newuser)
+                       :salt     "laskdjalksj"
+                       :birth    (:birth newuser)}))
+      (delete temp_authors (where {:username username})))))
+
+(defn get_temp_user [& {:keys [username email] :or {username nil email nil}}]
+  (if username
+    (select temp_authors (where {:username  username}))
+    (select temp_authors (where {:email     email}))))
+
+(defn activate_user [link]
+  (do
+    (remove_expired_temp_authors)
+    (let [res (first (select temp_authors (where {:activation link})))]
+      (if res
+        (do
+          (promote_temp_user (:username res))
+          "The account has been succesfully activated")
+        "This link is not valid."))))
+
+(defn create_temp_user [username email password]
+  (if (first (get_user :username username))
+    "This username isn't available anymore."
+    (if (first (get_user :email email))
+      "This email has already been used to create an account."
+      (if (first (get_temp_user :email email))
+        "You should have already received an activation email."
+        (do
+          (if (first (get_temp_user :username username))
+            (delete temp_authors (where {:username username})))
+          (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
+                act   (nc/encrypt (str username email birth))]
+            (insert temp_authors
+                    (values {:username    username
+                             :email       email
+                             :password    (nc/encrypt password)
+                             :salt        "NO SALT"
+                             :birth       birth
+                             :activation  act}))
+            (do
+              (let [res           (send_activation email act)
+                    [error code]  [(:error res) (:code res)]]
+              (if (= :SUCCESS error)
+                "User added to temp table, activation link sent."
+                (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
+
+
+;(println (str "\n\n" (create_temp_user "Cyrille" "cyrille.jj@free.fr" "pass")"\n"))
+;(println (str "\n\n" (activate_user "$2a$10$ck2d9kwn9OFtTNF8hMo71.iN2F61uGuR1eV2Z9L8hmxqAbNe.Fej6")))
+;(println (nc/compare "pass" "$2a$10$oVt.b1XOJX7x6y0KoyQwH.wUv72/dfsgeLtdNhC.1kgupOZOohc2y"))
+
 ;INSERT
 
-;TODO this has to be prettyfiable
 (defn weed_tags [tag_input artid]
   (let [tag_array       (distinct (clojure.string/split tag_input #" "))
         existing_tags   (map #(:label %) (select_tags))
@@ -235,7 +327,7 @@
 ;TODO transaction
 (defn insert_article [current-id title body tags authors categories]
   (if (is-admin? current-id)
-    (let [artid     (:uid (insert articles (values {:title title :body body})))
+    (let [artid     (:uid (insert articles (values {:title title :body (to_html body)})))
           auths     (get_keys authors)
           cats      (get_keys categories)]
       (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
@@ -243,10 +335,9 @@
       (weed_tags tags artid)
       artid)))
 
-;TODO Add authentication
 (defn insert_comment [id author content]
   (if (is-admin? author)
-    (insert comments (values {:artid id :authid author :content content}))))
+    (insert comments (values {:artid id :authid author :content (to_html content)}))))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
@@ -257,7 +348,7 @@
           cats      (get_keys categories)]
     (transaction
       (update articles
-              (set-fields {:title title :body body})
+              (set-fields {:title title :body (to_html body)})
               (where {:articles.uid uid}))
       (delete article_tags
               (where {:artid uid}))
@@ -276,11 +367,18 @@
 (defn update_comment [userid uid content]
 ;  (if (is-admin? userid) or author
     (update comments
-            (set-fields {:content content :edit (java.sql.Timestamp/valueOf
-                                                  (time-format/unparse
-                                                    (time-format/formatter "yyyy-MM-dd HH:mm:ss")
-                                                    (from-time-zone (now) (time-zone-for-offset -2))))})
+            (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
             (where {:uid uid})))
+
+(defn update_email [uid newemail]
+  (update authors
+          (set-fields {:email newemail})
+          (where {:uid uid})))
+
+(defn update_password [uid newpass]
+  (update authors
+          (set-fields {:password (nc/encrypt newpass)})
+          (where {:uid uid})))
 
 ;DELETE
 (defn delete_article [id uid]

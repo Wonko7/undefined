@@ -12,7 +12,8 @@
                  ;; cljs:
                  [enfocus "1.0.0-alpha3"]
                  ;; tests: FIXME can we specify dependencies for tests only? what does :scope do?
-                 [clj-webdriver "0.6.0-alpha11"]]
+                 [clj-webdriver "0.6.0-alpha11"]
+                 [com.draines/postal "1.9.0"]]
   :plugins [[lein-cljsbuild "0.2.6"]]
   :cljsbuild {
               :builds [{

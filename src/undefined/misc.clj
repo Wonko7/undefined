@@ -1,7 +1,10 @@
 (ns undefined.misc
   (:require [net.cgrand.enlive-html :as html]
-        [clj-time.coerce :as time-conv]
-        [clj-time.format :as time-format]))
+            [clojure.string :as string]
+            [clj-time.coerce :as time-conv]
+            [clj-time.format :as time-format]
+            [postal.core :as ps])
+  (:use     [undefined.config :only [get-conf]]))
 
 (def w3c-date-format (time-format/formatter "yyyy-MM-dd'T'HH:mm:ss'Z'"))
 (def date-format (time-format/formatter "EEEE, dd MMMM yyyy - HH:mm"))
@@ -9,7 +12,7 @@
 (defn format-date [sql-date & [format]]
   (condp = format
     :w3c (time-format/unparse w3c-date-format (time-conv/from-sql-date sql-date))
-         (time-format/unparse date-format (time-conv/from-sql-date sql-date))))
+    (time-format/unparse date-format (time-conv/from-sql-date sql-date))))
 
 (defn get_labels [x y] (apply str (interpose " " (map y x))))
 
@@ -21,3 +24,19 @@
                            "checked=\"CHECKED\"")
                          ">" (k %) "</input><br/>")
                    x)))
+
+(defn from_html [input] (if input (string/replace input #"<br/>" "\n")))
+(defn to_html   [input] (if input (string/replace input #"\n" "<br/>")))
+
+(defn send_activation [email act]
+  (let [smtp_pass (get-conf :smtp_pass)]
+  (ps/send-message ^{:host "smtp.gmail.com"
+                     :user "landolphia@undefined.re"
+                     :pass (if smtp_pass smtp_pass "placeholder")
+                     :ssl :yes!!!11}
+                   {:from "defined@undefined.re"
+                    :to email
+                    :subject "Welcome to undefined.re, please activate your account"
+                    :body (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
+                               "http://undefined.re/activate/" act
+                               "\n\nRegards,\n\n~The Undefined team.")})))
