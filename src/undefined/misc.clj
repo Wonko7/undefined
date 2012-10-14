@@ -27,13 +27,12 @@
 (defn send_activation [email act]
   (let [smtp_pass (get-conf :smtp_pass)]
   (ps/send-message ^{:host "smtp.gmail.com"
-                     :user "defined@undefined.re"
+                     :user "landolphia@undefined.re"
                      :pass (if smtp_pass smtp_pass "placeholder")
                      :ssl :yes!!!11}
                    {:from "defined@undefined.re"
                     :to email
                     :subject "Welcome to undefined.re, please activate your account"
-                    :body (str "Thank you for registering an account at undefined.re,\n\n
-                               follow the link below to activate your account and start posting comments\n
-                               http://undefined.re/activate/" act
-                               "\n\nRegards,\n\n~The undefined team.")})))
+                    :body (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
+                               "http://undefined.re/activate/" act
+                               "\n\nRegards,\n\n~The Undefined team.")})))

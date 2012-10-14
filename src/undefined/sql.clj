@@ -304,8 +304,9 @@
                 (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
 
 
-;(println (str "\n\n" (create_temp_user "hjaalskdjsdasd" "tlskjhlkhjt" "lkasjdaslkdj")"\n"))
-;(println (str "\n\n" (activate_user "$2a$10$Fih3cT5AsoaoOUDvgyQoA.Vx3joVsOAIFfSYCVHv6ExLRMs/pTOiy")))
+;(println (str "\n\n" (create_temp_user "Cyrille" "cyrille.jj@free.fr" "pass")"\n"))
+;(println (str "\n\n" (activate_user "$2a$10$ck2d9kwn9OFtTNF8hMo71.iN2F61uGuR1eV2Z9L8hmxqAbNe.Fej6")))
+;(println (nc/compare "pass" "$2a$10$oVt.b1XOJX7x6y0KoyQwH.wUv72/dfsgeLtdNhC.1kgupOZOohc2y"))
 
 ;INSERT
 
