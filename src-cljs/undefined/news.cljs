@@ -15,7 +15,8 @@
                                              (em/content div)
                                              (ef/chainable-standard #(em/at %
                                                                             [:.btn_del_c_and_a] (em/listen :click (delete-button type)) ; FIXME -> comments
-                                                                            [:.btn_upd_c_and_a] (em/listen :click (update-button type))))
+                                                                            [:.btn_upd_c_and_a] (em/listen :click (update-button type))
+                                                                            [:form.new-comment] (em/listen :submit new-comment)))
                                              (restore-height 200))))]
               (if (= type :article)
                 (fn [e]
@@ -72,25 +73,18 @@
 
           (new-comment [e]
             (.preventDefault e)
-            (let [;form       (.-currentTarget e)
-                  ;textarea   (em/select form [:textarea])
-                  ;comment    ((em/get-prop :value) textarea)
-                  ;article-id ((em/get-attr :data-article-id) form)
-                  lol        (em/from (.-currentTarget e)
-                                      :idlol [:.new-comment] (em/get-attr :data-article-id)
-                                      :id [:.btn_add_comment] (em/get-attr :data-article-id)
-                                      :asdf [:*] (em/get-attr :class)
-                                      :body [:textarea] (em/get-prop :value))]
-              (js/console.log "test:" (str lol))
+            (let [form       [(.-currentTarget e)]
+                  {:keys [body id]} (em/from form
+                                             :id    [:.btn_add_comment] (em/get-attr :data-article-id)
+                                             :body  [:textarea] (em/get-prop :value))]
+              (js/console.log "test:" id body)
               (if (re-find #"^\s*$" comment)
                 (js/alert "Your comment is empty...")
                 (do
-                  (js/console.log (str form) (str textarea) (str article-id) (str comment) "stupid")
-                  (fm/letrem [res (insert_comment_rem)
-                              ;res (insert_comment_rem article-id comment)
+                  (fm/letrem [res (insert_comment_rem id body)
                               ;div (get-page "refresh-comment-div" res)
                               ]
-                    ;(em/at textarea (em/set-attr :value ""))
+                    (em/at  (em/set-attr :value ""))
                     ;(em/at form     (em/before div))
                     (js/console.log res)
                     )))))]
