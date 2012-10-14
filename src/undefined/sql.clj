@@ -336,8 +336,9 @@
       artid)))
 
 (defn insert_comment [id author content]
-  (if (is-admin? author)
-    (insert comments (values {:artid id :authid author :content (to_html content)}))))
+  (if true;(is-admin? author)
+    (let [res (insert comments (values {:artid id :authid author :content (to_html content)}))]
+      (:uid res))))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
@@ -401,7 +402,7 @@
   (update_article (session/get :id) (str-to-int uid) title body tags authors categories))
 
 (defremote insert_comment_rem [artid content]
-  (insert_comment (session/get :id) artid authid content))
+  (insert_comment  artid (session/get :id) content))
 
 (defremote update_comment_rem [comid content]
   (update_comment (session/get :id) comid content))
