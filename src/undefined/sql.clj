@@ -273,8 +273,9 @@
 
 (defn activate_user [link]
   (do
+    (println (str "\n\nValidation token: " (first link) "\n\n"))
     (remove_expired_temp_authors)
-    (let [res (first (select temp_authors (where {:activation link})))]
+    (let [res (first (select temp_authors (where {:activation (first link)})))]
       (if res
         (do
           (promote_temp_user (:username res))
