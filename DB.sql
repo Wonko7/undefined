@@ -13,6 +13,8 @@ CREATE TABLE temp_authors (uid SERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL
 CREATE UNIQUE INDEX username_temp_lower_id ON temp_authors (lower(username));
 CREATE UNIQUE INDEX email_temp_lower_id ON temp_authors (lower(email));
 
+CREATE TABLE reset_links (uid SERIAL PRIMARY KEY, userid INTEGER references authors(uid) ON DELETE CASCADE, birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, resetlink TEXT NOT NULL);
+
 
 CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 
@@ -20,7 +22,7 @@ CREATE TABLE article_categories (artid INTEGER references articles(uid) ON DELET
 CREATE TABLE article_tags (artid INTEGER references articles(uid) ON DELETE CASCADE, tagid INTEGER references tags(uid) ON DELETE CASCADE, PRIMARY KEY (artid, tagid));
 CREATE TABLE article_authors (artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid) ON DELETE CASCADE, PRIMARY KEY(artid, authid));
 
-CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE, roleid INTEGER references roles(uid) ON DELETE CASCADEqu);
+CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE, roleid INTEGER references roles(uid) ON DELETE CASCADE);
 
 CREATE TABLE projects (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL, link TEXT NOT NULL, screenshot TEXT NOT NULL, pin INTEGER UNIQUE NOT NULL);
 

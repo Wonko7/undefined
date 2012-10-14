@@ -1,4 +1,4 @@
-<form action="/login" method="get">
+<form class="login" action="/login" method="get">
 	<fieldset id="login">
 		<div>
 			<label>Username:</label>
@@ -9,5 +9,64 @@
 			<input class="pass" type="password" name="password" />
 		</div>
 		<input type="submit" value="Log In">
+		<button id="reset_pass">Reset password</button>
 	</fieldset>
 </form>
+
+
+<div class="profile">
+	<div class="whole-article">
+		<div class="article">Logged in as: Landolphia<br/>
+			<a href="logout" class="logout">Log Out</a>
+		</div>
+	</div>
+	<div class="whole-article">
+		<div class="article-title">Account administration</div>
+		<hr>
+		<div class="article">
+			<div class="article-title"> Reset your password </div>
+			<form id="update_pass">
+				<fieldset>
+					<div>
+						<label>Current password:</label>
+						<input class="pass" type="password" id="cur_pass" />
+					</div>
+					<div>
+						<label>New password:</label>
+						<input class="pass" type="password" id="new_pass" /><br/>
+						<label>Confirm password:</label>
+						<input class="pass" type="password" id="conf_pass" /><br/>
+					</div>
+					<input type="submit" value="Confirm">
+				</fieldset>
+			</form>
+		</div>
+		<div class="article">
+
+			<form id="update_email">
+				<div class="article-title"> Update your email address</div>
+
+				<fieldset>
+					<div>
+						<label>Current email:</label>
+						<input class="pass" type="text" id="cur_email" />
+					</div>
+					<div>
+						<label>New email:</label>
+						<input class="pass" type="text" id="new_email" /><br/>
+						<label>Confirm email:</label>
+						<input class="pass" type="text" id="conf_email" /><br/>
+					</div>
+					<input type="submit" value="Confirm">
+
+				</fieldset>
+			</form>
+		</div>
+		<div class="article">
+			<div class="article-title"> Delete your account </div>
+			<form id="del_account">
+				<label>Delete account</label><input type="submit" value="Delete">
+			</form>
+		</div>
+	</div>
+</div>

@@ -30,13 +30,29 @@
 
 (defn send_activation [email act]
   (let [smtp_pass (get-conf :smtp_pass)]
-  (ps/send-message ^{:host "smtp.gmail.com"
-                     :user "landolphia@undefined.re"
-                     :pass (if smtp_pass smtp_pass "placeholder")
-                     :ssl :yes!!!11}
-                   {:from "defined@undefined.re"
-                    :to email
-                    :subject "Welcome to undefined.re, please activate your account"
-                    :body (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
-                               "http://undefined.re/activate/" act
-                               "\n\nRegards,\n\n~The Undefined team.")})))
+    (ps/send-message ^{:host "smtp.gmail.com"
+                       :user "landolphia@undefined.re"
+                       :pass (if smtp_pass smtp_pass "placeholder")
+                       :ssl :yes!!!11}
+                     {:from "defined@undefined.re"
+                      :to email
+                      :subject "Welcome to undefined.re, please activate your account"
+                      :body (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
+                                 "http://undefined.re/activate/" act
+                                 "\nThis link will expire in 24 hours."
+                                 "\n\nRegards,\n\n~The Undefined team.")})))
+
+(defn send_reset_pass [email resetlink]
+  (let [smtp_pass (get-conf :smtp_pass)]
+    (ps/send-message ^{:host "smtp.gmail.com"
+                       :user "landolphia@undefined.re"
+                       :pass (if smtp_pass smtp_pass "placeholder")
+                       :ssl :yes!!!11}
+                     {:from "defined@undefined.re"
+                      :to email
+                      :subject "Password reset request, undefined.re"
+                      :body (str "If you haven't requested your passowrd to be reset please ignore this email.\n\n"
+                                 "To reset your password follow the link below\n"
+                                 "http://undefined.re/reset/" resetlink
+                                 "\nThis link will expire in 24 hours."
+                                 "\n\nRegards,\n\n~The Undefined team.")})))
