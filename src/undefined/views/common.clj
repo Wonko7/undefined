@@ -67,7 +67,10 @@
 (html/defsnippet about "templates/about.html" [:.about]
   [])
 
-(html/defsnippet login "templates/login.html" [:form]
+(html/defsnippet login "templates/login.html" [:form.login]
+  [])
+
+(html/defsnippet profile "templates/login.html" [:div.profile]
   [])
 
 (html/defsnippet new-article "templates/new_article.html" [:form.newarticle]
