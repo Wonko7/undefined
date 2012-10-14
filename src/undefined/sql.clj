@@ -317,16 +317,16 @@
   (let [[user] (select authors (where {:username username}))]
     (update authors
             (set-fields {:email newemail})
-            (where {:uid uid}))))
+            (where {:uid (:uid user)}))))
 
 (defn update_password [username newpass]
   (let [[user] (select authors (where {:username username}))]
   (transaction
     (delete reset_links
-            (where {:userid uid}))
+            (where {:userid (:uid user)}))
     (update authors
             (set-fields {:password (nc/encrypt newpass)})
-            (where {:uid uid})))))
+            (where {:uid (:uid user)})))))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Reset password ;;
