@@ -199,7 +199,11 @@
           (join categories)
           (where {:artid id})))
 
-(defn select_authors [] (select authors))
+(defn select_authors [] 
+  (select authors
+          (join author_roles  (= :author_roles.authid :authors.uid))
+          (join roles         (= :author_roles.roleid :roles.uid))
+          (where {:roles.label "admin"})))
 
 (defn authors_by_article [id]
   (select article_authors
