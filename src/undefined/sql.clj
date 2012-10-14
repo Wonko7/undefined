@@ -218,8 +218,8 @@
 
 (defn get_user [& {:keys [id username email] :or {id nil username nil email nil}}]
   (let [[col op val] (if username   [:username ilike username]
-                    (if id          [:authors.uid = id]
-                                    [:email ilike email]))]
+                       (if id          [:authors.uid = id]
+                         [:email ilike email]))]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
@@ -309,9 +309,9 @@
             (do
               (let [res           (send_activation email act)
                     [error code]  [(:error res) (:code res)]]
-              (if (= :SUCCESS error)
-                "User added to temp table, activation link sent."
-                (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
+                (if (= :SUCCESS error)
+                  "User added to temp table, activation link sent."
+                  (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
 
 (defn update_email [uid newemail]
   (update authors
@@ -345,9 +345,16 @@
       (insert reset_links
               (values {:userid userid :resetlink link})))))
 
+;TODO implement..duh..
+(defn check_reset_token [token]
+  (let [[res] (select reset_links
+                      (where {:resetlink (first token)}))]
+    (do
+      (println "\n\nCHECK_RESET_TOKEN PLACEHOLDER, returns the user id\n")
+      (:userid res))))
 
 (defn reset_password [username]
-  (let [[user]      (select authors (where {:username username}))
+  (let [[user] (select authors (where {:username username}))
         resetlink (if user (nc/encrypt (str (:uid user) (:username user) (:password user) (now))))]
     (if resetlink
       (do
@@ -391,19 +398,19 @@
   (if (is-admin? current-id)
     (let [auths     (get_keys authors)
           cats      (get_keys categories)]
-    (transaction
-      (update articles
-              (set-fields {:title title :body (to_html body)})
-              (where {:articles.uid uid}))
-      (delete article_tags
-              (where {:artid uid}))
-      (delete article_authors
-              (where {:artid uid}))
-      (delete article_categories
-              (where {:artid uid}))
-      (weed_tags tags uid)
-      (doseq [x auths]  (insert article_authors     (values {:artid uid :authid (Integer/parseInt x)})))
-      (doseq [x cats]   (insert article_categories  (values {:artid uid :catid (Integer/parseInt x)})))))))
+      (transaction
+        (update articles
+                (set-fields {:title title :body (to_html body)})
+                (where {:articles.uid uid}))
+        (delete article_tags
+                (where {:artid uid}))
+        (delete article_authors
+                (where {:artid uid}))
+        (delete article_categories
+                (where {:artid uid}))
+        (weed_tags tags uid)
+        (doseq [x auths]  (insert article_authors     (values {:artid uid :authid (Integer/parseInt x)})))
+        (doseq [x cats]   (insert article_categories  (values {:artid uid :catid (Integer/parseInt x)})))))))
 
 (defn select_comment [uid]
   (select comments
@@ -411,10 +418,10 @@
           (order {:birth :ASC})))
 
 (defn update_comment [userid uid content]
-;  (if (is-admin? userid) or author
-    (update comments
-            (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
-            (where {:uid uid})))
+  ;  (if (is-admin? userid) or author
+  (update comments
+          (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
+          (where {:uid uid})))
 
 ;DELETE
 (defn delete_article [id uid]
@@ -443,9 +450,9 @@
 
 (defremote delete_rem [type uid]
   (let [id (session/get :id)]
-   (if (= type :article)
-    (delete_article id (str-to-int uid))
-    (delete_comment id (str-to-int uid)))))
+    (if (= type :article)
+      (delete_article id (str-to-int uid))
+      (delete_comment id (str-to-int uid)))))
 
 (defremote comment_count_rem [id] (comment_count_by_article id))
 
