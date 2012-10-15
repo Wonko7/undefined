@@ -1,6 +1,7 @@
 (ns undef.login
   (:use [undef.pages :only [add-page-init! page-click]]
-        [undef.misc :only [show-admin-stuff]])
+        [undef.misc :only [show-admin-stuff]]
+        [undef.misc :only [restore-height]])
   (:require [fetch.remotes :as remotes]
             [enfocus.core :as ef])
   (:require-macros [fetch.macros :as fm]
@@ -63,11 +64,11 @@
     (validate-deco inp (re-find #"^\w\S*@\w\S*[.]\S+$" val))))
 
 (defn submit-sign-up [e]
-  (let [{keys [user pass mail]} (em/from js/document
-                                         :user [:#inp_usr]   (em/get-prop :value)
-                                         :pass [:#new_pass]  (em/get-prop :value)
-                                         :mail [:#new_email] (em/get-prop :value))]
-    (fm/letrem [result (sign-up-rem user pass mail)]
+  (let [{:keys [user pass mail]} (em/from js/document
+                                          :user [:#inp_usr]   (em/get-prop :value)
+                                          :pass [:#new_pass]  (em/get-prop :value)
+                                          :mail [:#new_email] (em/get-prop :value))]
+    (fm/letrem [result (sign-up-rem user mail pass)]
       (em/at js/document
              [:#sign-up-form] (em/chain (em/resize :curwidth 0 200)
                                         (em/html-content result)
