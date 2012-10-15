@@ -60,6 +60,13 @@
 ;;  News;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn mk-article [uid category admin? title birth body comments]
+  (article uid category admin?
+           title (format-date birth) (remove-unsafe-tags body)
+           {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article uid)))}
+           (str "Authors: " (get_labels (authors_by_article uid) :username))
+           (mk-comment-count uid) comments))
+
 (defn news-page [user-id href type [arg1 arg2]]
   (let [[arg1 arg2]                [(str-to-int arg1) (str-to-int arg2)]
         category                   (get-category href type)
@@ -75,11 +82,7 @@
                                      (- offset nb-articles))
         admin?                     (is-admin? user-id)]
     (page (mk-blog-cat-title category arg1)
-          (map #(article (:uid %) category admin?
-                         (:title %) (format-date (:birth %)) (remove-unsafe-tags (:body %))
-                         {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article (:uid %))))}
-                         (str "Authors: " (get_labels (authors_by_article (:uid %)) :username)) ;; count
-                         (mk-comment-count (:uid %)) comments)
+          (map #(mk-article (:uid %) category admin? (:title %) (:birth %) (:body %) comments)
                articles)
           {:bottom (blog-nav (if (and pv (neg? pv)) 0 pv) nx category type arg1 offset)
            :metadata {:data-init-page "news"}})))
@@ -106,7 +109,10 @@
 
 (add-page-init! "update-article-div" update-article-div)
 (add-page-init! "update-comment-div" update-comment-div)
-(add-page-init! "refresh-article-div" #(html/select (news-page %1 %2 :single [%3]) [(keyword (str "#article_" %3))]))
+(add-page-init! "refresh-article-div" #(let [[{:keys [uid title birth body]}] (select_article (str-to-int %3))
+                                             [{:keys [content]}]              (mk-article uid :blog (is-admin? %1) title birth body nil)]
+                                         content)
+                1) ;; FIXME; decide on a methode ; get contents from wrapper (refresh-article-div) and replace content in cljs, or send with wrapper and hide, then substitute and hide and show in cljs.
 (add-page-init! "refresh-comment-div" #(mk-comment (first (select_comment (str-to-int %3)))) 1)
 (add-page-init! "fetch-comment-div" #((html/add-class "hidden") (first (mk-comment (first (select_comment (str-to-int %3)))))) 1)
 
