@@ -1,6 +1,6 @@
 (ns undefined.content
-  (:use [undefined.views.common]
-        [ring.util.codec])
+  (:use [undefined.views.common])
+  (:import (java.net URLEncoder URLDecoder))
   (:require [net.cgrand.enlive-html :as html]
             [noir.util.crypt :as nc]))
 
@@ -26,7 +26,8 @@
          fallback)
        fallback))))
 
-(let  [lol (nc/encrypt "omg lolafasdf")]
-  (println lol
-           (url-encode lol)
-           (url-decode "lol%24a." "utf-8")))
+(defn url-encode [s]
+  (URLEncoder/encode s "utf-8"))
+
+(defn url-decode [s]
+  (URLDecoder/decode s "utf-8"))

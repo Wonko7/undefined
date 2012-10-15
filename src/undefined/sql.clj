@@ -11,7 +11,7 @@
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
-        [undefined.content :only [str-to-int]]
+        [undefined.content :only [str-to-int url-encode]]
         [undefined.auth :only [is-admin? userid]]))
 
 ;;;;;;;;;;;;;
@@ -298,7 +298,7 @@
           (if (first (get_temp_user :username username))
             (delete temp_authors (where {:username username})))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
-                act   (nc/encrypt (str username email birth))]
+                act   (url-encode (nc/encrypt (str username email birth)))]
             (println act)
             (insert temp_authors
                     (values {:username    username
@@ -358,7 +358,8 @@
 
 (defn reset_password [username]
   (let [[user] (select authors (where {:username username}))
-        resetlink (if user (nc/encrypt (str (:uid user) (:username user) (:password user) (now))))]
+        resetlink (when user
+                    (url-encode (nc/encrypt (str (:uid user) (:username user) (:password user) (now)))))]
     (if resetlink
       (do
         (store_reset_link (:uid user) resetlink)

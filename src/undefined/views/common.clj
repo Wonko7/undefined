@@ -71,7 +71,10 @@
   [])
 
 (html/defsnippet profile "templates/login.html" [:div.profile]
-  [])
+  [name mail]
+  [:.profile :.username]      (html/content name)
+  [:.profile :.current-email] (html/do-> (html/set-attr :href (str "mailto:" mail))
+                                         (html/content mail)))
 
 (html/defsnippet new-article "templates/new_article.html" [:form.newarticle]
   [authors categories title body tags uid sel_auths sel_cats]
