@@ -293,7 +293,7 @@
     (if (first (get_user :email email))
       "This email has already been used to create an account."
       (if (first (get_temp_user :email email))
-        "You should have already received an activation email."
+        "You should have already received an activation email." ;; FIXME yeah well resend anyway? maybe the user accidently deleted it?
         (do
           (if (first (get_temp_user :username username))
             (delete temp_authors (where {:username username})))
@@ -311,7 +311,7 @@
               (let [res           (send_activation email act)
                     [error code]  [(:error res) (:code res)]]
                 (if (= :SUCCESS error)
-                  "User added to temp table, activation link sent."
+                  "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
                   (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
 
 (defn update_email [username newemail]
