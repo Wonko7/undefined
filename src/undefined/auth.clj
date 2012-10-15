@@ -46,5 +46,4 @@
   (:uid (friend/current-authentication id)))
 
 (defn useremail [id]
-  (println (friend/current-authentication id))
   (:email (friend/current-authentication id)))
