@@ -1,6 +1,8 @@
 (ns undefined.content
-  (:use [undefined.views.common])
-  (:require [net.cgrand.enlive-html :as html]))
+  (:use [undefined.views.common]
+        [ring.util.codec])
+  (:require [net.cgrand.enlive-html :as html]
+            [noir.util.crypt :as nc]))
 
 (html/defsnippet as-tree "templates/article.html" [:div.hack]
   [article]
@@ -23,3 +25,8 @@
          (Integer/parseInt digits)
          fallback)
        fallback))))
+
+(let  [lol (nc/encrypt "omg lolafasdf")]
+  (println lol
+           (url-encode lol)
+           (url-decode "lol%24a." "utf-8")))

@@ -299,6 +299,7 @@
             (delete temp_authors (where {:username username})))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
                 act   (nc/encrypt (str username email birth))]
+            (println act)
             (insert temp_authors
                     (values {:username    username
                              :email       email
