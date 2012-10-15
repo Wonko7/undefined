@@ -64,6 +64,7 @@
     (validate-deco inp (re-find #"^\w\S*@\w\S*[.]\S+$" val))))
 
 (defn submit-sign-up [e]
+  (.preventDefault e)
   (let [{:keys [user pass mail]} (em/from js/document
                                           :user [:#inp_usr]   (em/get-prop :value)
                                           :pass [:#new_pass]  (em/get-prop :value)

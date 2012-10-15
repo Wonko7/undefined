@@ -21,8 +21,9 @@
         {:metadata {:data-init-page "sign-up"}}))
 
 (defremote sign-up-rem [user mail pass]
-  (println user mail pass)
-  (create_temp_user user mail pass))
+  (str "<div>"
+       (create_temp_user user mail pass)
+       "</div>"))
 
 (add-page-init! "login" login-page)
 (add-page-init! "sign-up" sign-up-page)

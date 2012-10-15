@@ -13,5 +13,6 @@
                                   {:tag :div :attrs {:class "whole-article"}
                                    :content [{:tag :div :attrs {:class "article"}
                                               :content [(activate_user %3)]}]}
-                                  {:metadata {:data-init-page "404"}})
+                                  ;{:metadata {:data-init-page "404"}};; FIXME I decided against redirect. user should se result even if he goes to get coffee.
+                                  )
                 1)
