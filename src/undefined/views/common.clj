@@ -76,6 +76,9 @@
   [:.profile :.current-email] (html/do-> (html/set-attr :href (str "mailto:" mail))
                                          (html/content mail)))
 
+(html/defsnippet sign-up "templates/login.html" [:div.sign-up]
+  [])
+
 (html/defsnippet new-article "templates/new_article.html" [:form.newarticle]
   [authors categories title body tags uid sel_auths sel_cats]
   [:.inp_title]       (html/set-attr :value title)

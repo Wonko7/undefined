@@ -6,6 +6,74 @@
   (:require-macros [fetch.macros :as fm]
                    [enfocus.macros :as em]))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;    pages;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn update-valid-button []
+  (let [vals (em/from js/document
+                      :a [:#inp_usr]   (em/get-attr :class)
+                      :b [:#new_pass]  (em/get-attr :class)
+                      :c [:#conf_pass] (em/get-attr :class)
+                      :d [:#new_email] (em/get-attr :class))
+        valid? (->> vals
+                 (filter (fn [[k v]] (= "valid-inp" v)))
+                 (count)
+                 (= 4))]
+    (if valid?
+      (em/at js/document [:#submit-sign-up] (em/do->
+                                              (em/remove-attr :disabled)
+                                              (em/add-class "valid-sub")
+                                              (em/remove-class "invalid-sub")))
+      (em/at js/document [:#submit-sign-up] (em/do->
+                                              (em/set-attr :disabled "disabled")
+                                              (em/add-class "invalid-sub")
+                                              (em/remove-class "valid-sub"))))))
+
+(defn validate-deco [elt valid?]
+  (if valid?
+    (em/at elt (em/do-> (em/add-class "valid-inp")
+                        (em/remove-class "invalid-inp")))
+    (em/at elt (em/do-> (em/add-class "invalid-inp")
+                        (em/remove-class "valid-inp"))))
+  (update-valid-button))
+
+(defn val-username [e]
+  (let [inp (.-currentTarget e)
+        val (em/from inp (em/get-prop :value))]
+    (validate-deco inp (and (>= (.-length val) 3) (nil? (re-find #"\s+" val))))))
+
+(defn val-pass2 [e]
+  (let [inp             (em/select js/document [:#conf_pass])
+        {:keys [p1 p2]} (em/from js/document
+                                 :p1 [:#new_pass]  (em/get-prop :value)
+                                 :p2 [:#conf_pass] (em/get-prop :value))]
+    (validate-deco inp (and (> (.-length p2) 0) (= p1 p2)))))
+
+(defn val-pass1 [e]
+  (let [inp (.-currentTarget e)
+        val (em/from inp (em/get-prop :value))]
+    (validate-deco inp (>= (.-length val) 8))
+    (val-pass2 nil)))
+
+(defn val-email [e]
+  (let [inp (.-currentTarget e)
+        val (em/from inp (em/get-prop :value))]
+    (validate-deco inp (re-find #"^\w\S*@\w\S*[.]\S+$" val))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;    pages;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn sign-up-page [href & [args]]
+  (em/at js/document
+         [:#inp_usr]   (em/listen :input val-username)
+         [:#new_pass]  (em/listen :input val-pass1)
+         [:#conf_pass] (em/listen :input val-pass2)
+         [:#new_email] (em/listen :input val-email)))
+
 (defn login-page [href & [args]]
   (em/at js/document
          [:#inp_usr]     (em/focus)
@@ -44,5 +112,7 @@
                                                     ;TODO warn the fucking user
                                                     (js/console.log "Don't you wish you could delete your account?")))))
 
+
 (add-page-init! "login" login-page)
 (add-page-init! "profile" profile-page)
+(add-page-init! "sign-up" sign-up-page)

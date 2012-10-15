@@ -11,6 +11,8 @@
 		<input type="submit" value="Log In">
 		<button id="reset_pass">Reset password</button>
 	</fieldset>
+
+	<div class="title"><a href="sign-up">Sign Up</a></div>
 </form>
 
 
@@ -26,7 +28,7 @@
 		<hr>
 
 		<div class="article">
-			<div class="article-title"> Change your password </div>
+			<div class="article-title">Change your password</div>
 			<form id="update_pass">
 				<fieldset>
 					<div>
@@ -72,6 +74,30 @@
 			<form id="del_account">
 				<label>Delete account: </label><input type="submit" value="Delete">
 			</form>
+		</div>
+	</div>
+</div>
+
+<div class="sign-up">
+	<div class="whole-article">
+			<div class="article">
+				<div class="article-title"></div>
+				<form class="sign-up" action="/sign-up" method="get">
+					<input class="invalid-inp" placeholder="Username" id="inp_usr" type="text" name="username" />
+					<input class="invalid-inp" placeholder="Password" type="password" id="new_pass" />
+					<input class="invalid-inp" placeholder="Password Confirmation" type="password" id="conf_pass" />
+					<input class="invalid-inp" placeholder="Email Address" type="text" id="new_email" />
+					<input class="invalid-sub" type="submit" value="Sign Up" disabled="disabled" id="submit-sign-up">
+				</form>
+			</div>
+			<hr>
+			<div class="article">
+				<ul>
+					<li> Username must be at least 3 characters long and mustn't contain whitespace </li>
+					<li> Password must be at least 8 characters long </li>
+					<li> Email address will be used to activate your account </li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>

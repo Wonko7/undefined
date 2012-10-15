@@ -1,5 +1,5 @@
 (ns undefined.views.login
-  (:use [undefined.views.common :only [base page login profile add-page-init!]]
+  (:use [undefined.views.common :only [base page login profile sign-up add-page-init!]]
         [undefined.auth :only [username useremail]]))
 
 ;FIXME find a way to save password for chrome/safari
@@ -13,4 +13,10 @@
           (login)
           {:metadata {:data-init-page "login"}})))
 
+(defn sign-up-page [user-id href & [args]]
+  (page "Sign up:"
+        (sign-up)
+        {:metadata {:data-init-page "sign-up"}}))
+
 (add-page-init! "login" login-page)
+(add-page-init! "sign-up" sign-up-page)

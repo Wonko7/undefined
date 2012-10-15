@@ -38,8 +38,8 @@
                                                                     (fn [name]
                                                                       (let [[user :as roles] (get_user :username name)]
                                                                         (into user
-                                                                        {:password (:pass user)
-                                                                         :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))}))))
+                                                                              {:password (:pass user)
+                                                                               :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))}))))
                                             :workflows [#'fetch-workflow]
                                             :unauthorized-handler (constantly
                                                                     {:status 401

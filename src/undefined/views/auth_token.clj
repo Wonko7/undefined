@@ -9,7 +9,7 @@
 ;; token validation:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-page-init! "validate" #(page "Account Validation"
+(add-page-init! "activate" #(page "Account Activation"
                                   {:tag :div :attrs {:class "whole-article"}
                                    :content [{:tag :div :attrs {:class "article"}
                                               :content [(activate_user %3)]}]}
