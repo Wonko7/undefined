@@ -1,5 +1,5 @@
 (ns undefined.server
-  (:import org.mindrot.jbcrypt.BCrypt)
+(:import org.mindrot.jbcrypt.BCrypt)
   (:use [undefined.config :only [set-config!]]
         [undefined.sql :only [init-db-connection get_user get_user_roles]])
   (:require [noir.server :as server]
@@ -36,9 +36,10 @@
 
 (server/add-middleware friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn
                                                                     (fn [name]
-                                                                      (let [[{:keys [uid username pass]} :as roles] (get_user :username name)]
-                                                                        {:username username :uid uid :password pass
-                                                                         :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))})))
+                                                                      (let [[user :as roles] (get_user :username name)]
+                                                                        (into user
+                                                                        {:password (:pass user)
+                                                                         :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))}))))
                                             :workflows [#'fetch-workflow]
                                             :unauthorized-handler (constantly
                                                                     {:status 401
