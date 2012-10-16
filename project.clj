@@ -19,9 +19,9 @@
               :builds [{
                         :source-path "src-cljs"
                         :compiler {:output-to "resources/public/js/main.js"
-                                   :optimizations :advanced
+                                   :optimizations :whitespace
                                    ;:externs ["lol.js"]
-                                   :pretty-print false}}]}
+                                   :pretty-print true}}]}
   :profiles {:srv-test {:dependencies [[postgresql "8.4-702.jdbc4"]]}
              :srv-prod {:dependencies [[postgresql "8.4-702.jdbc4"]]} ;; FIXME; adapt port settings
              :c        {:dependencies [[postgresql "9.1-901-1.jdbc4"]]}

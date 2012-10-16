@@ -269,7 +269,7 @@
                                :salt     "NO SALT"
                                :birth    (:birth newuser)}))
         [role]  (select   roles
-                      (where {:label "peon"}))]
+                      (where {:label "user"}))]
     (do
       (insert author_roles
               (values {:authid (:uid user)
