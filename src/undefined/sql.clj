@@ -12,7 +12,7 @@
         [korma.db]
         [korma.core]
         [undefined.content :only [str-to-int url-encode]]
-        [undefined.auth :only [is-admin? userid]]))
+        [undefined.auth :only [is-admin? is-author? userid]]))
 
 ;;;;;;;;;;;;;
 ;; Helpers ;;
@@ -422,10 +422,11 @@
           (order :birth :ASC)))
 
 (defn update_comment [userid uid content]
-  ;  (if (is-admin? userid) or author
-  (update comments
-          (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
-          (where {:uid uid})))
+  (let [com (select comments (where {:uid uid}))]
+    (if (or (is-author? user-id (:authid com)) (is-admin? user-id))
+      (update comments
+              (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
+              (where {:uid uid})))))
 
 ;DELETE
 (defn delete_article [id uid]
@@ -434,9 +435,10 @@
             (where {:uid uid}))))
 
 (defn delete_comment [id uid]
-  (id (is-admin? id);; FIXME is-author?
+  (let [com (select comments (where {:uid uid}))]
+    (if (or (is-author? user-id (:authid com)) (is-admin? id))
       (delete comments
-              (where {:uid uid}))))
+              (where {:uid uid})))))
 
 ;; Remotes
 
