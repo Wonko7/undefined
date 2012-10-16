@@ -1,18 +1,17 @@
 <form class="login" action="/login" method="get">
-	<fieldset id="login">
-		<div>
-			<label>Username:</label>
-			<input class="user" id="inp_usr" type="text" name="username" />
+	<div class="whole-article">
+		<div class="article">
+			<fieldset id="login">
+				<div class="article-title"></div>
+				<input class="valid-inp" class="user" id="inp_usr" type="text" name="username" />
+				<input class="valid-inp" class="pass" type="password" name="password" />
+				<input class="valid-sub" type="submit" value="Log In">
+				<button class="valid-sub" id="reset_pass">Reset password</button>
+			</fieldset>
 		</div>
-		<div>
-			<label>Password:</label>
-			<input class="pass" type="password" name="password" />
-		</div>
-		<input type="submit" value="Log In">
-		<button id="reset_pass">Reset password</button>
-	</fieldset>
-
-	<div class="title"><a href="/sign-up">Sign Up</a></div>
+		<hr>
+		<div class="title"><a href="/sign-up">Sign Up</a></div>
+	</div>
 </form>
 
 
@@ -56,7 +55,7 @@
 			<div class="article-title">Delete your account</div>
 			<form id="del_account">
 				<input class="invalid-inp" type="password" id="cur_pass3" placeholder="Current password" />
-				<input class="valid-sub" type="submit" value="Delete Account" />
+				<input class="invalid-sub" type="submit" value="Delete Account" disabled="disabled" id="submit-del" />
 			</form>
 		</div>
 	</div>
@@ -64,25 +63,24 @@
 
 <div class="sign-up">
 	<div class="whole-article">
-			<div class="article">
-				<div class="article-title"></div>
-				<form id="sign-up-form" action="/sign-up" method="get">
-					<input class="invalid-inp" placeholder="Username" id="inp_usr" type="text" name="username" />
-					<input class="invalid-inp" placeholder="Password" type="password" id="new_pass" />
-					<input class="invalid-inp" placeholder="Password Confirmation" type="password" id="conf_pass" />
-					<input class="invalid-inp" placeholder="Email Address" type="text" id="new_email" />
-					<input class="invalid-sub" type="submit" value="Sign Up" disabled="disabled" id="submit-sign-up" />
-				</form>
-			</div>
-			<hr>
-			<div class="article">
-				<ul>
-					<li> Username must be at least 3 characters long and shall not contain whitespace </li>
-					<li> Password must be at least 8 characters long </li>
-					<li> Email address will be used to activate your account </li>
-					<li> Your username will be secured only once you have activated your account </li>
-				</ul>
-			</div>
+		<div class="article">
+			<div class="article-title"></div>
+			<form id="sign-up-form" action="/sign-up" method="get">
+				<input class="invalid-inp" placeholder="Username" id="inp_usr" type="text" name="username" />
+				<input class="invalid-inp" placeholder="Password" type="password" id="new_pass" />
+				<input class="invalid-inp" placeholder="Password Confirmation" type="password" id="conf_pass" />
+				<input class="invalid-inp" placeholder="Email Address" type="text" id="new_email" />
+				<input class="invalid-sub" type="submit" value="Sign Up" disabled="disabled" id="submit-sign-up" />
+			</form>
+		</div>
+		<hr>
+		<div class="article">
+			<ul>
+				<li> Username must be at least 3 characters long and mustn't contain whitespace </li>
+				<li> Password must be at least 8 characters long </li>
+				<li> Email address will be used to activate your account </li>
+				<li> Your username will be secured only once you have activated your account </li>
+			</ul>
 		</div>
 	</div>
 </div>

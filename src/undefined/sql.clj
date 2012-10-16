@@ -509,8 +509,11 @@
     (if user
       (if (nc/compare password (:pass user))
         (do
-          (delete authors
-                  (where {:username username}))
+          (transaction
+            (delete comments
+                    (where {:authid (:uid user)}))
+            (delete authors
+                    (where {:username username})))
           1)
         "Your password is incorrect")
       "This user doesn't exist")))
