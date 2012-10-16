@@ -9,73 +9,8 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;    pages;
+;;;    Helpers;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn update-valid-button []
-  (let [vals (em/from js/document
-                      :a [:#inp_usr]   (em/get-attr :class)
-                      :b [:#new_pass]  (em/get-attr :class)
-                      :c [:#conf_pass] (em/get-attr :class)
-                      :d [:#new_email] (em/get-attr :class))
-        valid? (->> vals
-                 (filter (fn [[k v]] (= "valid-inp" v)))
-                 (count)
-                 (= 4))]
-    (if valid?
-      (em/at js/document [:#submit-sign-up] (em/do->
-                                              (em/remove-attr :disabled)
-                                              (em/add-class "valid-sub")
-                                              (em/remove-class "invalid-sub")))
-      (em/at js/document [:#submit-sign-up] (em/do->
-                                              (em/set-attr :disabled "disabled")
-                                              (em/add-class "invalid-sub")
-                                              (em/remove-class "valid-sub"))))))
-(defn validate-deco [elt valid?]
-  (if valid?
-    (em/at elt (em/do-> (em/add-class "valid-inp")
-                        (em/remove-class "invalid-inp")))
-    (em/at elt (em/do-> (em/add-class "invalid-inp")
-                        (em/remove-class "valid-inp"))))
-  (update-valid-button))
-
-(defn val-username [e]
-  (let [inp (.-currentTarget e)
-        val (em/from inp (em/get-prop :value))]
-    (validate-deco inp (and (>= (.-length val) 3) (nil? (re-find #"\s+" val))))))
-
-(defn val-pass2 [e]
-  (let [inp             (em/select js/document [:#conf_pass])
-        {:keys [p1 p2]} (em/from js/document
-                                 :p1 [:#new_pass]  (em/get-prop :value)
-                                 :p2 [:#conf_pass] (em/get-prop :value))]
-    (validate-deco inp (and (> (.-length p2) 0) (= p1 p2)))))
-
-(defn val-pass1 [e]
-  (let [inp (.-currentTarget e)
-        val (em/from inp (em/get-prop :value))]
-    (validate-deco inp (>= (.-length val) 8))
-    (val-pass2 nil)))
-
-(defn val-email [e]
-  (let [inp (.-currentTarget e)
-        val (em/from inp (em/get-prop :value))]
-    (validate-deco inp (re-find #"^\w\S*@\w\S*[.]\S+$" val))))
-
-(defn submit-sign-up [e]
-  (.preventDefault e)
-  (let [{:keys [user pass mail]} (em/from js/document
-                                          :user [:#inp_usr]   (em/get-prop :value)
-                                          :pass [:#new_pass]  (em/get-prop :value)
-                                          :mail [:#new_email] (em/get-prop :value))]
-    (fm/letrem [result (sign-up-rem user mail pass)]
-      (em/at js/document
-             [:#sign-up-form] (em/chain (em/resize :curwidth 0 200)
-                                        (em/html-content result)
-                                        (restore-height 200))))))
-
-;;;    profile helpers     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 (defn mk-validate-deco [submit-sel val-sels]
   (let [nb-vals (count val-sels)]
@@ -84,7 +19,7 @@
         (em/at elt (em/do-> (em/add-class "valid-inp")
                             (em/remove-class "invalid-inp")))
         (em/at elt (em/do-> (em/add-class "invalid-inp")
-                            (em/remove-class "valid-inp")))) 
+                            (em/remove-class "valid-inp"))))
       (let [vals (em/from js/document
                           :#inp_usr   [:#inp_usr]   (em/get-attr :class)
                           :#cur_pass1 [:#cur_pass1] (em/get-attr :class)
@@ -105,7 +40,7 @@
                                             (em/set-attr :disabled "disabled")
                                             (em/add-class "invalid-sub")
                                             (em/remove-class "valid-sub"))))))))
-; email;
+
 (defn mk-pass-val [validator & [pass2-val]]
   (if pass2-val
     (fn [e]
@@ -118,6 +53,7 @@
             val (em/from inp (em/get-prop :value))]
         (validator inp (>= (.-length val) 8))))))
 
+;; pass1 should be mk-pass2-val's listener id.
 (defn mk-pass2-val [pass1 pass2 validator]
   (fn [e]
     (let [inp             (em/select js/document [pass1])
@@ -130,7 +66,13 @@
   (fn [e]
     (let [inp (.-currentTarget e)
           val (em/from inp (em/get-prop :value))]
-      (validator inp (re-find #"^\w\S*@\w\S*[.]\S+$" val)))))
+      (validator inp (re-find #"^\w\S*@\w\S*\.\S+$" val)))))
+
+(defn mk-user-val [validator]
+  (fn [e]
+    (let [inp (.-currentTarget e)
+          val (em/from inp (em/get-prop :value))]
+      (validator inp (and (>= (.-length val) 3) (nil? (re-find #"\s+" val)))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -138,12 +80,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn sign-up-page [href & [args]]
-  (em/at js/document
-         [:#inp_usr]      (em/listen :input val-username)
-         [:#new_pass]     (em/listen :input val-pass1)
-         [:#conf_pass]    (em/listen :input val-pass2)
-         [:#new_email]    (em/listen :input val-email)
-         [:#sign-up-form] (em/listen :submit submit-sign-up)))
+  (let [;; validators;
+        submit-validator (mk-validate-deco :#submit-sign-up #{:#inp_usr :#new_pass :#conf_pass :#new_email})
+        pass2-val        (mk-pass2-val :#conf_pass :#new_pass submit-validator)
+        ;; form submit;
+        submit-sign-up   (fn [e]
+                           (.preventDefault e)
+                           (let [{:keys [user pass mail]} (em/from js/document
+                                                                   :user [:#inp_usr]   (em/get-prop :value)
+                                                                   :pass [:#new_pass]  (em/get-prop :value)
+                                                                   :mail [:#new_email] (em/get-prop :value))]
+                             (fm/letrem [result (sign-up-rem user mail pass)]
+                               (em/at js/document
+                                      [:#sign-up-form] (em/chain (em/resize :curwidth 0 200)
+                                                                 (em/html-content result)
+                                                                 (restore-height 200))))))]
+    (em/at js/document
+           [:#inp_usr]      (em/listen :input (mk-user-val submit-validator))
+           [:#new_pass]     (em/listen :input (mk-pass-val submit-validator pass2-val))
+           [:#conf_pass]    (em/listen :input pass2-val)
+           [:#new_email]    (em/listen :input (mk-pass-val submit-validator))
+           [:#sign-up-form] (em/listen :submit submit-sign-up))))
 
 (defn login-page [href & [args]]
   (em/at js/document
@@ -164,7 +121,6 @@
                                                     (js/alert (str "log in failed. ")))))))))
 
 
-;TODO add validation for submit button
 (defn profile-page [href & [args]]
   (let [update-password   (fn [e]
                             (.preventDefault e)
