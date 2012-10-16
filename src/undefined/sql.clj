@@ -382,7 +382,7 @@
 ;TODO transaction
 (defn insert_article [current-id title body tags authors categories]
   (if (is-admin? current-id)
-    (let [artid     (:uid (insert articles (values {:title title :body (to_html body)})))
+    (let [artid     (:uid (insert articles (values {:title title :body body})))
           auths     (get_keys authors)
           cats      (get_keys categories)]
       (doseq [x auths]  (insert article_authors     (values {:artid artid :authid (Integer/parseInt x)})))
@@ -404,7 +404,7 @@
           cats      (get_keys categories)]
       (transaction
         (update articles
-                (set-fields {:title title :body (to_html body)})
+                (set-fields {:title title :body body})
                 (where {:articles.uid uid}))
         (delete article_tags
                 (where {:artid uid}))
