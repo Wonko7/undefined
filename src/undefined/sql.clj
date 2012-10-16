@@ -298,8 +298,8 @@
           (if (first (get_temp_user :username username))
             (delete temp_authors (where {:username username})))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
-                act   (url-encode (nc/encrypt (str username email birth)))]
-            (println act)
+                act   (nc/encrypt (str username email birth))]
+            (println (url-encode act))
             (insert temp_authors
                     (values {:username    username
                              :email       email
@@ -308,7 +308,7 @@
                              :birth       birth
                              :activation  act}))
             (do
-              (let [res           (send_activation email act)
+              (let [res           (send_activation email (url-encode act))
                     [error code]  [(:error res) (:code res)]]
                 (if (= :SUCCESS error)
                   "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
@@ -359,11 +359,11 @@
 (defn reset_password [username]
   (let [[user] (select authors (where {:username username}))
         resetlink (when user
-                    (url-encode (nc/encrypt (str (:uid user) (:username user) (:password user) (now)))))]
+                    (nc/encrypt (str (:uid user) (:username user) (:password user) (now))))]
     (if resetlink
       (do
         (store_reset_link (:uid user) resetlink)
-        (send_reset_pass (:email user) resetlink)
+        (send_reset_pass (:email user) (url-encode resetlink))
         "An email with instructions to reset your password has been sent.")
       "There's been an issue sending your reset link.")))
 
