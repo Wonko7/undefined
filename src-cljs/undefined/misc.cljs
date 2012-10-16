@@ -20,7 +20,6 @@
     (fn [node]
       (let [h (:size (em/from [node]
                               :size [:> :*] (fn [child]
-                                              ((ef/extr-multi-node #(js/console.log %1 (str %1))) child ); ((ef/extr-multi-node style/getPaddingBox) child) ((ef/extr-multi-node style/getBorderBox) child) (.-height  ((ef/extr-multi-node style/getSize) child)))
                                               (let [+-bot-top   #(+ (.-top %1) (.-bottom %1))
                                                     marg (+-bot-top ((ef/extr-multi-node style/getPaddingBox) child))
                                                     bord (+-bot-top ((ef/extr-multi-node style/getBorderBox) child))
@@ -28,3 +27,5 @@
                                                 (+ marg bord size)))))]
         ((em/chain (em/resize :curwidth h speed)
                    (em/remove-style :height :width)) [node])))))
+
+;((ef/extr-multi-node #(js/console.log %1 (str %1))) child )

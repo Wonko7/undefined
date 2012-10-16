@@ -41,10 +41,6 @@
 ;; wrappers for undefined:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn is-admin? [id]
-  (let [{:keys [roles]} (friend/current-authentication id)]
-    (:undefined.server/admin roles)))
-
 (defn username [id]
   (:username (friend/current-authentication id)))
 
@@ -53,3 +49,10 @@
 
 (defn useremail [id]
   (:email (friend/current-authentication id)))
+
+(defn is-admin? [id]
+  (let [{:keys [roles]} (friend/current-authentication id)]
+    (:undefined.server/admin roles)))
+
+(defn is-author? [actual-id test-id]
+  (= (userid actual-id) test-id))

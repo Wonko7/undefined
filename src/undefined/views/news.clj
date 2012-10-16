@@ -5,7 +5,7 @@
                               tags_by_article articles_by_tags select_tags
                               categories_by_article authors_by_article
                               comments_by_article comment_count_by_article select_comment]]
-        [undefined.auth :only [is-admin? username]]
+        [undefined.auth :only [is-admin? is-author? username]]
         [undefined.misc :only [format-date get_labels]]
         [undefined.content :only [remove-unsafe-tags str-to-int]]
         [noir.fetch.remotes]))
@@ -40,14 +40,15 @@
 (defn mk-tag-link [tag]
   (a-link (str (:label tag) " ") {:href (str "tag/" (:uid tag))}))
 
-(defn mk-comment [comment]
-  (user-comment (:uid comment) true (:author comment) ;; FIXME s/true/(or is-author is-admin)
+(defn mk-comment [user-id comment]
+  (user-comment (:uid comment) (or (is-author? user-comment (:authid comment)) (is-admin? user-id))
+                (:author comment)
                 (format-date (:birth comment)) (when (:edit comment)
                                                  (format-date (:edit comment)))
                 (:content comment)) )
 
 (defn mk-comments [user-id article-uid]
-  (concat (map mk-comment (comments_by_article article-uid))
+  (concat (map (partial mk-comment user-id) (comments_by_article article-uid))
           (if (username user-id)
             (new-comment article-uid 0 nil)
             (please-log-in))))
@@ -113,8 +114,8 @@
                                              [{:keys [content]}]              (mk-article uid :blog (is-admin? %1) title birth body nil)]
                                          content)
                 1) ;; FIXME; decide on a methode ; get contents from wrapper (refresh-article-div) and replace content in cljs, or send with wrapper and hide, then substitute and hide and show in cljs.
-(add-page-init! "refresh-comment-div" #(mk-comment (first (select_comment (str-to-int %3)))) 1)
-(add-page-init! "fetch-comment-div" #((html/add-class "hidden") (first (mk-comment (first (select_comment (str-to-int %3)))))) 1)
+(add-page-init! "refresh-comment-div" #(mk-comment %1 (first (select_comment (str-to-int %3)))) 1)
+(add-page-init! "fetch-comment-div" #((html/add-class "hidden") (first (mk-comment %1 (first (select_comment (str-to-int %3)))))) 1)
 
 (add-page-init! "news" #(news-page %1 %2 :page [(or 0 %3)])) ;; always evals to 0 but reference %3 for compiler.
 (add-page-init! "blog" #(news-page %1 %2 :page [(or 0 %3)]))
