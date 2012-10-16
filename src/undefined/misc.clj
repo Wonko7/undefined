@@ -38,7 +38,7 @@
                       :to email
                       :subject "Welcome to undefined.re, please activate your account"
                       :body (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
-                                 "http://localhost:8000/activate/" act ;;FIXME use get conf for domain name
+                                 "http://undefined.re/activate/" act ;;FIXME use get conf for domain name
                                  "\nThis link will expire in 24 hours."
                                  "\n\nRegards,\n\n~The Undefined team.")})))
 
