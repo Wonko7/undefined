@@ -72,9 +72,8 @@
 
 (html/defsnippet profile "templates/login.html" [:div.profile]
   [name mail]
-  [:.profile :.username]      (html/content name)
-  [:.profile :.current-email] (html/do-> (html/set-attr :href (str "mailto:" mail))
-                                         (html/content mail)))
+  [:.profile :.username]  (html/content name)
+  [:.profile :#new_email] (html/set-attr :placeholder mail))
 
 (html/defsnippet sign-up "templates/login.html" [:div.sign-up]
   [])

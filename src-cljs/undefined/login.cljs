@@ -31,7 +31,6 @@
                                               (em/set-attr :disabled "disabled")
                                               (em/add-class "invalid-sub")
                                               (em/remove-class "valid-sub"))))))
-
 (defn validate-deco [elt valid?]
   (if valid?
     (em/at elt (em/do-> (em/add-class "valid-inp")
@@ -75,6 +74,50 @@
                                         (em/html-content result)
                                         (restore-height 200))))))
 
+;;;    profile helpers     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn mk-validate-deco [submit-sel val-sels]
+  (let [nb-vals (count val-sels)]
+    (fn [elt valid?]
+      (if valid?
+        (em/at elt (em/do-> (em/add-class "valid-inp")
+                            (em/remove-class "invalid-inp")))
+        (em/at elt (em/do-> (em/add-class "invalid-inp")
+                            (em/remove-class "valid-inp")))) 
+      (let [vals (em/from js/document
+                          :#inp_usr   [:#inp_usr]   (em/get-attr :class)
+                          :#cur_pass1 [:#cur_pass1] (em/get-attr :class)
+                          :#cur_pass2 [:#cur_pass2] (em/get-attr :class)
+                          :#new_pass  [:#new_pass]  (em/get-attr :class)
+                          :#conf_pass [:#conf_pass] (em/get-attr :class)
+                          :#new_email [:#new_email] (em/get-attr :class))
+            valid? (->> vals
+                     (filter (fn [[k v]] (and (k val-sels) (= "valid-inp" v))))
+                     (count)
+                     (= nb-vals))]
+        (if valid?
+          (em/at js/document [submit-sel] (em/do->
+                                            (em/remove-attr :disabled)
+                                            (em/add-class "valid-sub")
+                                            (em/remove-class "invalid-sub")))
+          (em/at js/document [submit-sel] (em/do->
+                                            (em/set-attr :disabled "disabled")
+                                            (em/add-class "invalid-sub")
+                                            (em/remove-class "valid-sub"))))))))
+; email;
+(defn mk-pass-val [validator]
+  (fn [e]
+    (let [inp (.-currentTarget e)
+          val (em/from inp (em/get-prop :value))]
+      (validator inp (>= (.-length val) 8)))))
+
+(defn mk-email-val [validator]
+  (fn [e]
+    (let [inp (.-currentTarget e)
+          val (em/from inp (em/get-prop :value))]
+      (validator inp (re-find #"^\w\S*@\w\S*[.]\S+$" val)))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;    pages;
@@ -90,7 +133,6 @@
 
 (defn login-page [href & [args]]
   (em/at js/document
-         [:#inp_usr]     (em/focus)
          [:#reset_pass]  (em/listen :click (fn [e]
                                              (.preventDefault e)
                                              (let [username (em/from (em/select [:#inp_usr]) (em/get-prop :value))]
@@ -122,14 +164,21 @@
                                     (js/alert res))
                                   (js/alert "The passwords don't match.")))))
         update-email      (fn [e]
-                            (.preventDefault)
+                            (.preventDefault e)
                             (let  [newemail (em/from js/document
                                                      :first   [:#new_email]   (em/get-prop :value)
                                                      :second  [:#conf_email]  (em/get-prop :value))]
-                              (fm/letrem  [[username roles] (get-user)] (nil))))]
+                              (fm/letrem [[username roles] (get-user)]
+                                nil)))
+        ;; validators;
+        email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
+        ]
 
 
     (em/at js/document
+           [:#cur_pass2]    (em/listen :input (mk-pass-val email-submit-validator))
+           [:#new_email]    (em/listen :input (mk-email-val email-submit-validator))
+           ;;
            [:#new_pass]           (em/listen :input val-pass1)
            [:#conf_pass]          (em/listen :input val-pass2)
            [:#page :a.logout]     (em/listen :click (fn [e]
