@@ -244,7 +244,7 @@
 
 (defn comments_by_article [id]
   (select comments
-          (fields :uid :content [:authors.username :author] :birth :edit)
+          (fields :uid :content [:authors.username :author] [:authors.uid :authid] :birth :edit)
           (join authors (= :authors.uid :comments.authid))
           (aggregate (count :*) :cnt :comments.uid)
           (group :authors.username :birth :edit)
