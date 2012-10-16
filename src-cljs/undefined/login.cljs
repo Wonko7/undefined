@@ -106,11 +106,25 @@
                                             (em/add-class "invalid-sub")
                                             (em/remove-class "valid-sub"))))))))
 ; email;
-(defn mk-pass-val [validator]
+(defn mk-pass-val [validator & [pass2-val]]
+  (if pass2-val
+    (fn [e]
+      (let [inp (.-currentTarget e)
+            val (em/from inp (em/get-prop :value))]
+        (validator inp (>= (.-length val) 8))
+        (pass2-val nil)))
+    (fn [e]
+      (let [inp (.-currentTarget e)
+            val (em/from inp (em/get-prop :value))]
+        (validator inp (>= (.-length val) 8))))))
+
+(defn mk-pass2-val [pass1 pass2 validator]
   (fn [e]
-    (let [inp (.-currentTarget e)
-          val (em/from inp (em/get-prop :value))]
-      (validator inp (>= (.-length val) 8)))))
+    (let [inp             (em/select js/document [pass1])
+          {:keys [p1 p2]} (em/from js/document
+                                   :p1 [pass1] (em/get-prop :value)
+                                   :p2 [pass2] (em/get-prop :value))]
+      (validator inp (and (> (.-length p2) 0) (= p1 p2))))))
 
 (defn mk-email-val [validator]
   (fn [e]
@@ -172,15 +186,17 @@
                                 nil)))
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
-        ]
-
-
+        pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
+        pass2-val                (mk-pass2-val :#conf_pass :#new_pass pass-submit-validator)]
     (em/at js/document
+           ;; email validation;
            [:#cur_pass2]    (em/listen :input (mk-pass-val email-submit-validator))
            [:#new_email]    (em/listen :input (mk-email-val email-submit-validator))
-           ;;
-           [:#new_pass]           (em/listen :input val-pass1)
-           [:#conf_pass]          (em/listen :input val-pass2)
+           ;; password validation;
+           [:#cur_pass1]    (em/listen :input (mk-pass-val pass-submit-validator))
+           [:#new_pass]     (em/listen :input (mk-pass-val pass-submit-validator pass2-val))
+           [:#conf_pass]    (em/listen :input pass2-val)
+           ;; forms;
            [:#page :a.logout]     (em/listen :click (fn [e]
                                                       (.preventDefault e)
                                                       (fm/letrem [res (auth-logout)]
