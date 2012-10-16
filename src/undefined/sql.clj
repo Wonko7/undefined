@@ -325,14 +325,20 @@
             (set-fields {:email newemail})
             (where {:uid (:uid user)}))))
 
-(defn update_password [username newpass]
+(defn update_password [username oldpass newpass]
   (let [[user] (select authors (where {:username username}))]
-  (transaction
-    (delete reset_links
-            (where {:userid (:uid user)}))
-    (update authors
-            (set-fields {:password (nc/encrypt newpass)})
-            (where {:uid (:uid user)})))))
+    (if user
+      (if (nc/compare oldpass (:password user))
+        (do
+          (transaction
+            (delete reset_links
+                    (where {:userid (:uid user)}))
+            (update authors
+                    (set-fields {:password (nc/encrypt newpass)})
+                    (where {:uid (:uid user)})))          
+          "Your password has been succesfully updated.")
+        "Your current password is incorrect.")
+      "Your password couldn't be updated.")))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;; Reset password ;;
@@ -440,7 +446,7 @@
             (where {:uid uid}))))
 
 (defn delete_comment [id uid]
-  (let [com (select comments (where {:uid uid}))]
+  (let [[com] (select comments (where {:uid uid}))]
     (if (or (is-author? id (:authid com)) (is-admin? id))
       (delete comments
               (where {:uid uid})))))
@@ -467,6 +473,7 @@
 
 (defremote comment_count_rem [id] (comment_count_by_article id))
 
+(defremote update_pass_rem [id oldpass newpass] (update_password id oldpass newpass))
 (defremote reset_pass_rem [username] (reset_password username))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))

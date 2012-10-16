@@ -107,7 +107,10 @@
                                                     (page-click "news" nil)
                                                     (js/alert (str "log in failed. ")))))))))
 
+
+;TODO add validation for submit button
 (defn profile-page [href & [args]]
+<<<<<<< HEAD
   (em/at js/document
          [:#inp_usr]           (em/listen :input val-username)
          [:#new_pass]          (em/listen :input val-pass1)
@@ -129,6 +132,43 @@
                                                     (.preventDefault e)
                                                     ;TODO warn the fucking user
                                                     (js/console.log "Don't you wish you could delete your account?")))))
+=======
+  (let [update-password   (fn [e]
+                            (.preventDefault e)
+                            (let  [newpass  (em/from js/document
+                                                     :first    [:#new_pass]  (em/get-prop :value)
+                                                     :second   [:#conf_pass] (em/get-prop :value)
+                                                     :old      [:#cur_pass]  (em/get-prop :value))]
+                              (fm/letrem  [[username roles] (get-user)]
+                                (if (= (:first newpass) (:second newpass))
+                                  (fm/letrem [res (update_pass_rem username (:old newpass) (:first newpass))]
+                                    (js/alert res))
+                                  (js/alert "The passwords don't match.")))))
+        update-email      (fn [e]
+                            (.preventDefault)
+                            (let  [newemail (em/from js/document
+                                                     :first   [:#new_email]   (em/get-prop :value)
+                                                     :second  [:#conf_email]  (em/get-prop :value))]
+                              (fm/letrem  [[username roles] (get-user)] (nil))))]
+
+
+    (em/at js/document
+           [:#new_pass]           (em/listen :input val-pass1)
+           [:#conf_pass]          (em/listen :input val-pass2)
+           [:#page :a.logout]     (em/listen :click (fn [e]
+                                                      (.preventDefault e)
+                                                      (fm/letrem [res (auth-logout)]
+                                                        (page-click "news" nil))))
+           [:form#update_pass]    (em/listen :submit #(update-password %))
+           [:form#update_email]   (em/listen :submit (fn [e]
+                                                       (.preventDefault e)
+                                                       ;TODO check cur email is valid, check both new emails are the same and valid
+                                                       (js/console.log "Don't you wish you could update your email?")))
+           [:form#del_account]    (em/listen :submit (fn [e]
+                                                       (.preventDefault e)
+                                                       ;TODO warn the fucking user
+                                                       (js/console.log "Don't you wish you could delete your account?"))))))
+>>>>>>> c/comments
 
 
 (add-page-init! "login" login-page)
