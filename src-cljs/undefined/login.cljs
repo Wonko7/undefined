@@ -172,11 +172,9 @@
                                                      :first    [:#new_pass]  (em/get-prop :value)
                                                      :second   [:#conf_pass] (em/get-prop :value)
                                                      :old      [:#cur_pass1]  (em/get-prop :value))]
-                              (fm/letrem  [[username roles] (get-user)]
-                                (if (= (:first newpass) (:second newpass))
-                                  (fm/letrem [res (update_pass_rem username (:old newpass) (:first newpass))]
-                                    (js/alert res))
-                                  (js/alert "The passwords don't match.")))))
+                              (fm/letrem  [[username roles] (get-user)
+                                           res (update_pass_rem username (:old newpass) (:first newpass))]
+                                (js/alert res))))
         update-email      (fn [e]
                             (.preventDefault e)
                             (let  [newemail (em/from js/document
