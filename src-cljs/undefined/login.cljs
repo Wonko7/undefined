@@ -109,6 +109,10 @@
 
 (defn profile-page [href & [args]]
   (em/at js/document
+         [:#inp_usr]           (em/listen :input val-username)
+         [:#new_pass]          (em/listen :input val-pass1)
+         [:#conf_pass]         (em/listen :input val-pass2)
+         [:#new_email]         (em/listen :input val-email)
          [:#page :a.logout]    (em/listen :click (fn [e]
                                                    (.preventDefault e)
                                                    (fm/letrem [res (auth-logout)]
