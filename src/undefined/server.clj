@@ -19,6 +19,8 @@
 ;; see https://github.com/cemerick/friend.git
 ;; and https://github.com/xeqi/friend-fetch-example
 
+;; one day; (derive ::admin ::user), use isa? for hierarchies
+
 (defn fetch-workflow [request]
   (session/put! :id (friend/identity request))
   (when (= "/_fetch" (:uri request))
