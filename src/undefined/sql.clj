@@ -13,7 +13,7 @@
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
-        [undefined.content :only [str-to-int url-encode]]
+        [undefined.content :only [str-to-int url-encode url-decode]]
         [undefined.auth :only [is-admin? is-author? userid]]))
 
 ;;;;;;;;;;;;;
@@ -290,7 +290,7 @@
 
 (defn activate_user [link]
   (do
-    ;(println (str "\n\nValidation token: " (first link) "\n\n"))
+    (println (str "\n\nValidation token: " (first link) "\n\n"))
     (remove_expired_temp_authors)
     (let [res (first (select temp_authors (where {:activation (first link)})))]
       (if res
@@ -426,7 +426,7 @@
             (let [res (send_change_email newmail (url-encode act))
                   [error code]  [(:error res) (:code res)]]
               (if (= :SUCCESS error)
-                "An confirmation link was sent to your email. You can restart the process if you didn't get the email."
+                "A confirmation link was sent to your email. You can restart the process if you didn't get the email."
                 (str "There was an error sending your confirmation link.[" error ", "code "]")))))
         "Your password is incorrect.")
       "This user doesn't exist.")))
