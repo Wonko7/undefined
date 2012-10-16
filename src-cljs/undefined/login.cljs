@@ -184,6 +184,8 @@
                               (fm/letrem [[username roles] (get-user)
                                           res (request_email_token_rem username (:pass newemail) (:first newemail))]
                                 (js/alert res))))
+        delete-account    (fn [e]
+                           nil) 
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
         pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
@@ -205,7 +207,7 @@
            [:form#update_email]   (em/listen :submit #(update-email %))
            [:form#del_account]    (em/listen :submit (fn [e]
                                                        (.preventDefault e)
-                                                       ;TODO warn the fucking user
+                                                       ;TODO warn the fucking user and log him out
                                                        (js/console.log "Don't you wish you could delete your account?"))))))
 
 
