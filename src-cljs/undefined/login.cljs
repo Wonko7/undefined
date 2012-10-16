@@ -122,24 +122,24 @@
 
 
 (defn profile-page [href & [args]]
-  (let [update-password   (fn [e]
-                            (.preventDefault e)
-                            (let  [newpass  (em/from js/document
-                                                     :first    [:#new_pass]  (em/get-prop :value)
-                                                     :second   [:#conf_pass] (em/get-prop :value)
-                                                     :old      [:#cur_pass1]  (em/get-prop :value))]
-                              (fm/letrem  [[username roles] (get-user)]
-                                (if (= (:first newpass) (:second newpass))
-                                  (fm/letrem [res (update_pass_rem username (:old newpass) (:first newpass))]
-                                    (js/alert res))
-                                  (js/alert "The passwords don't match.")))))
-        update-email      (fn [e]
-                            (.preventDefault e)
-                            (let  [newemail (em/from js/document
-                                                     :first   [:#new_email]   (em/get-prop :value)
-                                                     :second  [:#conf_email]  (em/get-prop :value))]
-                              (fm/letrem [[username roles] (get-user)]
-                                nil)))
+  (let [update-password          (fn [e]
+                                   (.preventDefault e)
+                                   (let  [newpass  (em/from js/document
+                                                            :first    [:#new_pass]  (em/get-prop :value)
+                                                            :second   [:#conf_pass] (em/get-prop :value)
+                                                            :old      [:#cur_pass1]  (em/get-prop :value))]
+                                     (fm/letrem  [[username roles] (get-user)]
+                                       (if (= (:first newpass) (:second newpass))
+                                         (fm/letrem [res (update_pass_rem username (:old newpass) (:first newpass))]
+                                           (js/alert res))
+                                         (js/alert "The passwords don't match.")))))
+        update-email             (fn [e]
+                                   (.preventDefault e)
+                                   (let  [newemail (em/from js/document
+                                                            :first   [:#new_email]   (em/get-prop :value)
+                                                            :second  [:#conf_email]  (em/get-prop :value))]
+                                     (fm/letrem [[username roles] (get-user)]
+                                       nil)))
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
         pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
