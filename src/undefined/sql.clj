@@ -7,7 +7,9 @@
             [korma.sql.engine :as eng])
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
-        [undefined.misc   :only [get_keys send_reset_pass send_activation to_html]]
+        [undefined.misc   :only [get_keys
+                                 send_reset_pass send_activation send_change_email
+                                 to_html]]
         [noir.fetch.remotes]
         [korma.db]
         [korma.core]
@@ -86,6 +88,11 @@
 (defentity reset_links
   (table :reset_links)
   (fields :userid :resetlink :birth)
+  (pk :uid))
+
+(defentity newemail_links
+  (table :newemail_links)
+  (fields :userid :updatelink :birth)
   (pk :uid))
 
 (defentity temp_authors
@@ -300,7 +307,7 @@
       (if (first (get_temp_user :email email))
         "You should have already received an activation email." ;; FIXME yeah well resend anyway? maybe the user accidently deleted it?
         (do
-          (if (first (get_temp_user :username username))
+          (if (first (get_temp_user :username username))  ;FIXME don't need to check, just delete
             (delete temp_authors (where {:username username})))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
                 act   (nc/encrypt (str username email birth))]
@@ -318,12 +325,6 @@
                 (if (= :SUCCESS error)
                   "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
                   (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
-
-(defn update_email [username newemail]
-  (let [[user] (select authors (where {:username username}))]
-    (update authors
-            (set-fields {:email newemail})
-            (where {:uid (:uid user)}))))
 
 (defn update_password [username oldpass newpass]
   (let [[user] (select authors (where {:username username}))]
@@ -377,6 +378,57 @@
         (send_reset_pass (:email user) (url-encode resetlink))
         "An email with instructions to reset your password has been sent.")
       "There's been an issue sending your reset link.")))
+
+;;;;;;;;;;;;;;;;;;
+;; Update Email ;;
+;;;;;;;;;;;;;;;;;;
+
+(defn update_email [userid newemail]
+  (transaction
+    (update authors
+            (set-fields {:email newemail})
+            (where {:uid userid}))
+    (delete newemail_links
+            (where {:userid userid}))))
+
+
+(defn remove_expired_newemail_links []
+  (let [treshold (minus (now) (days 1) (hours -2))]
+    (delete newemail_links
+            (where {:birth [< (psqltime treshold)]}))))
+
+(defn check_update_email_token [link]
+  (do
+    (remove_expired_newemail_links)
+    (let [res (first (select newemail_links (where {:updatelink (first link)})))]
+      (if res
+        (do
+          (update_email (:userid res) (:newemail res))
+          "Your email address has been updated.")
+        "This link is not valid."))))
+
+(defn create_new_email_token [username newmail]
+  (let  [[user] (get_user :username username)
+         birth  (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
+         act    (nc/encrypt (str username newmail birth))]
+    (if user
+      (if (first (get_user :email newmail))
+      "This email has already been used to create an account."
+      (do
+        (transaction
+          (delete newemail_links
+                  (where {:userid (:uid user)}))
+          (insert newemail_links
+                  (values {:userid      (:uid user)
+                           :newemail    newmail
+                           :birth       birth
+                           :updatelink  act})))
+        (let [res (send_change_email newmail (url-encode act))
+              [error code]  [(:error res) (:code res)]]
+          (if (= :SUCCESS error)
+            "An confirmation link was sent to your email. You can restart the process if you didn't get the email."
+            (str "There was an error sending your confirmation link.[" error ", "code "]")))))
+      "This user doesn't exist.")))
 
 ;INSERT
 

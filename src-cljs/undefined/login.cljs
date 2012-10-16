@@ -122,11 +122,11 @@
                                     (js/alert res))
                                   (js/alert "The passwords don't match.")))))
         update-email      (fn [e]
-                            (.preventDefault)
+                            (.preventDefault e)
                             (let  [newemail (em/from js/document
                                                      :first   [:#new_email]   (em/get-prop :value)
                                                      :second  [:#conf_email]  (em/get-prop :value))]
-                              (fm/letrem  [[username roles] (get-user)] (nil))))]
+                              (fm/letrem  [[username roles] (get-user)] nil)))]
 
 
     (em/at js/document

@@ -51,8 +51,23 @@
                      {:from "defined@undefined.re"
                       :to email
                       :subject "Password reset request, undefined.re"
-                      :body (str "If you haven't requested your passowrd to be reset please ignore this email.\n\n"
+                      :body (str "If you haven't requested your password to be reset please ignore this email.\n\n"
                                  "To reset your password follow the link below\n"
                                  "http://undefined.re/reset/" resetlink
+                                 "\nThis link will expire in 24 hours."
+                                 "\n\nRegards,\n\n~The Undefined team.")})))
+
+(defn send_change_email [email updatelink]
+  (let [smtp_pass (get-conf :smtp_pass)]
+    (ps/send-message ^{:host "smtp.gmail.com"
+                       :user "landolphia@undefined.re"
+                       :pass (if smtp_pass smtp_pass "placeholder")
+                       :ssl :yes!!!11}
+                     {:from "defined@undefined.re"
+                      :to email
+                      :subject "Email update request, undefined.re"
+                      :body (str "If you haven't requested your email to be changed please ignore this email.\n\n"
+                                 "To confirm your new email address follow the link below\n"
+                                 "http://undefined.re/update/" updatelink
                                  "\nThis link will expire in 24 hours."
                                  "\n\nRegards,\n\n~The Undefined team.")})))
