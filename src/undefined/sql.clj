@@ -247,7 +247,7 @@
           (fields :uid :content [:authors.username :author] [:authors.uid :authid] :birth :edit)
           (join authors (= :authors.uid :comments.authid))
           (aggregate (count :*) :cnt :comments.uid)
-          (group :authors.username :birth :edit)
+          (group :authors.username :birth :edit :authors.uid)
           (order :birth :ASC)
           (where {:artid id})))
 
@@ -396,7 +396,7 @@
       artid)))
 
 (defn insert_comment [id author content]
-  (if (is-admin? author) ;; FIXME ; replace by is-user
+  (if (userid author)
     (let [res (insert comments (values {:artid id :authid (userid author) :content (to_html content)}))]
       (:uid res))))
 
