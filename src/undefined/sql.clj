@@ -440,7 +440,7 @@
             (where {:uid uid}))))
 
 (defn delete_comment [id uid]
-  (let [com (select comments (where {:uid uid}))]
+  (let [[com] (select comments (where {:uid uid}))]
     (if (or (is-author? id (:authid com)) (is-admin? id))
       (delete comments
               (where {:uid uid})))))
