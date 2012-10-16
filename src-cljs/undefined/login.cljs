@@ -171,7 +171,7 @@
                             (let  [newpass  (em/from js/document
                                                      :first    [:#new_pass]  (em/get-prop :value)
                                                      :second   [:#conf_pass] (em/get-prop :value)
-                                                     :old      [:#cur_pass]  (em/get-prop :value))]
+                                                     :old      [:#cur_pass1]  (em/get-prop :value))]
                               (fm/letrem  [[username roles] (get-user)]
                                 (if (= (:first newpass) (:second newpass))
                                   (fm/letrem [res (update_pass_rem username (:old newpass) (:first newpass))]

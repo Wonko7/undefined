@@ -391,7 +391,6 @@
     (delete newemail_links
             (where {:userid userid}))))
 
-
 (defn remove_expired_newemail_links []
   (let [treshold (minus (now) (days 1) (hours -2))]
     (delete newemail_links
