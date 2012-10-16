@@ -27,7 +27,6 @@
     (let [{:keys [remote params]} (:params request)
           [{:keys [user pass]}]   (remotes/safe-read params)]
       (when (= remote "auth-login")
-        (println {:username user :password pass})
         (if-let [user-record ((:credential-fn  (::friend/auth-config request))
                               ^{::friend/workflow :fetch-workflow}
                               {:username user :password pass})]

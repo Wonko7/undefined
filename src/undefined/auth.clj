@@ -18,7 +18,7 @@
 
 (defremote auth-login [auth]
   (let [{:keys [username roles]} (friend/current-authentication)]
-    (friend/authorize #{:undefined.server/admin :undefined.server/user}
+    (friend/authorize #{:undefined.server/admin :undefined.server/peon}
                       [username roles])))
 
 (defremote auth-logout [] nil)
