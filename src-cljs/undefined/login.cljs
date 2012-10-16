@@ -127,19 +127,21 @@
                                    (let  [newpass  (em/from js/document
                                                             :first    [:#new_pass]  (em/get-prop :value)
                                                             :second   [:#conf_pass] (em/get-prop :value)
-                                                            :old      [:#cur_pass1]  (em/get-prop :value))]
-                                     (fm/letrem  [[username roles] (get-user)]
-                                       (if (= (:first newpass) (:second newpass))
-                                         (fm/letrem [res (update_pass_rem username (:old newpass) (:first newpass))]
-                                           (js/alert res))
-                                         (js/alert "The passwords don't match.")))))
+                                                            :old      [:#cur_pass1] (em/get-prop :value))]
+                                     (fm/letrem  [[username roles] (get-user)
+                                                  res (update_pass_rem username (:old newpass) (:first newpass))]
+                                       (js/alert res))))
         update-email             (fn [e]
                                    (.preventDefault e)
                                    (let  [newemail (em/from js/document
                                                             :first   [:#new_email]   (em/get-prop :value)
-                                                            :second  [:#conf_email]  (em/get-prop :value))]
-                                     (fm/letrem [[username roles] (get-user)]
-                                       nil)))
+                                                            :second  [:#conf_email]  (em/get-prop :value)
+                                                            :pass    [:#cur_pass2]    (em/get-prop :value))]
+                                     (fm/letrem [[username roles] (get-user)
+                                                 res (request_email_token_rem username (:pass newemail) (:first newemail))]
+                                       (js/alert res))))
+        delete-account           (fn [e]
+                                   nil) 
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
         pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
@@ -158,13 +160,10 @@
                                                       (fm/letrem [res (auth-logout)]
                                                         (page-click "news" nil))))
            [:form#update_pass]    (em/listen :submit #(update-password %))
-           [:form#update_email]   (em/listen :submit (fn [e]
-                                                       (.preventDefault e)
-                                                       ;TODO check cur email is valid, check both new emails are the same and valid
-                                                       (js/console.log "Don't you wish you could update your email?")))
+           [:form#update_email]   (em/listen :submit #(update-email %))
            [:form#del_account]    (em/listen :submit (fn [e]
                                                        (.preventDefault e)
-                                                       ;TODO warn the fucking user
+                                                       ;TODO warn the fucking user and log him out
                                                        (js/console.log "Don't you wish you could delete your account?"))))))
 
 

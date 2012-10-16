@@ -406,27 +406,29 @@
           "Your email address has been updated.")
         "This link is not valid."))))
 
-(defn create_new_email_token [username newmail]
+(defn create_new_email_token [username password newmail]
   (let  [[user] (get_user :username username)
          birth  (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
          act    (nc/encrypt (str username newmail birth))]
     (if user
-      (if (first (get_user :email newmail))
-      "This email has already been used to create an account."
-      (do
-        (transaction
-          (delete newemail_links
-                  (where {:userid (:uid user)}))
-          (insert newemail_links
-                  (values {:userid      (:uid user)
-                           :newemail    newmail
-                           :birth       birth
-                           :updatelink  act})))
-        (let [res (send_change_email newmail (url-encode act))
-              [error code]  [(:error res) (:code res)]]
-          (if (= :SUCCESS error)
-            "An confirmation link was sent to your email. You can restart the process if you didn't get the email."
-            (str "There was an error sending your confirmation link.[" error ", "code "]")))))
+      (if (nc/compare password (:pass user))
+        (if (first (get_user :email newmail))
+          "This email has already been used to create an account."
+          (do
+            (transaction
+              (delete newemail_links
+                      (where {:userid (:uid user)}))
+              (insert newemail_links
+                      (values {:userid      (:uid user)
+                               :newemail    newmail
+                               :birth       birth
+                               :updatelink  act})))
+            (let [res (send_change_email newmail (url-encode act))
+                  [error code]  [(:error res) (:code res)]]
+              (if (= :SUCCESS error)
+                "An confirmation link was sent to your email. You can restart the process if you didn't get the email."
+                (str "There was an error sending your confirmation link.[" error ", "code "]")))))
+        "Your password is incorrect.")
       "This user doesn't exist.")))
 
 ;INSERT
@@ -526,5 +528,7 @@
 
 (defremote update_pass_rem [id oldpass newpass] (update_password id oldpass newpass))
 (defremote reset_pass_rem [username] (reset_password username))
+
+(defremote request_email_token_rem [username password newemail] (create_new_email_token username password newemail))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))
