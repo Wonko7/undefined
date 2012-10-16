@@ -12,7 +12,7 @@
         [korma.db]
         [korma.core]
         [undefined.content :only [str-to-int url-encode]]
-        [undefined.auth :only [is-admin? userid]]))
+        [undefined.auth :only [is-admin? is-author? userid]]))
 
 ;;;;;;;;;;;;;
 ;; Helpers ;;
@@ -95,7 +95,7 @@
 (defentity roles
   (table :roles)
   (pk :uid)
-  (entity-fields :label)
+  (entity-fields :uid :label)
   (database undef-db))
 
 (defentity categories
@@ -261,14 +261,19 @@
             (where {:birth [< (psqltime treshold)]}))))
 
 (defn promote_temp_user [username]
-  (let [newuser (first (select temp_authors (where {:username username})))]
-    (transaction
-      (insert authors
-              (values {:username (:username newuser)
-                       :email    (:email newuser)
-                       :password (:password newuser)
-                       :salt     "laskdjalksj"
-                       :birth    (:birth newuser)}))
+  (let [newuser (first (select temp_authors (where {:username username})))
+        user  (insert  authors
+                      (values {:username (:username newuser)
+                               :email    (:email newuser)
+                               :password (:password newuser)
+                               :salt     "NO SALT"
+                               :birth    (:birth newuser)}))
+        [role]  (select   roles
+                      (where {:label "peon"}))]
+    (do
+      (insert author_roles
+              (values {:authid (:uid user)
+                       :roleid (:uid role)}))
       (delete temp_authors (where {:username username})))))
 
 (defn get_temp_user [& {:keys [username email] :or {username nil email nil}}]
@@ -278,7 +283,7 @@
 
 (defn activate_user [link]
   (do
-    (println (str "\n\nValidation token: " (first link) "\n\n"))
+    ;(println (str "\n\nValidation token: " (first link) "\n\n"))
     (remove_expired_temp_authors)
     (let [res (first (select temp_authors (where {:activation (first link)})))]
       (if res
@@ -299,7 +304,7 @@
             (delete temp_authors (where {:username username})))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
                 act   (nc/encrypt (str username email birth))]
-            (println (url-encode act))
+            ;(println (url-encode act))
             (insert temp_authors
                     (values {:username    username
                              :email       email
@@ -422,10 +427,11 @@
           (order :birth :ASC)))
 
 (defn update_comment [userid uid content]
-  ;  (if (is-admin? userid) or author
-  (update comments
-          (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
-          (where {:uid uid})))
+  (let [com (select comments (where {:uid uid}))]
+    (if (or (is-author? userid (:authid com)) (is-admin? userid))
+      (update comments
+              (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
+              (where {:uid uid})))))
 
 ;DELETE
 (defn delete_article [id uid]
@@ -434,9 +440,10 @@
             (where {:uid uid}))))
 
 (defn delete_comment [id uid]
-  (id (is-admin? id);; FIXME is-author?
+  (let [com (select comments (where {:uid uid}))]
+    (if (or (is-author? id (:authid com)) (is-admin? id))
       (delete comments
-              (where {:uid uid}))))
+              (where {:uid uid})))))
 
 ;; Remotes
 

@@ -19,11 +19,11 @@ CREATE UNIQUE INDEX email_temp_lower_id ON temp_authors (lower(email));
 
 CREATE TABLE roles (uid SERIAL PRIMARY KEY, label TEXT UNIQUE NOT NULL);
 
-CREATE TABLE article_categories (artid INTEGER references articles(uid) ON DELETE CASCADE, catid INTEGER references categories(uid) ON DELETE CASCADE, PRIMARY KEY (artid, catid));
-CREATE TABLE article_tags (artid INTEGER references articles(uid) ON DELETE CASCADE, tagid INTEGER references tags(uid) ON DELETE CASCADE, PRIMARY KEY (artid, tagid));
-CREATE TABLE article_authors (artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid) ON DELETE CASCADE, PRIMARY KEY(artid, authid));
+CREATE TABLE article_categories (artid INTEGER references articles(uid) ON DELETE CASCADE NOT NULL, catid INTEGER references categories(uid) ON DELETE CASCADE NOT NULL, PRIMARY KEY (artid, catid));
+CREATE TABLE article_tags (artid INTEGER references articles(uid) ON DELETE CASCADE NOT NULL, tagid INTEGER references tags(uid) ON DELETE CASCADE NOT NULL, PRIMARY KEY (artid, tagid));
+CREATE TABLE article_authors (artid INTEGER references articles(uid) ON DELETE CASCADE NOT NULL, authid INTEGER references authors(uid) ON DELETE CASCADE NOT NULL, PRIMARY KEY(artid, authid));
 
-CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE, roleid INTEGER references roles(uid) ON DELETE CASCADE);
+CREATE TABLE author_roles (authid INTEGER references authors(uid) ON DELETE CASCADE NOT NULL, roleid INTEGER references roles(uid) ON DELETE CASCADE NOT NULL);
 
 CREATE TABLE projects (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL, link TEXT NOT NULL, screenshot TEXT NOT NULL, pin INTEGER UNIQUE NOT NULL);
 
