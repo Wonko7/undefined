@@ -110,29 +110,6 @@
 
 ;TODO add validation for submit button
 (defn profile-page [href & [args]]
-<<<<<<< HEAD
-  (em/at js/document
-         [:#inp_usr]           (em/listen :input val-username)
-         [:#new_pass]          (em/listen :input val-pass1)
-         [:#conf_pass]         (em/listen :input val-pass2)
-         [:#new_email]         (em/listen :input val-email)
-         [:#page :a.logout]    (em/listen :click (fn [e]
-                                                   (.preventDefault e)
-                                                   (fm/letrem [res (auth-logout)]
-                                                     (page-click "news" nil))))
-         [:form#update_pass]   (em/listen :submit (fn [e]
-                                                    (.preventDefault e)
-                                                    ;TODO check that cur pass is good, that both new passes are the same
-                                                    (js/console.log "Don't you wish you could update your password?")))
-         [:form#update_email]  (em/listen :submit (fn [e]
-                                                    (.preventDefault e)
-                                                    ;TODO check cur email is valid, check both new emails are the same and valid
-                                                    (js/console.log "Don't you wish you could update your email?")))
-         [:form#del_account]   (em/listen :submit (fn [e]
-                                                    (.preventDefault e)
-                                                    ;TODO warn the fucking user
-                                                    (js/console.log "Don't you wish you could delete your account?")))))
-=======
   (let [update-password   (fn [e]
                             (.preventDefault e)
                             (let  [newpass  (em/from js/document
@@ -168,7 +145,6 @@
                                                        (.preventDefault e)
                                                        ;TODO warn the fucking user
                                                        (js/console.log "Don't you wish you could delete your account?"))))))
->>>>>>> c/comments
 
 
 (add-page-init! "login" login-page)
