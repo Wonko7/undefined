@@ -19,6 +19,8 @@
 ;; see https://github.com/cemerick/friend.git
 ;; and https://github.com/xeqi/friend-fetch-example
 
+;; one day; (derive ::admin ::user), use isa? for hierarchies
+
 (defn fetch-workflow [request]
   (session/put! :id (friend/identity request))
   (when (= "/_fetch" (:uri request))
@@ -37,9 +39,10 @@
 (server/add-middleware friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn
                                                                     (fn [name]
                                                                       (let [[user :as roles] (get_user :username name)]
-                                                                        (into user
-                                                                              {:password (:pass user)
-                                                                               :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))}))))
+                                                                        (when user
+                                                                          (into user
+                                                                                {:password (:pass user)
+                                                                                 :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))})))))
                                             :workflows [#'fetch-workflow]
                                             :unauthorized-handler (constantly
                                                                     {:status 401
