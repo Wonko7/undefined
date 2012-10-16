@@ -427,7 +427,7 @@
           (order :birth :ASC)))
 
 (defn update_comment [userid uid content]
-  (let [com (select comments (where {:uid uid}))]
+  (let [[com] (select comments (where {:uid uid}))]
     (if (or (is-author? userid (:authid com)) (is-admin? userid))
       (update comments
               (set-fields {:content (to_html content) :edit (psqltime (from-time-zone (now) (time-zone-for-offset -2)))})
