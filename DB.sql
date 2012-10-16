@@ -30,6 +30,7 @@ CREATE TABLE projects (uid SERIAL PRIMARY KEY, title TEXT NOT NULL, description 
 CREATE TABLE comments (uid SERIAL PRIMARY KEY, content TEXT NOT NULL, artid INTEGER references articles(uid) ON DELETE CASCADE, authid INTEGER references authors(uid), birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, edit TIMESTAMP (0) DEFAULT NULL);
 
 CREATE TABLE reset_links (uid SERIAL PRIMARY KEY, userid INTEGER references authors(uid) ON DELETE CASCADE, birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, resetlink TEXT NOT NULL);
+CREATE TABLE newemail_links (uid SERIAL PRIMARY KEY, userid INTEGER references authors(uid) ON DELETE CASCADE,newemail TEXT NOT NULL, birth TIMESTAMP (0) DEFAULT CURRENT_TIMESTAMP, updatelink TEXT NOT NULL);
 
 
 INSERT INTO categories (label) VALUES ('blog'), ('news');
