@@ -24,6 +24,7 @@
                           :#inp_usr   [:#inp_usr]   (em/get-attr :class)
                           :#cur_pass1 [:#cur_pass1] (em/get-attr :class)
                           :#cur_pass2 [:#cur_pass2] (em/get-attr :class)
+                          :#cur_pass3 [:#cur_pass3] (em/get-attr :class)
                           :#new_pass  [:#new_pass]  (em/get-attr :class)
                           :#conf_pass [:#conf_pass] (em/get-attr :class)
                           :#new_email [:#new_email] (em/get-attr :class))
@@ -145,6 +146,7 @@
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
         pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
+        del-submit-validator     (mk-validate-deco :#submit-del   #{:#cur_pass3})
         pass2-val                (mk-pass2-val :#conf_pass :#new_pass pass-submit-validator)]
     (em/at js/document
            ;; email validation;
@@ -154,6 +156,8 @@
            [:#cur_pass1]    (em/listen :input (mk-pass-val pass-submit-validator))
            [:#new_pass]     (em/listen :input (mk-pass-val pass-submit-validator pass2-val))
            [:#conf_pass]    (em/listen :input pass2-val)
+           ;; delete validation;
+           [:#cur_pass3]    (em/listen :input (mk-pass-val del-submit-validator))
            ;; forms;
            [:#page :a.logout]     (em/listen :click (fn [e]
                                                       (.preventDefault e)
