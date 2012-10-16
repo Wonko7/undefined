@@ -26,7 +26,7 @@
 
 (defsnippet-bind article "templates/article.html" [:div.whole-article]
   [uid category is-admin? title date article tags authors comment_count comments]
-  [url (str (name category) "-article/" uid)]
+  [url (str "/" (name category) "-article/" uid)]
 
   [:div.whole-article]  (html/set-attr :id (str "article_" uid))
   [:.article-title :a]  (html/do-> (html/content title)
@@ -82,7 +82,7 @@
 (html/defsnippet new-article "templates/new_article.html" [:form.newarticle]
   [authors categories title body tags uid sel_auths sel_cats]
   [:.inp_title]       (html/set-attr :value title)
-  [:.txt_body]        (html/content (from_html body))
+  [:.txt_body]        (html/content body)
   [:.inp_tags]        (html/set-attr :value tags)
   [:.cbx_authors]     (html/html-content (options_list authors "cbx_auth" :username sel_auths))
   [:.cbx_categories]  (html/html-content (options_list categories "cbx_cat" :label sel_cats))

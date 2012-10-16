@@ -16,7 +16,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn blog-nav [prev next category type id offset]
-  (let [link (str (name category) (when (= type :single) "-article"))
+  (let [link (str "/" (name category) (when (= type :single) "-article"))
         args #(if (= type :tag)
                 (str "/" id "/" %1)
                 (str "/" %1))]
@@ -38,7 +38,7 @@
     :else              "Undefined's Articles"))
 
 (defn mk-tag-link [tag]
-  (a-link (str (:label tag) " ") {:href (str "tag/" (:uid tag))}))
+  (a-link (str (:label tag) " ") {:href (str "/tag/" (:uid tag))}))
 
 (defn mk-comment [user-id comment]
   (user-comment (:uid comment) (or (is-author? user-id (:authid comment)) (is-admin? user-id))
