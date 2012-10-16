@@ -31,17 +31,10 @@
 			<div class="article-title">Change your password</div>
 			<form id="update_pass">
 				<fieldset>
-					<div>
-						<label>Current password: </label>
-						<input class="pass" type="password" id="cur_pass" />
-					</div>
-					<div>
-						<label>New password: </label>
-						<input class="pass" type="password" id="new_pass" /><br/>
-						<label>Confirm password: </label>
-						<input class="pass" type="password" id="conf_pass" /><br/>
-					</div>
-					<input type="submit" value="Confirm">
+					<input class="invalid-inp" type="password" id="cur_pass1" placeholder="Current password" />
+					<input class="invalid-inp" type="password" id="new_pass" placeholder="New password" />
+					<input class="invalid-inp" type="password" id="conf_pass" placeholder="Confirm password" />
+					<input class="invalid-sub" disabled="disabled" type="submit" value="Confirm" id="submit-pass" />
 				</fieldset>
 			</form>
 		</div>
@@ -49,21 +42,11 @@
 
 		<div class="article">
 			<form id="update_email">
-				<div class="article-title"> Update your email address</div>
-
+				<div class="article-title">Update your email address</div>
 				<fieldset>
-					<div>
-						<label>Current email:</label>
-						<a class="current-email"></a>
-					</div>
-					<div>
-						<label>New email:</label>
-						<input type="text" id="new_email" /><br/>
-						<label>Confirm email:</label>
-						<input type="text" id="conf_email" /><br/>
-					</div>
-					<input type="submit" value="Confirm">
-
+					<input class="invalid-inp" type="password" id="cur_pass2" placeholder="Current password" />
+					<input type="text" id="new_email" class="invalid-inp" />
+					<input type="submit" value="Confirm" class="invalid-sub" disabled="disabled" id="submit-email" />
 				</fieldset>
 			</form>
 		</div>
@@ -72,7 +55,7 @@
 		<div class="article">
 			<div class="article-title">Delete your account</div>
 			<form id="del_account">
-				<label>Delete account: </label><input type="submit" value="Delete">
+				<input class="valid-sub" type="submit" value="Delete Account" />
 			</form>
 		</div>
 	</div>
@@ -87,7 +70,7 @@
 					<input class="invalid-inp" placeholder="Password" type="password" id="new_pass" />
 					<input class="invalid-inp" placeholder="Password Confirmation" type="password" id="conf_pass" />
 					<input class="invalid-inp" placeholder="Email Address" type="text" id="new_email" />
-					<input class="invalid-sub" type="submit" value="Sign Up" disabled="disabled" id="submit-sign-up">
+					<input class="invalid-sub" type="submit" value="Sign Up" disabled="disabled" id="submit-sign-up" />
 				</form>
 			</div>
 			<hr>
