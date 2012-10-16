@@ -30,6 +30,12 @@
              (when (= :http (:scheme req))
                (redirect https-url))))
 
+(pre-route "/sign-up" []
+           (let [req       (ring-request)
+                 https-url (str "https://" (:server-name req) (str ":" (:ssl-port (get-config))) (:uri req))]
+             (when (= :http (:scheme req))
+               (redirect https-url))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; wrappers for undefined:
