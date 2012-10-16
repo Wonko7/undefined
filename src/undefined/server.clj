@@ -27,6 +27,7 @@
     (let [{:keys [remote params]} (:params request)
           [{:keys [user pass]}]   (remotes/safe-read params)]
       (when (= remote "auth-login")
+        (println {:username user :password pass})
         (if-let [user-record ((:credential-fn  (::friend/auth-config request))
                               ^{::friend/workflow :fetch-workflow}
                               {:username user :password pass})]
@@ -39,9 +40,10 @@
 (server/add-middleware friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn
                                                                     (fn [name]
                                                                       (let [[user :as roles] (get_user :username name)]
-                                                                        (into user
-                                                                              {:password (:pass user)
-                                                                               :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))}))))
+                                                                        (when user
+                                                                          (into user
+                                                                                {:password (:pass user)
+                                                                                 :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))})))))
                                             :workflows [#'fetch-workflow]
                                             :unauthorized-handler (constantly
                                                                     {:status 401
