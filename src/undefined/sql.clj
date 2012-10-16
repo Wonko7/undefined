@@ -504,6 +504,17 @@
       (delete comments
               (where {:uid uid})))))
 
+(defn delete_account [username password]
+  (let [[user] (get_user :username username)]
+    (if user
+      (if (nc/compare password (:pass user))
+        (do
+          (delete authors
+                  (where {:username username}))
+          1)
+        "Your password is incorrect")
+      "This user doesn't exist")))
+
 ;; Remotes
 
 (defremote insert_article_rem [title body tags authors categories]
@@ -530,5 +541,7 @@
 (defremote reset_pass_rem [username] (reset_password username))
 
 (defremote request_email_token_rem [username password newemail] (create_new_email_token username password newemail))
+
+(defremote delete_account_rem [username password] (delete_account username password))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))

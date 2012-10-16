@@ -180,12 +180,22 @@
                             (let  [newemail (em/from js/document
                                                      :first   [:#new_email]   (em/get-prop :value)
                                                      :second  [:#conf_email]  (em/get-prop :value)
-                                                     :pass    [:#cur_pass2]    (em/get-prop :value))]
+                                                     :pass    [:#cur_pass2]   (em/get-prop :value))]
                               (fm/letrem [[username roles] (get-user)
                                           res (request_email_token_rem username (:pass newemail) (:first newemail))]
                                 (js/alert res))))
         delete-account    (fn [e]
-                           nil) 
+                            (.preventDefault e)
+                            (if (js/confirm "This action cannot be undone, are you sure you want to proceed?")
+                              (let  [password (em/from (em/select [:#cur_pass3] (em/get-prop :value)))]
+                                (fm/letrem [[username roles] (get-user)
+                                            res (delete_account_rem username password)]
+                                  (if (= 1 res)
+                                    (do
+                                      (js/alert "Your account has been deleted")
+                                      (fm/letrem [res (auth-logout)]
+                                        (page-click "news" nil)))
+                                    (js/alert res))))))
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
         pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
