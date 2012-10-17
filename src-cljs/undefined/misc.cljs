@@ -30,6 +30,18 @@
 
 ;((ef/extr-multi-node #(js/console.log %1 (str %1))) child )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Request loading feedback ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(em/defaction start-load [content button]
+  [button]  (em/set-attr :disabled "disabled")
+  [content] (em/html-content "<img src='/img/loading.gif'></img>"))
+
+(em/defaction stop-load [content button result]
+  [button]  (em/remove-attr :disabled)
+  [content] (em/content result))
+
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Form validation ;;
 ;;;;;;;;;;;;;;;;;;;;;
