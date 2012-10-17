@@ -8,7 +8,7 @@
   (:use [clj-time.core]
         [undefined.config :only [get-config]]
         [undefined.misc   :only [get_keys
-                                 send_reset_pass send_activation send_change_email
+                                 send_email
                                  to_html]]
         [noir.fetch.remotes]
         [korma.db]
@@ -320,7 +320,7 @@
                              :birth       birth
                              :activation  act}))
             (do
-              (let [res           (send_activation email (url-encode act))
+              (let [res           (send_email :activation email (url-encode act))
                     [error code]  [(:error res) (:code res)]]
                 (if (= :SUCCESS error)
                   "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
@@ -360,13 +360,13 @@
       (insert reset_links
               (values {:userid userid :resetlink link})))))
 
-;TODO implement..duh.. (actually.. what else is there to do?)
 (defn check_reset_token [token]
   (let [[res] (select reset_links
                       (where {:resetlink (first token)}))]
-    (do
-      (println "\n\nCHECK_RESET_TOKEN PLACEHOLDER, returns the user id\n")
-      (:userid res))))
+    (if res
+      (select authors
+              (where {:uid (:userid res)}))
+      -1)))
 
 (defn reset_password [username]
   (let [[user] (select authors (where {:username username}))
@@ -375,7 +375,7 @@
     (if resetlink
       (do
         (store_reset_link (:uid user) resetlink)
-        (send_reset_pass (:email user) (url-encode resetlink))
+        (send_email :reset (:email user) (url-encode resetlink))
         "An email with instructions to reset your password has been sent.")
       "There's been an issue sending your reset link.")))
 
@@ -423,7 +423,7 @@
                                :newemail    newmail
                                :birth       birth
                                :updatelink  act})))
-            (let [res (send_change_email newmail (url-encode act))
+            (let [res (send_email :change newmail (url-encode act))
                   [error code]  [(:error res) (:code res)]]
               (if (= :SUCCESS error)
                 "A confirmation link was sent to your email. You can restart the process if you didn't get the email."

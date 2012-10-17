@@ -28,46 +28,32 @@
 (defn from_html [input] (if input (string/replace input #"<br/>" "\n")))
 (defn to_html   [input] (if input (string/replace input #"\n" "<br/>")))
 
-(defn send_activation [email act]
-  (let [smtp_pass (get-conf :smtp_pass)]
-    (ps/send-message ^{:host "smtp.gmail.com"
-                       :user "landolphia@undefined.re"
-                       :pass (if smtp_pass smtp_pass "placeholder")
-                       :ssl :yes!!!11}
-                     {:from "defined@undefined.re"
-                      :to email
-                      :subject "Welcome to undefined.re, please activate your account"
-                      :body (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
-                                 "http://undefined.re/activate/" act ;;FIXME use get conf for domain name
-                                 "\nThis link will expire in 24 hours."
-                                 "\n\nRegards,\n\n~The Undefined team.")})))
-
-(defn send_reset_pass [email resetlink]
-  (let [smtp_pass (get-conf :smtp_pass)]
-    (ps/send-message ^{:host "smtp.gmail.com"
-                       :user "landolphia@undefined.re"
-                       :pass (if smtp_pass smtp_pass "placeholder")
-                       :ssl :yes!!!11}
-                     {:from "defined@undefined.re"
-                      :to email
-                      :subject "Password reset request, undefined.re"
-                      :body (str "If you haven't requested your password to be reset please ignore this email.\n\n"
-                                 "To reset your password follow the link below\n"
-                                 "http://undefined.re/reset/" resetlink
-                                 "\nThis link will expire in 24 hours."
-                                 "\n\nRegards,\n\n~The Undefined team.")})))
-
-(defn send_change_email [email updatelink]
-  (let [smtp_pass (get-conf :smtp_pass)]
-    (ps/send-message ^{:host "smtp.gmail.com"
-                       :user "landolphia@undefined.re"
-                       :pass (if smtp_pass smtp_pass "placeholder")
-                       :ssl :yes!!!11}
-                     {:from "defined@undefined.re"
-                      :to email
-                      :subject "Email update request, undefined.re"
-                      :body (str "If you haven't requested your email to be changed please ignore this email.\n\n"
-                                 "To confirm your new email address follow the link below\n"
-                                 "http://undefined.re/update/" updatelink
-                                 "\nThis link will expire in 24 hours."
-                                 "\n\nRegards,\n\n~The Undefined team.")})))
+(defn send_email [typ email token]
+  (let [subject (case typ
+                 :activation  "Welcome to undefined.re, please activate your account"
+                 :reset       "Password reset request, undefined.re"
+                 :change      "Email update request, undefined.re")
+        body    (case typ
+                  :activation  (str "Thank you for registering an account at undefined.re,\n\nfollow the link below to activate your account and start posting comments\n"
+                                    "http://undefined.re/activate/" token 
+                                    "\nThis link will expire in 24 hours."
+                                    "\n\nRegards,\n\n~The Undefined team.")
+                  :reset       (str "If you haven't requested your password to be reset please ignore this email.\n\n"
+                                    "To reset your password follow the link below\n"
+                                    "http://undefined.re/reset/" token
+                                    "\nThis link will expire in 24 hours."
+                                    "\n\nRegards,\n\n~The Undefined team.")
+                  :change      (str "If you haven't requested your email to be changed please ignore this email.\n\n"
+                                    "To confirm your new email address follow the link below\n"
+                                    "http://undefined.re/update/" token
+                                    "\nThis link will expire in 24 hours."
+                                    "\n\nRegards,\n\n~The Undefined team."))
+        smtp_pass (get-conf :smtp_pass)]
+    (ps/send-message ^{:host  "smtp.gmail.com"
+                       :user  "landolphia@undefined.re"
+                       :pass  (if smtp_pass smtp_pass "placeholder")
+                       :ssl   :yes!!!11}
+                     {:from     "defined@undefined.re"
+                      :to       email
+                      :subject  subject
+                      :body     body})))
