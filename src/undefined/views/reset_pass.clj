@@ -9,11 +9,11 @@
 ;; token validation:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn reset-password []
-  (let [res (check_reset_token %3)]
+(defn reset-password [token & [args]]
+  (let [res (check_reset_token )]
     (if (= -1 res)
       (page "Invalid Link")
       (page reset-pass))))
 
 
-(add-page-init! "reset" reset-password) 
+(add-page-init! "reset" reset-password)
