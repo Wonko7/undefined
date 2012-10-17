@@ -9,11 +9,12 @@
 ;; token validation:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defn reset-password [token & [args]]
-  (let [res (check_reset_token )]
+(defn reset-password [user-id href token & [args]]
+  (let [res (check_reset_token token)]
     (if (= -1 res)
-      (page "Invalid Link")
-      (page reset-pass))))
+      (page "Reset your password" "This token is not valid.")
+      (page "Reset your password" (reset-pass)
+          {:metadata {:data-init-page "reset"}}))))
 
 
-(add-page-init! "reset" reset-password)
+(add-page-init! "reset" reset-password 1)

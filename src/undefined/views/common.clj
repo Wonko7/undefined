@@ -119,9 +119,8 @@
   [:ul.static-links] (html/append static-links)
   [:ul.tags]         (html/append tags))
 
-(html/defsnippet reset-pass "templates/reset_pass.html" [:div]
+(html/defsnippet reset-pass "templates/reset_pass.html" [:div#reset]
   [])
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;  Page skeleton:
