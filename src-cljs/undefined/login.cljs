@@ -40,10 +40,12 @@
   (em/at js/document
          [:#reset_pass]  (em/listen :click (fn [e]
                                              (.preventDefault e)
-                                             (let [username (em/from (em/select [:#inp_usr]) (em/get-prop :value))]
-                                               (if (js/confirm (str "Are you sure you want to reset your password?"))
-                                                 (fm/letrem [res (reset_pass_rem username)]
-                                                   (js/alert res))))))
+                                             (do
+                                               (start-load :#load_reset :#reset-pass)
+                                               (let [username (em/from (em/select [:#inp_usr]) (em/get-prop :value))]
+                                                 (if (js/confirm (str "Are you sure you want to reset your password?"))
+                                                   (fm/letrem [res (reset_pass_rem username)]
+                                                     (stop-load :#load_reset :#reset-pass res)))))))
          [:form]         (em/listen :submit (fn [e]
                                               (.preventDefault e)
                                               (let [id (em/from js/document
