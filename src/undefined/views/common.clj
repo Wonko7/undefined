@@ -1,6 +1,6 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
-        [undefined.auth :only [is-admin?]]
+        [undefined.auth :only [is-admin? username]]
         [undefined.config :only [get-config]]
         [undefined.misc :only [from_html]]
         [noir.core :only [defpage]]
@@ -114,8 +114,8 @@
          (html/content title)))
 
 (html/defsnippet right-content "templates/right-content.html" [:#right-content]
-  [static-links tags]
-  [:ul.login]        (html/append (li-link "Log In" {:href "login"}))
+  [user-id static-links tags]
+  [:ul.login-link]   (html/append (li-link (if user-id "Profile/Log Out" "Log In") {:href "login"}))
   [:ul.static-links] (html/append static-links)
   [:ul.tags]         (html/append tags))
 
@@ -129,11 +129,11 @@
 (declare page-inits)
 
 (html/deftemplate base "templates/index.html"
-  [content]
+  [user-id content]
   [:.admin]              (html/add-class "hidden")
   [:title]               (html/content "Undefined Development")
   [:#page-wrapper]       (html/append content)
-  [:#page-right-wrapper] (html/append ((page-inits "right-content") nil "right-content" nil)))
+  [:#page-right-wrapper] (html/append ((page-inits "right-content") user-id "right-content" nil)))
 
 (html/defsnippet page "templates/page.html" [:#page]
   [title content & [optional]]
@@ -200,6 +200,6 @@
         (let [args (map #(str "id" %) (range nb-args))
               syms (map symbol args)]
           `(defpage ~(str "/" name "/:" (apply str (interpose "/:" args))) {:keys [~@syms]}
-             (base (~fun (session/get :id) ~name [~@syms]))))
+             (base (session/get :id) (~fun (session/get :id) ~name [~@syms]))))
         `(defpage ~(str "/" name) []
-           (base (~fun (session/get :id) ~name nil))))))
+           (base (session/get :id) (~fun (session/get :id) ~name nil)))))) ;; FIXME let & use 1 session/get

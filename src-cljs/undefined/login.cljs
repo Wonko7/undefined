@@ -1,7 +1,6 @@
 (ns undef.login
   (:use [undef.pages :only [add-page-init! page-click]]
-        [undef.misc :only [show-admin-stuff]]
-        [undef.misc :only [restore-height
+        [undef.misc :only [show-admin-stuff restore-height update-login-link
                            mk-validate-deco mk-pass-val mk-pass2-val mk-email-val mk-user-val
                            start-load stop-load]])
   (:require [fetch.remotes :as remotes]
@@ -52,7 +51,8 @@
                                                                 :pass [:form :input.pass] (em/get-prop :value))]
                                                 (fm/letrem [[user roles] (auth-login id)]
                                                   (if user
-                                                    (page-click "news" nil)
+                                                    (do (update-login-link user)
+                                                        (page-click "news" nil))
                                                     (js/alert (str "log in failed. ")))))))))
 
 
