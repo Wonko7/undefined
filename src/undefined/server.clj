@@ -38,11 +38,10 @@
 
 (server/add-middleware friend/authenticate {:credential-fn (partial creds/bcrypt-credential-fn
                                                                     (fn [name]
-                                                                      (let [[user :as roles] (get_user :username name)]
+                                                                      (let [[{:keys [uid username pass] :as user} :as roles] (get_user :username name)]
                                                                         (when user
-                                                                          (into user
-                                                                                {:password (:pass user)
-                                                                                 :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))})))))
+                                                                          {:username username :uid uid :password pass
+                                                                           :roles (into #{} (map #(->> % :roles (keyword "undefined.server")) roles))}))))
                                             :workflows [#'fetch-workflow]
                                             :unauthorized-handler (constantly
                                                                     {:status 401
