@@ -20,15 +20,19 @@
         ;; form submit;
         submit-sign-up   (fn [e]
                            (.preventDefault e)
-                           (let [{:keys [user pass mail]} (em/from js/document
-                                                                   :user [:#inp_usr]   (em/get-prop :value)
-                                                                   :pass [:#new_pass]  (em/get-prop :value)
-                                                                   :mail [:#new_email] (em/get-prop :value))]
-                             (fm/letrem [result (sign-up-rem user mail pass)]
-                               (em/at js/document
-                                      [:#sign-up-form] (em/chain (em/resize :curwidth 0 200)
-                                                                 (em/html-content result)
-                                                                 (restore-height 200))))))]
+                           (do
+                             (start-load :#load_signup :#submit-sign-up)
+                             (let [{:keys [user pass mail]} (em/from js/document
+                                                                     :user [:#inp_usr]   (em/get-prop :value)
+                                                                     :pass [:#new_pass]  (em/get-prop :value)
+                                                                     :mail [:#new_email] (em/get-prop :value))]
+                               (fm/letrem [result (sign-up-rem user mail pass)]
+                                 (do
+                                   (stop-load :#load_signup :#submit-sign-up "")
+                                   (em/at js/document
+                                          [:#sign-up-form] (em/chain (em/resize :curwidth 0 200)
+                                                                     (em/html-content result)
+                                                                     (restore-height 200))))))))]
     (em/at js/document
            [:#inp_usr]      (em/listen :input (mk-user-val submit-validator))
            [:#new_pass]     (em/listen :input (mk-pass-val submit-validator pass2-val))
