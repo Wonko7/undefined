@@ -14,7 +14,8 @@
     (if (= -1 res)
       (page "Reset your password" "This token is not valid.")
       (page "Reset your password" (reset-pass)
-          {:metadata {:data-init-page "reset"}}))))
+          {:metadata {:data-init-page "reset"
+                      :data-init-args token}}))))
 
 
 (add-page-init! "reset" reset-password 1)

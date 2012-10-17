@@ -345,15 +345,27 @@
 ;; Reset password ;;
 ;;;;;;;;;;;;;;;;;;;;
 
-(defn reset_pass [username newpass]
-  ;TODO check token
-  "do shit here")
-
 (defn remove_expired_reset_links []
   (let [treshold (minus (now) (days 1) (hours -2))]
     (delete reset_links
-            (where {:birth [< (psqltime treshold)]})))) 
+            (where {:birth [< (psqltime treshold)]}))))
 
+(defn reset_pass [newpass token]
+  (let [res (dry-run (select reset_links
+                      (where {:resetlink (first token)})))]
+    (println (str "\nres: "res))))
+;    (if res 
+;      (do
+;        (remove_expired_reset_links)
+;        (transaction
+;          (delete reset_links
+;                  (where {:userid userid}))
+;          (update authors
+;                  (set-fields {:password (nc/encrypt newpass)})
+;                  (where {:uid userid})))
+;        "Your password has been updated.")
+;      "Your password could not be updated.")))
+;
 ;Erases any previous demands made for the same user
 (defn store_reset_link [userid link]
   (do
@@ -551,6 +563,6 @@
 
 (defremote delete_account_rem [username password] (delete_account username password))
 
-(defremote reset_pass_rem [username newpass] (reset_pass username newpass))
+(defremote reset_pass2_rem [newpass token] (reset_pass newpass token))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))
