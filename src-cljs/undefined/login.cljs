@@ -79,11 +79,11 @@
                                       (fm/letrem [[username roles] (get-user)
                                                   res (request_email_token_rem username (:pass newemail) (:first newemail))]
                                         (stop-load :#load_email :#submit-email res)))))
-        delete-account          (fn [e]
+        delete-account          (fn [e];FIXME need multiple stop-load
                                   (.preventDefault e)
                                   (do
                                     (start-load :#load_del :#submit-del)
-                                    (if (js/confirm "This action cannot be undone, are you sure you want to proceed?")
+                                    (when (js/confirm "This action cannot be undone, are you sure you want to proceed?")
                                       (let  [password (em/from (em/select [:#cur_pass3]) (em/get-prop :value))]
                                         (fm/letrem [[username roles] (get-user)
                                                     res (delete_account_rem username password)]

@@ -345,6 +345,10 @@
 ;; Reset password ;;
 ;;;;;;;;;;;;;;;;;;;;
 
+(defn reset_pass [username newpass]
+  ;TODO check token
+  "do shit here")
+
 (defn remove_expired_reset_links []
   (let [treshold (minus (now) (days 1) (hours -2))]
     (delete reset_links
@@ -546,5 +550,7 @@
 (defremote request_email_token_rem [username password newemail] (create_new_email_token username password newemail))
 
 (defremote delete_account_rem [username password] (delete_account username password))
+
+(defremote reset_pass_rem [username newpass] (reset_pass username newpass))
 
 ;(defremote tag_cloud_rem [] (tag_cloud))
