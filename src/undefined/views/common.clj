@@ -120,7 +120,8 @@
   [:ul.tags]         (html/append tags))
 
 (html/defsnippet reset-pass "templates/reset_pass.html" [:div]
-  [])
+  [content]
+  [:div]    (html/content content))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
