@@ -12,6 +12,14 @@
 ;;;    Helpers;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(em/defaction start-load [content button]
+  [button]  (em/set-attr :disabled "disabled")
+  [content] (em/html-content "<img src='/img/loading.gif'></img>"))
+
+(em/defaction stop-load [content button result]
+  [button]  (em/remove-attr :disabled)
+  [content] (em/content result))
+
 (defn mk-validate-deco [submit-sel val-sels]
   (let [nb-vals (count val-sels)]
     (fn [elt valid?]
@@ -125,34 +133,40 @@
 (defn profile-page [href & [args]]
   (let [update-password   (fn [e]
                             (.preventDefault e)
-                            (let  [newpass  (em/from js/document
-                                                     :first    [:#new_pass]  (em/get-prop :value)
-                                                     :second   [:#conf_pass] (em/get-prop :value)
-                                                     :old      [:#cur_pass1] (em/get-prop :value))]
-                              (fm/letrem  [[username roles] (get-user)
-                                           res (update_pass_rem username (:old newpass) (:first newpass))]
-                                (js/alert res))))
+                            (do
+                              (start-load :#load_pass :#submit-pass)
+                              (let  [newpass  (em/from js/document
+                                                       :first    [:#new_pass]  (em/get-prop :value)
+                                                       :second   [:#conf_pass] (em/get-prop :value)
+                                                       :old      [:#cur_pass1] (em/get-prop :value))]
+                                (fm/letrem  [[username roles] (get-user)
+                                             res (update_pass_rem username (:old newpass) (:first newpass))]
+                                  (stop-load :#load_pass :#submit-pass res)))))
         update-email      (fn [e]
                             (.preventDefault e)
-                            (let  [newemail (em/from js/document
-                                                     :first   [:#new_email]   (em/get-prop :value)
-                                                     :second  [:#conf_email]  (em/get-prop :value)
-                                                     :pass    [:#cur_pass2]   (em/get-prop :value))]
-                              (fm/letrem [[username roles] (get-user)
-                                          res (request_email_token_rem username (:pass newemail) (:first newemail))]
-                                (js/alert res))))
+                            (do
+                              (start-load :#load_email :#submit-email)
+                              (let  [newemail (em/from js/document
+                                                       :first   [:#new_email]   (em/get-prop :value)
+                                                       :second  [:#conf_email]  (em/get-prop :value)
+                                                       :pass    [:#cur_pass2]   (em/get-prop :value))]
+                                (fm/letrem [[username roles] (get-user)
+                                            res (request_email_token_rem username (:pass newemail) (:first newemail))]
+                                  (stop-load :#load_email :#submit-email res)))))
         delete-account    (fn [e]
                             (.preventDefault e)
-                            (if (js/confirm "This action cannot be undone, are you sure you want to proceed?")
-                              (let  [password (em/from (em/select [:#cur_pass3]) (em/get-prop :value))]
-                                (fm/letrem [[username roles] (get-user)
-                                            res (delete_account_rem username password)]
-                                  (if (= 1 res)
-                                    (do
-                                      (js/alert "Your account has been deleted")
-                                      (fm/letrem [res (auth-logout)]
-                                        (page-click "news" nil)))
-                                    (js/alert res))))))
+                            (do
+                              (start-load :#load_del :#submit-del)
+                              (if (js/confirm "This action cannot be undone, are you sure you want to proceed?")
+                                (let  [password (em/from (em/select [:#cur_pass3]) (em/get-prop :value))]
+                                  (fm/letrem [[username roles] (get-user)
+                                              res (delete_account_rem username password)]
+                                    (if (= 1 res)
+                                      (do
+                                        (js/alert "Your account has been deleted")
+                                        (fm/letrem [res (auth-logout)]
+                                          (page-click "news" nil)))
+                                      (stop-load :#load_del :#submit-del res)))))))
         ;; validators;
         email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
         pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
