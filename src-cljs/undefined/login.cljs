@@ -123,59 +123,59 @@
 
 
 (defn profile-page [href & [args]]
-  (let [update-password   (fn [e]
-                            (.preventDefault e)
-                            (let  [newpass  (em/from js/document
-                                                     :first    [:#new_pass]  (em/get-prop :value)
-                                                     :second   [:#conf_pass] (em/get-prop :value)
-                                                     :old      [:#cur_pass1] (em/get-prop :value))]
-                              (fm/letrem  [[username roles] (get-user)
-                                           res (update_pass_rem username (:old newpass) (:first newpass))]
-                                (js/alert res))))
-        update-email      (fn [e]
-                            (.preventDefault e)
-                            (let  [newemail (em/from js/document
-                                                     :first   [:#new_email]   (em/get-prop :value)
-                                                     :second  [:#conf_email]  (em/get-prop :value)
-                                                     :pass    [:#cur_pass2]   (em/get-prop :value))]
-                              (fm/letrem [[username roles] (get-user)
-                                          res (request_email_token_rem username (:pass newemail) (:first newemail))]
-                                (js/alert res))))
-        delete-account    (fn [e]
-                            (.preventDefault e)
-                            (if (js/confirm "This action cannot be undone, are you sure you want to proceed?")
-                              (let  [password (em/from (em/select [:#cur_pass3]) (em/get-prop :value))]
-                                (fm/letrem [[username roles] (get-user)
-                                            res (delete_account_rem username password)]
-                                  (if (= 1 res)
-                                    (do
-                                      (js/alert "Your account has been deleted")
-                                      (fm/letrem [res (auth-logout)]
-                                        (page-click "news" nil)))
-                                    (js/alert res))))))
+  (let [update-password         (fn [e]
+                                  (.preventDefault e)
+                                  (let  [newpass  (em/from js/document
+                                                           :first    [:#new_pass]  (em/get-prop :value)
+                                                           :second   [:#conf_pass] (em/get-prop :value)
+                                                           :old      [:#cur_pass1] (em/get-prop :value))]
+                                    (fm/letrem  [[username roles] (get-user)
+                                                 res (update_pass_rem username (:old newpass) (:first newpass))]
+                                      (js/alert res))))
+        update-email            (fn [e]
+                                  (.preventDefault e)
+                                  (let  [newemail (em/from js/document
+                                                           :first   [:#new_email]   (em/get-prop :value)
+                                                           :second  [:#conf_email]  (em/get-prop :value)
+                                                           :pass    [:#cur_pass2]   (em/get-prop :value))]
+                                    (fm/letrem [[username roles] (get-user)
+                                                res (request_email_token_rem username (:pass newemail) (:first newemail))]
+                                      (js/alert res))))
+        delete-account          (fn [e]
+                                  (.preventDefault e)
+                                  (if (js/confirm "This action cannot be undone, are you sure you want to proceed?")
+                                    (let  [password (em/from (em/select [:#cur_pass3]) (em/get-prop :value))]
+                                      (fm/letrem [[username roles] (get-user)
+                                                  res (delete_account_rem username password)]
+                                        (if (= 1 res)
+                                          (do
+                                            (js/alert "Your account has been deleted")
+                                            (fm/letrem [res (auth-logout)]
+                                              (page-click "news" nil)))
+                                          (js/alert res))))))
         ;; validators;
-        email-submit-validator   (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
-        pass-submit-validator    (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
-        del-submit-validator     (mk-validate-deco :#submit-del   #{:#cur_pass3})
-        pass2-val                (mk-pass2-val :#conf_pass :#new_pass pass-submit-validator)]
+        email-submit-validator  (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
+        pass-submit-validator   (mk-validate-deco :#submit-pass  #{:#cur_pass1 :#new_pass :#conf_pass})
+        del-submit-validator    (mk-validate-deco :#submit-del   #{:#cur_pass3})
+        pass2-val               (mk-pass2-val :#conf_pass :#new_pass pass-submit-validator)]
     (em/at js/document
            ;; email validation;
-           [:#cur_pass2]    (em/listen :input (mk-pass-val email-submit-validator))
-           [:#new_email]    (em/listen :input (mk-email-val email-submit-validator))
+           [:#cur_pass2]        (em/listen :input (mk-pass-val email-submit-validator))
+           [:#new_email]        (em/listen :input (mk-email-val email-submit-validator))
            ;; password validation;
-           [:#cur_pass1]    (em/listen :input (mk-pass-val pass-submit-validator))
-           [:#new_pass]     (em/listen :input (mk-pass-val pass-submit-validator pass2-val))
-           [:#conf_pass]    (em/listen :input pass2-val)
+           [:#cur_pass1]        (em/listen :input (mk-pass-val pass-submit-validator))
+           [:#new_pass]         (em/listen :input (mk-pass-val pass-submit-validator pass2-val))
+           [:#conf_pass]        (em/listen :input pass2-val)
            ;; delete validation;
-           [:#cur_pass3]    (em/listen :input (mk-pass-val del-submit-validator))
+           [:#cur_pass3]        (em/listen :input (mk-pass-val del-submit-validator))
            ;; forms;
-           [:#page :a.logout]     (em/listen :click (fn [e]
-                                                      (.preventDefault e)
-                                                      (fm/letrem [res (auth-logout)]
-                                                        (page-click "news" nil))))
-           [:form#update_pass]    (em/listen :submit #(update-password %))
-           [:form#update_email]   (em/listen :submit #(update-email %))
-           [:form#del_account]    (em/listen :submit #(delete-account %)))))
+           [:#page :a.logout]   (em/listen :click (fn [e]
+                                                    (.preventDefault e)
+                                                    (fm/letrem [res (auth-logout)]
+                                                      (page-click "news" nil))))
+           [:form#update_pass]  (em/listen :submit #(update-password %))
+           [:form#update_email] (em/listen :submit #(update-email %))
+           [:form#del_account]  (em/listen :submit #(delete-account %)))))
 
 
 (add-page-init! "login" login-page)
