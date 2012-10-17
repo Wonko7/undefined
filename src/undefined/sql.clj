@@ -351,21 +351,21 @@
             (where {:birth [< (psqltime treshold)]}))))
 
 (defn reset_pass [newpass token]
-  (let [res (dry-run (select reset_links
-                      (where {:resetlink (first token)})))]
-    (println (str "\nres: "res))))
-;    (if res 
-;      (do
-;        (remove_expired_reset_links)
-;        (transaction
-;          (delete reset_links
-;                  (where {:userid userid}))
-;          (update authors
-;                  (set-fields {:password (nc/encrypt newpass)})
-;                  (where {:uid userid})))
-;        "Your password has been updated.")
-;      "Your password could not be updated.")))
-;
+  (let [[res]     (select reset_links
+                    (where {:resetlink token}))
+        userid  (:userid res)]
+    (if res 
+      (do
+        (remove_expired_reset_links)
+        (transaction
+          (delete reset_links
+                  (where {:userid userid}))
+          (update authors
+                  (set-fields {:password (nc/encrypt newpass)})
+                  (where {:uid userid})))
+        "Your password has been updated.")
+      "Your password could not be updated.")))
+
 ;Erases any previous demands made for the same user
 (defn store_reset_link [userid link]
   (do
