@@ -10,10 +10,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn reset-password [token & [args]]
-  (let [res (check_reset_token )]
+  (let [res (check_reset_token token)]
     (if (= -1 res)
-      (page "Invalid Link")
-      (page reset-pass))))
+      (page "Reset your password" "Invalid Link")
+      (page "Reset your password" reset-pass))))
 
 
-(add-page-init! "reset" reset-password)
+(add-page-init! "reset" #(reset-password %))
