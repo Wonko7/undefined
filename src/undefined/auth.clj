@@ -47,9 +47,6 @@
 (defn userid [id]
   (:uid (friend/current-authentication id)))
 
-(defn useremail [id]
-  (:email (friend/current-authentication id)))
-
 (defn is-admin? [id]
   (let [{:keys [roles]} (friend/current-authentication id)]
     (:undefined.server/admin roles)))

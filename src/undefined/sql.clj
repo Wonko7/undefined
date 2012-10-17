@@ -224,16 +224,16 @@
           (where {:artid id})))
 
 (defn get_user [& {:keys [id username email] :or {id nil username nil email nil}}]
-  (let [[col op val] (if username   [:username ilike username]
-                       (if id          [:authors.uid = id]
-                         [:email ilike email]))]
+  (let [stat (if username   {:username [ilike username]}  
+               (if id          {:authors.uid id}
+                 {:email [ilike email]}))]
     (select authors
             (join author_roles (= :author_roles.authid :authors.uid))
             (join roles (= :roles.uid :author_roles.roleid))
             (fields [:authors.uid :uid] [:authors.username :username] [:authors.password :pass] [:authors.email :email]
                     [:authors.salt :salt] [:roles.label :roles])
 
-            (where {col [op val]}))))
+            (where stat))))
 
 (defn select_projects [] (select projects))
 

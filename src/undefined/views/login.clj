@@ -1,14 +1,14 @@
 (ns undefined.views.login
   (:use [undefined.views.common :only [base page login profile sign-up add-page-init!]]
-        [undefined.auth :only [username useremail]]
-        [undefined.sql :only [create_temp_user]]
+        [undefined.auth :only [username userid]]
+        [undefined.sql :only [create_temp_user get_user]]
         [noir.fetch.remotes]))
 
 ;FIXME find a way to save password for chrome/safari
 (defn login-page [user-id name & [args]]
   (if user-id
     (page (username user-id)
-          (profile (username user-id) (useremail user-id))
+          (profile (username user-id) (:email (first (get_user :id (userid user-id)))))
           {:metadata {:data-init-page "profile"
                       :data-init-args (username user-id)}})
     (page "Log In:"
