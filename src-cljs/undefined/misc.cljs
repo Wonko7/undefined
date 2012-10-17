@@ -30,6 +30,9 @@
 
 ;((ef/extr-multi-node #(js/console.log %1 (str %1))) child )
 
+(defn update-login-link [name]
+  (em/at js/document [:.login-link :a] (em/content (if name "Profile/Log Out" "Log In"))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Request loading feedback ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -55,7 +58,7 @@
         (em/at elt (em/do-> (em/add-class "invalid-inp")
                             (em/remove-class "valid-inp"))))
       (let [vals (em/from js/document
-                          :#inp_usr   [:#inp_usr]   (em/get-attr :class)
+                          :#inp_usr   [:#inp_usr]   (em/get-attr :class) ;; FIXME this should be generated from val-sels
                           :#cur_pass1 [:#cur_pass1] (em/get-attr :class)
                           :#cur_pass2 [:#cur_pass2] (em/get-attr :class)
                           :#cur_pass3 [:#cur_pass3] (em/get-attr :class)
@@ -67,14 +70,12 @@
                      (count)
                      (= nb-vals))]
         (if valid?
-          (em/at js/document [submit-sel] (em/do->
-                                            (em/remove-attr :disabled)
-                                            (em/add-class "valid-sub")
-                                            (em/remove-class "invalid-sub")))
-          (em/at js/document [submit-sel] (em/do->
-                                            (em/set-attr :disabled "disabled")
-                                            (em/add-class "invalid-sub")
-                                            (em/remove-class "valid-sub"))))))))
+          (em/at js/document [submit-sel] (em/do-> (em/remove-attr :disabled)
+                                                   (em/add-class "valid-sub")
+                                                   (em/remove-class "invalid-sub")))
+          (em/at js/document [submit-sel] (em/do-> (em/set-attr :disabled "disabled")
+                                                   (em/add-class "invalid-sub")
+                                                   (em/remove-class "valid-sub"))))))))
 
 (defn mk-pass-val [validator & [pass2-val]]
   (if pass2-val
