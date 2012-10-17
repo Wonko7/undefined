@@ -15,6 +15,11 @@
           (login)
           {:metadata {:data-init-page "login"}})))
 
+(defn logout-redirect [user-id name & [args]]
+  (page "Logging out"
+          (login)
+          {:metadata {:data-init-page "logout"}}))
+
 (defn sign-up-page [user-id href & [args]]
   (page "Sign up:"
         (sign-up)
@@ -25,5 +30,6 @@
        (create_temp_user user mail pass)
        "</div>"))
 
+(add-page-init! "logout" logout-redirect)
 (add-page-init! "login" login-page)
 (add-page-init! "sign-up" sign-up-page)

@@ -117,7 +117,11 @@
            [:form#update_email] (em/listen :submit #(update-email %))
            [:form#del_account]  (em/listen :submit #(delete-account %)))))
 
+(defn logout-redirect [href & [args]]
+  (update-login-link nil)
+  (page-click "news" nil))
 
 (add-page-init! "login" login-page)
 (add-page-init! "profile" profile-page)
 (add-page-init! "sign-up" sign-up-page)
+(add-page-init! "logout" logout-redirect)
