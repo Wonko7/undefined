@@ -187,8 +187,6 @@
             (aggregate (count :*) :cnt)
             (where {:artid artid}))))
 
-(println (str "\n\nComment count: " (comment_count :article 1) "/" (comment_count :comment 22)))
-
 (defn select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
