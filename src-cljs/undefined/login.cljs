@@ -52,6 +52,7 @@
                                                      (stop-load :#load_reset :#reset-pass res)))))))
          [:form]         (em/listen :submit (fn [e]
                                               (.preventDefault e)
+                                              (start-load :#load_reset :#submit_login)
                                               (let [id (em/from js/document
                                                                 :user [:form :input.user] (em/get-prop :value)
                                                                 :pass [:form :input.pass] (em/get-prop :value))]
@@ -59,7 +60,7 @@
                                                   (if user
                                                     (do (update-login-link user)
                                                         (page-click "news" nil))
-                                                    (js/alert (str "log in failed. ")))))))))
+                                                    (stop-load :#load_reset :#submit_login "Login failed"))))))))
 
 
 (defn profile-page [href & [args]]
