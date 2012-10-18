@@ -159,7 +159,7 @@
     (let [[users]     (select authors (where {:email email}))
           [newmail]   (select newemail_links (where {:newemail email}))
           [tempusers] (select temp_authors (where {:email email}))]
-      (not (or users newmail (and change tempusers)))))
+      (not (or users newmail (and change tempusers))))))
 
 ;SELECT
 ;
@@ -187,7 +187,7 @@
   (let [artid (if article
                 article
                 (:artid (first (select comments
-                                (where {:uid comment})))))]
+                                       (where {:uid comment})))))]
     (select comments
             (aggregate (count :*) :cnt)
             (where {:artid artid}))))
@@ -292,7 +292,7 @@
                                :salt     "NO SALT"
                                :birth    (:birth newuser)}))
         [role]  (select   roles
-                      (where {:label "peon"}))]
+                        (where {:label "peon"}))]
     (do
       (insert author_roles
               (values {:authid (:uid user)
@@ -320,9 +320,9 @@
     "Your username is too long (> 50 characters)."
     (if (first (get_user :username username))
       "This username isn't available anymore."
-      (if (first (get_user :email email))
-        "This email has already been used to create an account."
+      (if (is-email-available? email);(first (get_user :email email))
         (do
+          (flush_temp_tables)
           (delete temp_authors (where {:username username})) 
           (delete temp_authors (where {:email email}))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
@@ -340,7 +340,8 @@
                     [error code]  [(:error res) (:code res)]]
                 (if (= :SUCCESS error)
                   "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
-                  (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
+                  (str "There was an error sending your activation link.[" error ", "code "]"))))))
+        "This email has already been used to create an account."))))
 
 (defn update_password [username oldpass newpass]
   (let [[user] (select authors (where {:username username}))]
@@ -363,7 +364,7 @@
 
 (defn reset_pass [newpass token]
   (let [[res]     (select reset_links
-                    (where {:resetlink token}))
+                          (where {:resetlink token}))
         userid  (:userid res)]
     (if res 
       (do
@@ -434,8 +435,7 @@
          act    (nc/encrypt (str username newmail birth))]
     (if user
       (if (nc/compare password (:pass user))
-        (if (first (get_user :email newmail))
-          "This email has already been used to create an account."
+        (if (is-email-available? newmail true);(first (get_user :email newmail))
           (do
             (transaction
               (delete newemail_links
@@ -449,7 +449,8 @@
                   [error code]  [(:error res) (:code res)]]
               (if (= :SUCCESS error)
                 "A confirmation link was sent to your email. You can restart the process if you didn't get the email."
-                (str "There was an error sending your confirmation link.[" error ", "code "]")))))
+                (str "There was an error sending your confirmation link.[" error ", "code "]"))))
+          "This email has already been used to create an account.")
         "Your password is incorrect.")
       "This user doesn't exist.")))
 
