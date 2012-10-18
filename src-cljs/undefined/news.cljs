@@ -99,5 +99,4 @@
       [:.btn_upd_comment] (em/listen :click (update-button :comment))
       [:form.new-comment] (em/listen :submit new-comment))))
 
-
 (add-page-init! "news" newspage)
