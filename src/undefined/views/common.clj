@@ -115,7 +115,7 @@
 
 (html/defsnippet right-content "templates/right-content.html" [:#right-content]
   [user-id static-links tags]
-  [:ul.login-link]   (html/append (li-link (if user-id "Profile/Log Out" "Log In") {:href "login"}))
+  [:ul.login-link]   (html/append (li-link (if user-id "Profile" "Log In") {:href "login"}))
   [:ul.static-links] (html/append static-links)
   [:ul.tags]         (html/append tags))
 

@@ -31,7 +31,7 @@
 ;((ef/extr-multi-node #(js/console.log %1 (str %1))) child )
 
 (defn update-login-link [name]
-  (em/at js/document [:.login-link :a] (em/content (if name "Profile/Log Out" "Log In"))))
+  (em/at js/document [:.login-link :a] (em/content (if name "Profile" "Log In"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Request loading feedback ;;
