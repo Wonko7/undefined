@@ -16,24 +16,6 @@
         [undefined.content :only [str-to-int url-encode url-decode]]
         [undefined.auth :only [is-admin? is-author? userid]]))
 
-;;;;;;;;;;;;;
-;; Helpers ;;
-;;;;;;;;;;;;;
-
-;TODO add to_psql_time wrapper (js+time-format+time-zone?)
-
-(defn ilike [k v]
-  (eng/infix k "ILIKE" v))
-
-;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
-
-(defn psqltime [t] (java.sql.Timestamp/valueOf
-                     (time-format/unparse
-                       (time-format/formatter "yyyy-MM-dd HH:mm:ss")
-                       t)))
-
-;;;;;;;;;;;;;
-
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
                            :password "password";"droptableusers"
@@ -144,6 +126,36 @@
   (entity-fields :uid :title :body :birth)
   (database undef-db))
 
+
+;;;;;;;;;;;;;
+;; Helpers ;;
+;;;;;;;;;;;;;
+
+;TODO add to_psql_time wrapper (js+time-format+time-zone?)
+
+(defn ilike [k v]
+  (eng/infix k "ILIKE" v))
+
+;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+
+(defn psqltime [t] (java.sql.Timestamp/valueOf
+                     (time-format/unparse
+                       (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+                       t)))
+
+(defn flush_temp_tables []
+  (let [treshold (minus (now) (days 1) (hours -2))]
+    (transaction
+      (delete temp_authors
+              (where {:birth [< (psqltime treshold)]}))
+      (delete reset_links
+              (where {:birth [< (psqltime treshold)]}))
+      (delete newemail_links
+              (where {:birth [< (psqltime treshold)]})))))
+
+(defn is-email-available? [email]
+  )
+
 ;SELECT
 ;
 (defn articles_by_tags [id off n]
@@ -167,10 +179,10 @@
           (order :articles.birth :DESC)))
 
 (defn comment_count [& {:keys [comment article] :or {comment nil article nil}}]
-  (let [artid (if comment
-                comment
+  (let [artid (if article
+                article
                 (:artid (first (select comments
-                                (where {:uid article})))))]
+                                (where {:uid comment})))))]
     (select comments
             (aggregate (count :*) :cnt)
             (where {:artid artid}))))
@@ -266,11 +278,6 @@
 ;; SIGNUP ;;
 ;;;;;;;;;;;;
 
-(defn remove_expired_temp_authors []
-  (let [treshold (minus (now) (days 1) (hours -2))]
-    (delete temp_authors
-            (where {:birth [< (psqltime treshold)]}))))
-
 (defn promote_temp_user [username]
   (let [newuser (first (select temp_authors (where {:username username})))
         user  (insert  authors
@@ -295,7 +302,7 @@
 (defn activate_user [link]
   (do
     (println (str "\n\nValidation token: " (first link) "\n\n"))
-    (remove_expired_temp_authors)
+    (flush_temp_tables)
     (let [res (first (select temp_authors (where {:activation (first link)})))]
       (if res
         (do
@@ -304,15 +311,15 @@
         "This link is not valid."))))
 
 (defn create_temp_user [username email password]
-  (if (first (get_user :username username))
-    "This username isn't available anymore."
-    (if (first (get_user :email email))
-      "This email has already been used to create an account."
-      (if (first (get_temp_user :email email))
-        "You should have already received an activation email." ;; FIXME yeah well resend anyway? maybe the user accidently deleted it?
+  (if (> (.length username) 50)
+    "Your username is too long (> 50 characters)."
+    (if (first (get_user :username username))
+      "This username isn't available anymore."
+      (if (first (get_user :email email))
+        "This email has already been used to create an account."
         (do
-          (if (first (get_temp_user :username username))  ;FIXME don't need to check, just delete
-            (delete temp_authors (where {:username username})))
+          (delete temp_authors (where {:username username})) 
+          (delete temp_authors (where {:email email}))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
                 act   (nc/encrypt (str username email birth))]
             ;(println (url-encode act))
@@ -349,18 +356,13 @@
 ;; Reset password ;;
 ;;;;;;;;;;;;;;;;;;;;
 
-(defn remove_expired_reset_links []
-  (let [treshold (minus (now) (days 1) (hours -2))]
-    (delete reset_links
-            (where {:birth [< (psqltime treshold)]}))))
-
 (defn reset_pass [newpass token]
   (let [[res]     (select reset_links
                     (where {:resetlink token}))
         userid  (:userid res)]
     (if res 
       (do
-        (remove_expired_reset_links)
+        (flush_temp_tables)
         (transaction
           (delete reset_links
                   (where {:userid userid}))
@@ -373,7 +375,7 @@
 ;Erases any previous demands made for the same user
 (defn store_reset_link [userid link]
   (do
-    (remove_expired_reset_links)
+    (flush_temp_tables)
     (transaction
       (delete reset_links
               (where {:userid userid}))
@@ -411,14 +413,9 @@
     (delete newemail_links
             (where {:userid userid}))))
 
-(defn remove_expired_newemail_links []
-  (let [treshold (minus (now) (days 1) (hours -2))]
-    (delete newemail_links
-            (where {:birth [< (psqltime treshold)]}))))
-
 (defn check_update_email_token [link]
   (do
-    (remove_expired_newemail_links)
+    (flush_temp_tables)
     (let [res (first (select newemail_links (where {:updatelink (first link)})))]
       (if res
         (do
@@ -475,9 +472,11 @@
       artid)))
 
 (defn insert_comment [id author content]
-  (if (userid author)
-    (let [res (insert comments (values {:artid id :authid (userid author) :content (to_html content)}))]
-      (:uid res))))
+  (if (< (.length content) 10001)
+    (if (userid author)
+      (let [res (insert comments (values {:artid id :authid (userid author) :content (to_html content)}))]
+        (:uid res)))
+    -1))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths
