@@ -30,9 +30,10 @@
                                  (if (not= 0 result)
                                    (stop-load :#load_signup :#submit-sign-up result)
                                    (em/at js/document
-                                          [:#sign-up-form] (em/chain (em/resize :curwidth 0 200)
-                                                                     (em/html-content  "<div>An activation link was sent to your email. You can redo the sign up process if you didn't get the email.</div>")
-                                                                     (restore-height 200))))))))]
+                                          [:#load_signup]   (em/substitute "")
+                                          [:#sign-up-form]  (em/chain (em/resize :curwidth 0 200)
+                                                                      (em/html-content  "<div>An activation link was sent to your email. You can redo the sign up process if you didn't get the email.</div>")
+                                                                      (restore-height 200))))))))]
     (em/at js/document
            [:#inp_usr]      (em/listen :input (mk-user-val submit-validator))
            [:#new_pass]     (em/listen :input (mk-pass-val submit-validator pass2-val))
