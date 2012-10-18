@@ -310,8 +310,9 @@
       "This username isn't available anymore."
       (if (first (get_user :email email))
         "This email has already been used to create an account."
-        (do 
-          (delete temp_authors (where {:username username}))
+        (do
+          (delete temp_authors (where {:username username})) 
+          (delete temp_authors (where {:email email}))
           (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
                 act   (nc/encrypt (str username email birth))]
             ;(println (url-encode act))
