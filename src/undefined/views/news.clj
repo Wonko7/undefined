@@ -53,8 +53,11 @@
             (new-comment article-uid 0 nil)
             (please-log-in))))
 
-(defn mk-comment-count [uid]
-  (str "Comment Count: " (:cnt (first (comment_count :article uid)))))
+(defn mk-comment-count [type uid]
+  (str "Comment Count: " (:cnt (first (comment_count type uid)))))
+
+(defremote mk-comment-count-rem [uid]
+  (mk-comment-count :comment uid))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -66,7 +69,7 @@
            title (format-date birth) (remove-unsafe-tags body)
            {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article uid)))}
            (str "Authors: " (get_labels (authors_by_article uid) :username))
-           (mk-comment-count uid) comments))
+           (mk-comment-count :article uid) comments))
 
 (defn news-page [user-id href type [arg1 arg2]]
   (let [[arg1 arg2]                [(str-to-int arg1) (str-to-int arg2)]

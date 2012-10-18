@@ -65,7 +65,7 @@
                                 (html/add-class "hidden")))
 
 (html/defsnippet about "templates/about.html" [:.about]
-  [])
+ [])
 
 (html/defsnippet login "templates/login.html" [:form.login]
   [])

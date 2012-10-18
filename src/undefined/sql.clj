@@ -563,8 +563,6 @@
       (delete_article id (str-to-int uid))
       (delete_comment id (str-to-int uid)))))
 
-(defremote comment_count_rem [& {:keys [comment article] :or {comment nil article nil}}] (comment_count comment article))
-
 (defremote update_pass_rem [id oldpass newpass] (update_password id oldpass newpass))
 (defremote reset_pass_rem [username] (reset_password username))
 
