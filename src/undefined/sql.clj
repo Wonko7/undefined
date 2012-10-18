@@ -339,7 +339,7 @@
               (let [res           (send_email :activation email (url-encode act))
                     [error code]  [(:error res) (:code res)]]
                 (if (= :SUCCESS error)
-                  "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
+                  0
                   (str "There was an error sending your activation link.[" error ", "code "]"))))))
         "This email has already been used to create an account."))))
 
