@@ -56,8 +56,8 @@
 (defn mk-comment-count [type uid]
   (str "Comment Count: " (:cnt (first (comment_count type uid)))))
 
-(defremote mk-comment-count-rem [uid]
-  (mk-comment-count :comment uid))
+(defremote mk-comment-count-rem [type uid]
+  (mk-comment-count type uid))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

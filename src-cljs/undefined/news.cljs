@@ -8,10 +8,10 @@
 
 
 (defn newspage [href & [args]]
-  (letfn [(update-comment-count-li [uid]
-            (fm/letrem [link-text (mk-comment-count-rem uid)]
+  (letfn [(update-comment-count-li [type uid]
+            (fm/letrem [link-text (mk-comment-count-rem type uid)]
               (em/at js/document [:.comment-count :a] (em/content link-text))))
-          
+
           (submit [type sel uid]
             (letfn [(animate-replace [div]
                       (em/at js/document
@@ -62,7 +62,7 @@
                     (em/at js/document [(str "#" stype "_" uid)] (em/chain (em/resize :curwidth 0 200)
                                                                            (em/remove-node)))
                     (when (= type :comment)
-                      (update-comment-count-li uid)))))))
+                      (update-comment-count-li :article res)))))))
 
           (update-button [type]
             (fn [e]
@@ -87,7 +87,7 @@
                   (do
                     (fm/letrem [res (insert_comment_rem id body)
                                 div (get-page "fetch-comment-div" res)]
-                    (update-comment-count-li res)
+                    (update-comment-count-li :comment res)
                       (em/at form [:textarea] (em/set-prop :value ""))
                       (em/at form (em/before div))
                       (em/at js/document [(str "#comment_" res)] (em/chain (em/resize :curwidth 0 0)
