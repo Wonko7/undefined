@@ -99,7 +99,9 @@
                                             (do
                                               (js/alert "Your account has been deleted")
                                               (fm/letrem [res (auth-logout)]
-                                                (page-click "news" nil)))
+                                                (do
+                                                  (update-login-link nil)
+                                                  (page-click "news" nil))))
                                             (stop-load :#load_del :#submit-del res)))))))
         ;; validators;
         email-submit-validator  (mk-validate-deco :#submit-email #{:#new_email :#cur_pass2})
