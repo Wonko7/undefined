@@ -4,7 +4,7 @@
             [clj-time.coerce :as time-conv]
             [clj-time.format :as time-format]
             [postal.core :as ps])
-  (:use [undefined.config :only [get-conf]]))
+  (:use [undefined.config :only [get-config]]))
 
 (def w3c-date-format (time-format/formatter "yyyy-MM-dd'T'HH:mm:ss'Z'"))
 (def date-format (time-format/formatter "EEEE, dd MMMM yyyy - HH:mm"))
@@ -48,7 +48,7 @@
                                     "http://undefined.re/update/" token
                                     "\nThis link will expire in 24 hours."
                                     "\n\nRegards,\n\n~The Undefined team."))
-        smtp_pass (get-conf :smtp_pass)]
+        smtp_pass (:smtp_pass (get-config))]
     (ps/send-message ^{:host  "smtp.gmail.com"
                        :user  "landolphia@undefined.re"
                        :pass  (if smtp_pass smtp_pass "placeholder")

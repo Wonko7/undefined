@@ -1,7 +1,6 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
         [undefined.auth :only [is-admin? is-author? username]]
-        [undefined.config :only [get-config]]
         [undefined.misc :only [from_html]]
         [noir.core :only [defpage]]
         [undefined.misc :only [options_list]])
