@@ -153,6 +153,8 @@
       (delete newemail_links
               (where {:birth [< (psqltime treshold)]})))))
 
+(defn is-email-available? [email]
+  )
 
 ;SELECT
 ;
@@ -177,13 +179,15 @@
           (order :articles.birth :DESC)))
 
 (defn comment_count [& {:keys [comment article] :or {comment nil article nil}}]
-  (let [artid (if comment
-                comment
+  (let [artid (if article
+                article
                 (:artid (first (select comments
-                                (where {:uid article})))))]
+                                (where {:uid comment})))))]
     (select comments
             (aggregate (count :*) :cnt)
             (where {:artid artid}))))
+
+(println (str "\n\nComment count: " (comment_count :article 1) "/" (comment_count :comment 22)))
 
 (defn select_article [id]
   (select article_categories
