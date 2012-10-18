@@ -166,10 +166,16 @@
           (where {:categories.label cat})
           (order :articles.birth :DESC)))
 
-(defn comment_count_by_article [id]
-  (select comments
-          (aggregate (count :*) :cnt)
-          (where {:artid id})))
+(defn comment_count [& {:keys [comment article] :or {comment nil article nil}}]
+  (let [artid (if comment
+                comment
+                (:artid (first (select comments
+                                (where {:uid article})))))]
+    (select comments
+            (aggregate (count :*) :cnt)
+            (where {:artid artid}))))
+
+(println (str "\n\n By comment id 1: " (comment_count :comment 1) "\n\nBy art 1: " (comment_count :article 1)))
 
 (defn select_article [id]
   (select article_categories
@@ -554,7 +560,7 @@
       (delete_article id (str-to-int uid))
       (delete_comment id (str-to-int uid)))))
 
-(defremote comment_count_rem [id] (comment_count_by_article id))
+(defremote comment_count_rem [& {:keys [comment article] :or {comment nil article nil}}] (comment_count comment article))
 
 (defremote update_pass_rem [id oldpass newpass] (update_password id oldpass newpass))
 (defremote reset_pass_rem [username] (reset_password username))
