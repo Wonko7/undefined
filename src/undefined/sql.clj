@@ -175,8 +175,6 @@
             (aggregate (count :*) :cnt)
             (where {:artid artid}))))
 
-(println (str "\n\n By comment id 1: " (comment_count :comment 1) "\n\nBy art 1: " (comment_count :article 1)))
-
 (defn select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
@@ -306,31 +304,32 @@
         "This link is not valid."))))
 
 (defn create_temp_user [username email password]
-  (if (first (get_user :username username))
-    "This username isn't available anymore."
-    (if (first (get_user :email email))
-      "This email has already been used to create an account."
-      (if (first (get_temp_user :email email))
-        "You should have already received an activation email." ;; FIXME yeah well resend anyway? maybe the user accidently deleted it?
-        (do
-          (if (first (get_temp_user :username username))  ;FIXME don't need to check, just delete
-            (delete temp_authors (where {:username username})))
-          (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
-                act   (nc/encrypt (str username email birth))]
-            ;(println (url-encode act))
-            (insert temp_authors
-                    (values {:username    username
-                             :email       email
-                             :password    (nc/encrypt password)
-                             :salt        "NO SALT"
-                             :birth       birth
-                             :activation  act}))
-            (do
-              (let [res           (send_email :activation email (url-encode act))
-                    [error code]  [(:error res) (:code res)]]
-                (if (= :SUCCESS error)
-                  "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
-                  (str "There was an error sending your activation link.[" error ", "code "]"))))))))))
+  (if (> (.length username) 50)
+    "Your username is too long (> 50 characters)."
+    (if (first (get_user :username username))
+      "This username isn't available anymore."
+      (if (first (get_user :email email))
+        "This email has already been used to create an account."
+        (if (first (get_temp_user :email email))
+          "You should have already received an activation email." ;; FIXME yeah well resend anyway? maybe the user accidently deleted it?
+          (do 
+            (delete temp_authors (where {:username username}))
+            (let [birth (psqltime (from-time-zone (now) (time-zone-for-offset -2)))
+                  act   (nc/encrypt (str username email birth))]
+              ;(println (url-encode act))
+              (insert temp_authors
+                      (values {:username    username
+                               :email       email
+                               :password    (nc/encrypt password)
+                               :salt        "NO SALT"
+                               :birth       birth
+                               :activation  act}))
+              (do
+                (let [res           (send_email :activation email (url-encode act))
+                      [error code]  [(:error res) (:code res)]]
+                  (if (= :SUCCESS error)
+                    "An activation link was sent to your email. You can redo the sign up process if you didn't get the email."
+                    (str "There was an error sending your activation link.[" error ", "code "]")))))))))))
 
 (defn update_password [username oldpass newpass]
   (let [[user] (select authors (where {:username username}))]
@@ -477,9 +476,11 @@
       artid)))
 
 (defn insert_comment [id author content]
-  (if (userid author)
-    (let [res (insert comments (values {:artid id :authid (userid author) :content (to_html content)}))]
-      (:uid res))))
+  (if (< (.length content) 10001)
+    (if (userid author)
+      (let [res (insert comments (values {:artid id :authid (userid author) :content (to_html content)}))]
+        (:uid res)))
+    -1))
 
 ;UPDATE
 ;TODO don't delete/re-insert tags/cats/auths

@@ -4,7 +4,7 @@
         [undefined.sql :only [select_articles select_article select_authors select_categories
                               tags_by_article articles_by_tags select_tags
                               categories_by_article authors_by_article
-                              comments_by_article comment_count_by_article select_comment]]
+                              comments_by_article comment_count select_comment]]
         [undefined.auth :only [is-admin? is-author? username]]
         [undefined.misc :only [format-date get_labels]]
         [undefined.content :only [remove-unsafe-tags str-to-int]]
@@ -54,7 +54,7 @@
             (please-log-in))))
 
 (defn mk-comment-count [uid]
-  (str "Comment Count: " (:cnt (first (comment_count_by_article uid)))))
+  (str "Comment Count: " (:cnt (first (comment_count :article uid)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

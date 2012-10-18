@@ -70,7 +70,7 @@
 		<div class="article">
 			<div class="article-title"></div>
 			<form id="sign-up-form" action="/sign-up" method="get">
-				<input class="invalid-inp" placeholder="Username" id="inp_usr" type="text" name="username" />
+				<input class="invalid-inp" placeholder="Username" id="inp_usr" type="text" name="username" maxlength="50" />
 				<input class="invalid-inp" placeholder="Password" type="password" id="new_pass" />
 				<input class="invalid-inp" placeholder="Password Confirmation" type="password" id="conf_pass" />
 				<input class="invalid-inp" placeholder="Email Address" type="text" id="new_email" />
@@ -80,7 +80,7 @@
 		<hr>
 		<div class="article">
 			<ul>
-				<li> Username must be at least 3 characters long and mustn't contain whitespace </li>
+				<li> Username must be between 3 and 50 characters long and mustn't contain whitespace </li>
 				<li> Password must be at least 8 characters long </li>
 				<li> Email address will be used to activate your account </li>
 				<li> Your username will be secured only once you have activated your account </li>
