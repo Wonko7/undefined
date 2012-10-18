@@ -16,24 +16,6 @@
         [undefined.content :only [str-to-int url-encode url-decode]]
         [undefined.auth :only [is-admin? is-author? userid]]))
 
-;;;;;;;;;;;;;
-;; Helpers ;;
-;;;;;;;;;;;;;
-
-;TODO add to_psql_time wrapper (js+time-format+time-zone?)
-
-(defn ilike [k v]
-  (eng/infix k "ILIKE" v))
-
-;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
-
-(defn psqltime [t] (java.sql.Timestamp/valueOf
-                     (time-format/unparse
-                       (time-format/formatter "yyyy-MM-dd HH:mm:ss")
-                       t)))
-
-;;;;;;;;;;;;;
-
 (defdb undef-db (postgres {:db "undefined"
                            :user "web"
                            :password "password";"droptableusers"
@@ -143,6 +125,34 @@
   (pk :uid)
   (entity-fields :uid :title :body :birth)
   (database undef-db))
+
+
+;;;;;;;;;;;;;
+;; Helpers ;;
+;;;;;;;;;;;;;
+
+;TODO add to_psql_time wrapper (js+time-format+time-zone?)
+
+(defn ilike [k v]
+  (eng/infix k "ILIKE" v))
+
+;(def psqltime (time-format/formatter "yyyy-MM-dd HH:mm:ss"))
+
+(defn psqltime [t] (java.sql.Timestamp/valueOf
+                     (time-format/unparse
+                       (time-format/formatter "yyyy-MM-dd HH:mm:ss")
+                       t)))
+
+(defn flush_temp_tables []
+  (let [treshold (minus (now) (days 1) (hours -2))]
+    (transaction
+      (delete temp_authors
+              (where {:birth [< (psqltime treshold)]}))
+      (delete reset_links
+              (where {:birth [< (psqltime treshold)]}))
+      (delete newemail_links
+              (where {:birth [< (psqltime treshold)]})))))
+
 
 ;SELECT
 ;
@@ -266,11 +276,6 @@
 ;; SIGNUP ;;
 ;;;;;;;;;;;;
 
-(defn remove_expired_temp_authors []
-  (let [treshold (minus (now) (days 1) (hours -2))]
-    (delete temp_authors
-            (where {:birth [< (psqltime treshold)]}))))
-
 (defn promote_temp_user [username]
   (let [newuser (first (select temp_authors (where {:username username})))
         user  (insert  authors
@@ -295,7 +300,7 @@
 (defn activate_user [link]
   (do
     (println (str "\n\nValidation token: " (first link) "\n\n"))
-    (remove_expired_temp_authors)
+    (flush_temp_tables)
     (let [res (first (select temp_authors (where {:activation (first link)})))]
       (if res
         (do
@@ -349,18 +354,13 @@
 ;; Reset password ;;
 ;;;;;;;;;;;;;;;;;;;;
 
-(defn remove_expired_reset_links []
-  (let [treshold (minus (now) (days 1) (hours -2))]
-    (delete reset_links
-            (where {:birth [< (psqltime treshold)]}))))
-
 (defn reset_pass [newpass token]
   (let [[res]     (select reset_links
                     (where {:resetlink token}))
         userid  (:userid res)]
     (if res 
       (do
-        (remove_expired_reset_links)
+        (flush_temp_tables)
         (transaction
           (delete reset_links
                   (where {:userid userid}))
@@ -373,7 +373,7 @@
 ;Erases any previous demands made for the same user
 (defn store_reset_link [userid link]
   (do
-    (remove_expired_reset_links)
+    (flush_temp_tables)
     (transaction
       (delete reset_links
               (where {:userid userid}))
@@ -411,14 +411,9 @@
     (delete newemail_links
             (where {:userid userid}))))
 
-(defn remove_expired_newemail_links []
-  (let [treshold (minus (now) (days 1) (hours -2))]
-    (delete newemail_links
-            (where {:birth [< (psqltime treshold)]}))))
-
 (defn check_update_email_token [link]
   (do
-    (remove_expired_newemail_links)
+    (flush_temp_tables)
     (let [res (first (select newemail_links (where {:updatelink (first link)})))]
       (if res
         (do
