@@ -5,7 +5,10 @@
         [noir.core :only [pre-route]]
         [undefined.config :only [get-config]])
   (:require [net.cgrand.enlive-html :as html]
-            [cemerick.friend :as friend]))
+            [cemerick.friend :as friend]
+            [noir.session :as session]
+            [noir.fetch.remotes]
+            [digest :as hash-fns]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53,3 +56,29 @@
 
 (defn is-author? [actual-id test-id]
   (= (userid actual-id) test-id))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; captcha fun;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn get-captcha []
+  (let [captcha-url (html/html-resource (java.net.URL. (str "http://api.textcaptcha.com/" "demo")))
+        captcha     (group-by :tag (html/select captcha-url #{[:question] [:answer]}))
+        question    (first (:content (first (:question captcha))))
+        answers     (mapcat :content (:answer captcha))]
+    [question answers]))
+
+(defremote get-captcha-rem []
+  (let [[question answers] (get-captcha)]
+    (session/put! :captcha answers)
+    question))
+
+(defremote validate-captcha [answer]
+  (let [answer (hash-fns/md5 answer)
+        valid? (some #(= answer %) (session/get :capcha))]
+    (println valid?)
+    (println answer (session/get :capcha))))
+
+(get-captcha)
