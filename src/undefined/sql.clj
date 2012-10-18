@@ -153,7 +153,7 @@
       (delete newemail_links
               (where {:birth [< (psqltime treshold)]})))))
 
-(defn is-email-available? [email]
+(defn is-email-available? [email] ; TODO MAKE SURE I flush the temp tables before saying an adress is reserved
   )
 
 ;SELECT
@@ -311,7 +311,7 @@
         "This link is not valid."))))
 
 (defn create_temp_user [username email password]
-  (if (> (.length username) 50)
+  (if (> (.-length username) 50)
     "Your username is too long (> 50 characters)."
     (if (first (get_user :username username))
       "This username isn't available anymore."
@@ -519,9 +519,9 @@
 
 (defn delete_comment [id uid]
   (let [[com] (select comments (where {:uid uid}))]
-    (if (or (is-author? id (:authid com)) (is-admin? id))
-      (delete comments
-              (where {:uid uid})))))
+    (if true; (or (is-author? id (:authid com)) (is-admin? id))
+      (:artid (delete comments
+                      (where {:uid uid}))))))
 
 (defn delete_account [username password]
   (let [[user] (get_user :username username)]
