@@ -1,6 +1,6 @@
 (ns undefined.views.common
   (:use [noir.fetch.remotes]
-        [undefined.auth :only [is-admin? username]]
+        [undefined.auth :only [is-admin? is-author? username]]
         [undefined.config :only [get-config]]
         [undefined.misc :only [from_html]]
         [noir.core :only [defpage]]
@@ -43,14 +43,18 @@
                                    (html/set-attr :href url))
   [:.comments]          (html/append comments))
 
-(html/defsnippet user-comment "templates/article.html" [:div.comment_wrapper]
-  [uid is-admin? author date-birth date-edit comment]
+(defsnippet-bind user-comment "templates/article.html" [:div.comment_wrapper]
+  [uid user-id auth-id author date-birth date-edit comment]
+  [author? (is-author? user-id auth-id)
+   admin?  (or author? (is-admin? user-id))]
+
   [:.comment_wrapper] (html/set-attr :id (str "comment_" uid))
-  [:.author]          (html/content author)
+  [:.author]          (html/do-> (html/content author)
+                                 (html/add-class (when author? "is-author")))
   [:.date-birth]      (html/content (str "Added: " date-birth))
   [:.date-edit]       (html/content (when date-edit (str " - Edited: " date-edit)))
   [:.content]         (html/content comment)
-  [:.edit]            (html/append (when is-admin?
+  [:.edit]            (html/append (when admin?
                                      [{:tag :button :attrs {:class "btn_upd_comment btn_upd_c_and_a" :value (str uid)} :content "Edit"}
                                       {:tag :button :attrs {:class "btn_del_comment btn_del_c_and_a" :value (str uid)} :content "Delete"}])))
 
