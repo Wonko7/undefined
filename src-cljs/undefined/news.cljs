@@ -8,7 +8,11 @@
 
 
 (defn newspage [href & [args]]
-  (letfn [(submit [type sel uid]
+  (letfn [(update-comment-count-li [uid]
+            (fm/letrem [link-text (mk-comment-count-rem uid)]
+              (em/at js/document [:.comment-count :a] (em/content link-text))))
+          
+          (submit [type sel uid]
             (letfn [(animate-replace [div]
                       (em/at js/document
                              [sel] (em/chain (em/resize :curwidth 0 200) ;; FIXME might make a function out of this (defn up-down-change-elt [& funs to add to chain])
@@ -47,7 +51,8 @@
                       (js/alert "Your comment is empty...")
                       (fm/letrem [res (update_comment_rem uid comment)
                                   div (get-page "refresh-comment-div" uid)]
-                        (animate-replace div))))))))
+                        (animate-replace div)
+                        (update-comment-count-li uid))))))))
 
           (delete-button [type]
             (fn [e]
@@ -56,7 +61,9 @@
                 (when (js/confirm (str "This will PERMANENTLY erase the " stype))
                   (fm/letrem [res (delete_rem type uid)]
                     (em/at js/document [(str "#" stype "_" uid)] (em/chain (em/resize :curwidth 0 200)
-                                                                           (em/remove-node))))))))
+                                                                           (em/remove-node)))
+                    (when (= type :comment)
+                      (update-comment-count-li uid)))))))
 
           (update-button [type]
             (fn [e]
@@ -81,6 +88,7 @@
                 (do
                   (fm/letrem [res (insert_comment_rem id body)
                               div (get-page "fetch-comment-div" res)]
+                    (update-comment-count-li res)
                     (em/at form [:textarea] (em/set-prop :value ""))
                     (em/at form (em/before div))
                     (em/at js/document [(str "#comment_" res)] (em/chain (em/resize :curwidth 0 0)

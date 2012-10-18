@@ -175,8 +175,6 @@
             (aggregate (count :*) :cnt)
             (where {:artid artid}))))
 
-(println (str "\n\n By comment id 1: " (comment_count :comment 1) "\n\nBy art 1: " (comment_count :article 1)))
-
 (defn select_article [id]
   (select article_categories
           (fields :articles.title :articles.body :articles.birth :articles.uid)
@@ -559,8 +557,6 @@
     (if (= type :article)
       (delete_article id (str-to-int uid))
       (delete_comment id (str-to-int uid)))))
-
-(defremote comment_count_rem [& {:keys [comment article] :or {comment nil article nil}}] (comment_count comment article))
 
 (defremote update_pass_rem [id oldpass newpass] (update_password id oldpass newpass))
 (defremote reset_pass_rem [username] (reset_password username))

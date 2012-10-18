@@ -4,7 +4,7 @@
         [undefined.sql :only [select_articles select_article select_authors select_categories
                               tags_by_article articles_by_tags select_tags
                               categories_by_article authors_by_article
-                              comments_by_article comment_count_by_article select_comment]]
+                              comments_by_article comment_count select_comment]]
         [undefined.auth :only [is-admin? is-author? username]]
         [undefined.misc :only [format-date get_labels]]
         [undefined.content :only [remove-unsafe-tags str-to-int]]
@@ -53,8 +53,11 @@
             (new-comment article-uid 0 nil)
             (please-log-in))))
 
-(defn mk-comment-count [uid]
-  (str "Comment Count: " (:cnt (first (comment_count_by_article uid)))))
+(defn mk-comment-count [type uid]
+  (str "Comment Count: " (:cnt (first (comment_count type uid)))))
+
+(defremote mk-comment-count-rem [uid]
+  (mk-comment-count :comment uid))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -66,7 +69,7 @@
            title (format-date birth) (remove-unsafe-tags body)
            {:tag :span :content (cons "Tags: " (mapcat mk-tag-link (tags_by_article uid)))}
            (str "Authors: " (get_labels (authors_by_article uid) :username))
-           (mk-comment-count uid) comments))
+           (mk-comment-count :article uid) comments))
 
 (defn news-page [user-id href type [arg1 arg2]]
   (let [[arg1 arg2]                [(str-to-int arg1) (str-to-int arg2)]
