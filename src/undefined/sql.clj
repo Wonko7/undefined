@@ -153,14 +153,13 @@
       (delete newemail_links
               (where {:birth [< (psqltime treshold)]})))))
 
-(defn is-email-available? [email] ; TODO MAKE SURE I flush the temp tables before saying an adress is reserved
+(defn is-email-available? [email & change]
   (do
     (flush_temp_tables)
-    (let [users   (select authors (where {:email email}))
-          newmail (select newemail_links (where {:newemail email}))]
-      (not (or users newmail)))))
-
-(println (str "\n\n Available: " (is-email-available? "cyrille.dssigny@gmail.com") "\n\n"))
+    (let [[users]     (select authors (where {:email email}))
+          [newmail]   (select newemail_links (where {:newemail email}))
+          [tempusers] (select temp_authors (where {:email email}))]
+      (not (or users newmail (and change tempusers)))))
 
 ;SELECT
 ;
