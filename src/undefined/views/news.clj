@@ -41,7 +41,7 @@
   (a-link (str (:label tag) " ") {:href (str "/tag/" (:uid tag))}))
 
 (defn mk-comment [user-id comment]
-  (user-comment (:uid comment) (or (is-author? user-id (:authid comment)) (is-admin? user-id))
+  (user-comment (:uid comment) user-id (:authid comment)
                 (:author comment)
                 (format-date (:birth comment)) (when (:edit comment)
                                                  (format-date (:edit comment)))
