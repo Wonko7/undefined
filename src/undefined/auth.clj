@@ -72,13 +72,14 @@
 
 (defremote get-captcha-rem []
   (let [[question answers] (get-captcha)]
+    (println answers)
     (session/put! :captcha answers)
     question))
 
 (defremote validate-captcha [answer]
-  (let [answer (hash-fns/md5 answer)
-        valid? (some #(= answer %) (session/get :capcha))]
+  (let [answer (hash-fns/md5 answer) ;; fixme: -> force lowercase, trim space
+        valid? (some #(= answer %) (session/get :captcha))]
     (println valid?)
-    (println answer (session/get :capcha))))
+    (println answer (session/get :captcha))))
 
 (get-captcha)

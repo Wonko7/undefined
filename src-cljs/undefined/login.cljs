@@ -15,9 +15,12 @@
 
 (defn sign-up-page [href & [args]]
   (fm/letrem [q (get-captcha-rem)]
-    (js/at js/document
+    (em/at js/document
            [:#cap-question] (em/content q)
-           [:#cap-form]     (em/listen :submit #(do (.preventDefault %) (validate-captcha (em/from js/document [:#cap-answer] (em/get-prop :value))) ))))
+           [:#cap-form]     (em/listen :submit (fn [e]
+                                                 (.preventDefault e)
+                                                 (fm/letrem [res (validate-captcha (:v (em/from js/document :v [:#cap-answer] (em/get-prop :value))))]
+                                                   (js/console.log res))))))
   (let [;; validators;
         submit-validator (mk-validate-deco :#submit-sign-up #{:#inp_usr :#new_pass :#conf_pass :#new_email})
         pass2-val        (mk-pass2-val :#conf_pass :#new_pass submit-validator)

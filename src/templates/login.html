@@ -72,18 +72,20 @@
 	<div class="whole-article">
 		<div class="article" id="captcha">
 			<div class="article-title">Proof of Sentience:</div>
-			Please answer the following question before signing up:<br>
+			<!-- Please answer the following question before signing up:<br> -->
+			<center>
 			<span id="cap-question"></span>
+			</center>
 			<form id="cap-form" action="/sign-up" method="get">
-				<input class="valid-inp" placeholder="Username" id="cap-answer" type="text" name="captcha" maxlength="50" />
-				<input class="valid-sub" type="submit" value="Sign Up" disabled="disabled" id="captcha-check" />
+				<input class="valid-inp" placeholder="" id="cap-answer" type="text" name="captcha" maxlength="50" />
+				<input class="valid-sub" type="submit" value="I am sentient" id="captcha-check" />
 			</form>
 		</div>
 		<hr>
 
 		<div class="article hidden">
 			<div class="article-title">Your info:</div>
-			<form id="sign-up-form" action="/sign-up" method="get">
+			<form id="sign-up-form" action="/skynet-overlord" method="get">
 				<input class="invalid-inp" placeholder="Username" id="inp_usr" type="text" name="username" maxlength="50" />
 				<input class="invalid-inp" placeholder="Password" type="password" id="new_pass" />
 				<input class="invalid-inp" placeholder="Password Confirmation" type="password" id="conf_pass" />
