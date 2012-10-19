@@ -404,7 +404,7 @@
       (do
         (store_reset_link (:uid user) resetlink)
         (send_email :reset (:email user) (url-encode resetlink))
-        "An email with instructions to reset your password has been sent.")
+        "An email with instructions to reset your password has been sent (check your spam folder).")
       "There's been an issue sending your reset link.")))
 
 ;;;;;;;;;;;;;;;;;;
@@ -448,7 +448,7 @@
             (let [res (send_email :change newmail (url-encode act))
                   [error code]  [(:error res) (:code res)]]
               (if (= :SUCCESS error)
-                "A confirmation link was sent to your email. You can restart the process if you didn't get the email."
+                "A confirmation link was sent to your email. You can restart the process if you didn't get the email (check your spam folder)."
                 (str "There was an error sending your confirmation link.[" error ", "code "]"))))
           "This email has already been used to create an account.")
         "Your password is incorrect.")

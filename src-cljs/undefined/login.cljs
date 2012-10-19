@@ -51,7 +51,7 @@
                                    (em/at js/document
                                           [:#load_signup]   (em/substitute "")
                                           [:#sign-up-form]  (em/chain (em/resize :curwidth 0 200)
-                                                                      (em/html-content  "<div>An activation link was sent to your email. You can redo the sign up process if you didn't get the email.</div>")
+                                                                      (em/html-content  "<div>An activation link was sent to your email. You can redo the sign up process if you didn't get the email (check your spam folder).</div>")
                                                                       (restore-height 200))))))))]
     (em/at js/document
            [:#inp_usr]      (em/listen :input (mk-user-val submit-validator))
