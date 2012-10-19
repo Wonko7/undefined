@@ -52,7 +52,7 @@
                                  (html/add-class (when author? "is-author")))
   [:.date-birth]      (html/content (str "Added: " date-birth))
   [:.date-edit]       (html/content (when date-edit (str " - Edited: " date-edit)))
-  [:.content]         (html/content comment)
+  [:.content]         (html/html-content comment)
   [:.edit]            (html/append (when admin?
                                      [{:tag :button :attrs {:class "btn_upd_comment btn_upd_c_and_a" :value (str uid)} :content "Edit"}
                                       {:tag :button :attrs {:class "btn_del_comment btn_del_c_and_a" :value (str uid)} :content "Delete"}])))
