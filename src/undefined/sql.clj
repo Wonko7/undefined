@@ -32,7 +32,7 @@
   [config]
   (def undef-db (create-db (postgres {:db (:database config)
                                       :user "web"
-                                      :password "password" ;droptableusers"
+                                      :password (:db-pass config)
                                       ;;OPTIONAL KEYS
                                       :host "127.0.0.1"
                                       :port "5432"

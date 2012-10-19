@@ -76,7 +76,7 @@
 
 
 (defn get-captcha []
-  (let [captcha-url (html/html-resource (java.net.URL. (str "http://api.textcaptcha.com/" (:captcha_pass (get-config)))))
+  (let [captcha-url (html/html-resource (java.net.URL. (str "http://api.textcaptcha.com/" (:captcha-pass (get-config)))))
         captcha     (group-by :tag (html/select captcha-url #{[:question] [:answer]}))
         question    (first (:content (first (:question captcha))))
         answers     (mapcat :content (:answer captcha))]

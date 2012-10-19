@@ -73,4 +73,4 @@
                                                 :ssl-port (:ssl-port conf)
                                                 ;; gen with: keytool -keystore keystore -alias jetty -genkey -keyalg RSA
                                                 :keystore "keystore"
-                                                :key-password "123456"}})))
+                                                :key-password (:keystore-pass conf)}})))
