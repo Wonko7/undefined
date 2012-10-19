@@ -23,7 +23,6 @@
                                              (.preventDefault e)
                                              (start-load :#cap-question :#captcha-check)
                                              (fm/letrem [q (validate-captcha (:v (em/from js/document :v [:#cap-answer] (em/get-prop :value))))]
-                                               (js/console.log q)
                                                (if q
                                                  (stop-load :#cap-question :#captcha-check q)
                                                  (do
