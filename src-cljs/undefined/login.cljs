@@ -14,13 +14,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn sign-up-page [href & [args]]
+  ;; captcha
+  (start-load :#cap-question :#captcha-check)
   (fm/letrem [q (get-captcha-rem)]
+    (stop-load :#cap-question :#captcha-check q)
     (em/at js/document
-           [:#cap-question] (em/content q)
-           [:#cap-form]     (em/listen :submit (fn [e]
-                                                 (.preventDefault e)
-                                                 (fm/letrem [res (validate-captcha (:v (em/from js/document :v [:#cap-answer] (em/get-prop :value))))]
-                                                   (js/console.log res))))))
+           [:#cap-form] (em/listen :submit (fn [e]
+                                             (.preventDefault e)
+                                             (start-load :#cap-question :#captcha-check)
+                                             (fm/letrem [q (validate-captcha (:v (em/from js/document :v [:#cap-answer] (em/get-prop :value))))]
+                                               (js/console.log q)
+                                               (if q
+                                                 (stop-load :#cap-question :#captcha-check q)
+                                                 (do
+                                                   (stop-load :#cap-question :#captcha-check "Welcome fellow sentient being!")
+                                                   (em/at js/document [:#sign-up] (em/chain (em/resize :curwidth 0 200)
+                                                                                            (ef/chainable-standard #(em/at %
+                                                                                                                           [:#captcha]             (em/add-class "hidden")
+                                                                                                                           [:#hidden-sign-up-form] (em/remove-class "hidden")))
+                                                                                            (restore-height 200))))))))))
   (let [;; validators;
         submit-validator (mk-validate-deco :#submit-sign-up #{:#inp_usr :#new_pass :#conf_pass :#new_email})
         pass2-val        (mk-pass2-val :#conf_pass :#new_pass submit-validator)
@@ -29,11 +41,12 @@
                            (.preventDefault e)
                            (do
                              (start-load :#load_signup :#submit-sign-up)
-                             (let [{:keys [user pass mail]} (em/from js/document
-                                                                     :user [:#inp_usr]   (em/get-prop :value)
-                                                                     :pass [:#new_pass]  (em/get-prop :value)
-                                                                     :mail [:#new_email] (em/get-prop :value))]
-                               (fm/letrem [result (sign-up-rem user mail pass)]
+                             (let [{:keys [user pass mail captcha]} (em/from js/document
+                                                                             :captcha [:#cap-answer] (em/get-prop :value)
+                                                                             :user    [:#inp_usr]    (em/get-prop :value)
+                                                                             :pass    [:#new_pass]   (em/get-prop :value)
+                                                                             :mail    [:#new_email]  (em/get-prop :value))]
+                               (fm/letrem [result (sign-up-rem captcha user mail pass)]
                                  (if (not= 0 result)
                                    (stop-load :#load_signup :#submit-sign-up result)
                                    (em/at js/document
@@ -45,7 +58,7 @@
            [:#inp_usr]      (em/listen :input (mk-user-val submit-validator))
            [:#new_pass]     (em/listen :input (mk-pass-val submit-validator pass2-val))
            [:#conf_pass]    (em/listen :input pass2-val)
-           [:#new_email]    (em/listen :input (mk-pass-val submit-validator))
+           [:#new_email]    (em/listen :input (mk-email-val submit-validator))
            [:#sign-up-form] (em/listen :submit submit-sign-up))))
 
 (defn login-page [href & [args]]

@@ -3,11 +3,12 @@
         [noir.response :only [redirect]]
         [noir.request :only [ring-request]]
         [noir.core :only [pre-route]]
+        [clojure.string :only [lower-case trim]]
         [undefined.config :only [get-config]])
   (:require [net.cgrand.enlive-html :as html]
             [cemerick.friend :as friend]
-            [noir.session :as session]
             [noir.fetch.remotes]
+            [noir.session :as session]
             [digest :as hash-fns]))
 
 
@@ -63,8 +64,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+(defn captcha-hash [answer]
+  (-> answer
+    trim
+    lower-case
+    hash-fns/md5))
+
+(defn captcha-check [answer answers]
+  (let [answer (captcha-hash answer)]
+    (some #(= answer %) answers)))
+
+
 (defn get-captcha []
-  (let [captcha-url (html/html-resource (java.net.URL. (str "http://api.textcaptcha.com/" "demo")))
+  (let [captcha-url (html/html-resource (java.net.URL. (str "http://api.textcaptcha.com/" (:captcha_pass (get-config)))))
         captcha     (group-by :tag (html/select captcha-url #{[:question] [:answer]}))
         question    (first (:content (first (:question captcha))))
         answers     (mapcat :content (:answer captcha))]
@@ -72,14 +84,11 @@
 
 (defremote get-captcha-rem []
   (let [[question answers] (get-captcha)]
-    (println answers)
     (session/put! :captcha answers)
     question))
 
 (defremote validate-captcha [answer]
-  (let [answer (hash-fns/md5 answer) ;; fixme: -> force lowercase, trim space
-        valid? (some #(= answer %) (session/get :captcha))]
-    (println valid?)
-    (println answer (session/get :captcha))))
-
-(get-captcha)
+  (when (not (captcha-check answer (session/get :captcha)))
+    (let [[question answers] (get-captcha)]
+      (session/put! :captcha answers)
+      question)))

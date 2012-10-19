@@ -78,7 +78,7 @@
   [:.profile :.username]  (html/content name)
   [:.profile :#new_email] (html/set-attr :placeholder mail))
 
-(html/defsnippet sign-up "templates/login.html" [:div.sign-up]
+(html/defsnippet sign-up "templates/login.html" [:#sign-up]
   [])
 
 (html/defsnippet new-article "templates/new_article.html" [:form.newarticle]

@@ -1,8 +1,9 @@
 (ns undefined.views.login
   (:use [undefined.views.common :only [base page login profile sign-up add-page-init!]]
-        [undefined.auth :only [username userid]]
+        [undefined.auth :only [username userid captcha-check]]
         [undefined.sql :only [create_temp_user get_user]]
-        [noir.fetch.remotes]))
+        [noir.fetch.remotes])
+  (:require [noir.session :as session]))
 
 ;FIXME find a way to save password for chrome/safari
 (defn login-page [user-id name & [args]]
@@ -17,19 +18,21 @@
 
 (defn logout-redirect [user-id name & [args]]
   (page "Logging out"
-          (login)
-          {:metadata {:data-init-page "logout"}}))
+        (login)
+        {:metadata {:data-init-page "logout"}}))
 
 (defn sign-up-page [user-id href & [args]]
   (page "Sign up:"
         (sign-up)
         {:metadata {:data-init-page "sign-up"}}))
 
-(defremote sign-up-rem [user mail pass]
-  (let [res (create_temp_user user mail pass)]
-    (if (= 0 res)
-      res
-      (str "<div>" res "</div>"))))
+(defremote sign-up-rem [captcha user mail pass]
+  (if (not (captcha-check captcha (session/get :captcha)))
+    "You tried to cheat the sentience test."
+    (let [res (create_temp_user user mail pass)]
+      (if (= 0 res)
+        res
+        (str "<div>" res "</div>")))))
 
 (add-page-init! "logout" logout-redirect)
 (add-page-init! "login" login-page)
