@@ -126,4 +126,4 @@ INSERT INTO comments (content, artid, authid, birth) VALUES ('This does not mean
 -- same for temp_authors
 -- INSERT INTO temp_authors (username, email, password, salt, activation) VALUES ('John', 'john@doe.re', 'hashedhashofhashyhashhash', 'uselessfornow', 'hashyhashofhashedhashwithhashontheside');
 
-GRANT ALL PRIVILEGES ON article_authors, article_categories, article_tags, articles, author_roles, authors, categories, comments, projects, reset_links, roles, tags, temp_authors, tags_uid_seq, articles_uid_seq, comments_uid_seq, temp_authors_uid_seq, authors_uid_seq TO web;
+GRANT ALL PRIVILEGES ON article_authors, article_categories, article_tags, articles, author_roles, authors, categories, comments, projects, reset_links, newemail_links, roles, tags, temp_authors, tags_uid_seq, articles_uid_seq, reset_links_uid_seq, comments_uid_seq, temp_authors_uid_seq, authors_uid_seq TO web;
