@@ -56,11 +56,10 @@
                                     "<br><br>Regards,<br><br>~The Undefined team."
                                     "</body></html>"))
         smtp_pass (:smtp_pass (get-config))]
-    (ps/send-message ^{:host  "smtp.gmail.com"
-                       :user  "landolphia@undefined.re"
-                       :pass  (if smtp_pass smtp_pass "placeholder")
-                       :ssl   :yes!!!11}
-                     {:from     "defined@undefined.re"
+    (ps/send-message ^{:host  "localhost"
+                       :user  "do-not-reply"
+                       :pass  (if smtp_pass smtp_pass "placeholder")}
+                     {:from     "no-reply@undefined.re"
                       :to       email
                       :subject  subject
                       :body     [{:type "text/html"
