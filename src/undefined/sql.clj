@@ -306,7 +306,7 @@
 
 (defn activate_user [link]
   (do
-    (println (str "\n\nValidation token: " (first link) "\n\n"))
+    ;(println (str "\n\nValidation token: " (first link) "\n\n"))
     (flush_temp_tables)
     (let [res (first (select temp_authors (where {:activation (first link)})))]
       (if res
@@ -397,7 +397,7 @@
       -1)))
 
 (defn reset_password [username]
-  (let [[user] (select authors (where {:username username}))
+  (let [[user] (select authors (where {:username [ilike username]}))
         resetlink (when user
                     (nc/encrypt (str (:uid user) (:username user) (:password user) (now))))]
     (if resetlink
