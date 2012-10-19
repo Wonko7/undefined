@@ -16,9 +16,9 @@
         [undefined.content :only [str-to-int url-encode url-decode]]
         [undefined.auth :only [is-admin? is-author? userid]]))
 
-(defdb undef-db (postgres {:db "undefined"
+(defdb undef-db [config] (postgres {:db "undefined"
                            :user "web"
-                           :password "password";"droptableusers"
+                           :password "password"
                            ;;OPTIONAL KEYS
                            :host "127.0.0.1"
                            :port "5432"
@@ -275,7 +275,7 @@
           (fields :uid :content [:authors.username :author] [:authors.uid :authid] :birth :edit)
           (join authors (= :authors.uid :comments.authid))
           (aggregate (count :*) :cnt :comments.uid)
-          (group :authors.username :birth :edit :authors.uid)
+          (group :authors.username :birth :edit :authors.uid :content)
           (order :birth :ASC)
           (where {:artid id})))
 
