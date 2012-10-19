@@ -16,7 +16,7 @@
         [undefined.content :only [str-to-int url-encode url-decode]]
         [undefined.auth :only [is-admin? is-author? userid]]))
 
-(defdb undef-db [config] (postgres {:db "undefined"
+(defdb undef-db (postgres {:db "undefined"
                            :user "web"
                            :password "password"
                            ;;OPTIONAL KEYS
