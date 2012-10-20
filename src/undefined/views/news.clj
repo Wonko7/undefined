@@ -45,7 +45,7 @@
                 (:author comment)
                 (format-date (:birth comment)) (when (:edit comment)
                                                  (format-date (:edit comment)))
-                (:content comment)) )
+                (remove-unsafe-tags (:content comment))))
 
 (defn mk-comments [user-id article-uid]
   (concat (map (partial mk-comment user-id) (comments_by_article article-uid))

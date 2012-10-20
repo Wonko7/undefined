@@ -9,7 +9,7 @@
   [:div.hack] (html/html-content article))
 
 (def unsafe
-  (let [safe-tags #{:a :div :span :section :p :article :br :big :small :center :img}]
+  (let [safe-tags #{:a :b :i :tt :sub :sup :div :span :section :p :article :br :big :small :center :img :ul :li :dd :ol}]
     (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
