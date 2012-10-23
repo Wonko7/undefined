@@ -17,16 +17,11 @@
     (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
-  (println "|" article "|")
-  ;(html/transform (:content (first (as-tree article)))
-  ;                [unsafe] (html/substitute ""))
-  
-  ;;(println "tttt" ;(AntiSamy.)
-  ;;         (.getCleanHTML (.scan (AntiSamy.) article "resources/antisamy-tinymce-1.4.4.xml"))
-  ;;         )
+  (println article)
   (-> (AntiSamy.)
     (.scan article "resources/antisamy-tinymce-1.4.4.xml")
-    .getCleanHTML)
+    .getCleanHTML
+    as-tree)
   )
 
 (defn str-to-int [s & [fallback]]
