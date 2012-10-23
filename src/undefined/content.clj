@@ -1,6 +1,10 @@
 (ns undefined.content
   (:use [undefined.views.common])
-  (:import (java.net URLEncoder URLDecoder))
+  ;(:import (java.net URLEncoder URLDecoder)
+  ;         [org.owasp.antisamy])
+  ;;         org.owasp.antisamy.antisamy)
+  (:import [org.owasp.validator.html AntiSamy CleanResults]
+           [java.net URLEncoder URLDecoder])
   (:require [net.cgrand.enlive-html :as html]
             [noir.util.crypt :as nc]))
 
@@ -13,8 +17,17 @@
     (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
-  (html/transform (:content (first (as-tree article)))
-                  [unsafe] (html/substitute "")))
+  (println (type article))
+  ;(html/transform (:content (first (as-tree article)))
+  ;                [unsafe] (html/substitute ""))
+  
+  (println "tttt" ;(AntiSamy.)
+           (.getCleanHTML (.scan (AntiSamy.) article "resources/antisamy-tinymce-1.4.4.xml"))
+           )
+  (-> (AntiSamy.)
+    (.scan article "resources/antisamy-tinymce-1.4.4.xml")
+    .getCleanHTML)
+  )
 
 (defn str-to-int [s & [fallback]]
   (let [fallback (or fallback 0)]

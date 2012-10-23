@@ -8,13 +8,15 @@
                  [clj-time "0.4.4"]
                  [com.cemerick/friend "0.1.1-SNAPSHOT" :exclusions [ring/ring-core]]
                  [digest "1.3.0"]
+                 [com.draines/postal "1.9.0"]
+                 [org.owasp.antisamy/antisamy "1.4.5"]
                  ;; clj & cljs:
                  [fetch "0.1.0-alpha2"]
                  ;; cljs:
                  [enfocus "1.0.0-alpha3"]
                  ;; tests: FIXME can we specify dependencies for tests only? what does :scope do?
                  [clj-webdriver "0.6.0-alpha11"]
-                 [com.draines/postal "1.9.0"]]
+                 ]
   :plugins [[lein-cljsbuild "0.2.6"]]
   :cljsbuild {
               :builds [{
