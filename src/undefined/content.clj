@@ -17,12 +17,12 @@
     (html/pred #(not ((:tag %) safe-tags)))))
 
 (defn remove-unsafe-tags [article]
-  (println article)
   (-> (AntiSamy.)
     (.scan article "resources/antisamy-tinymce-1.4.4.xml")
     .getCleanHTML
-    as-tree)
-  )
+    as-tree             ;; FIXME -> use html-content instead of append? check if this breaks things.
+    first
+    :content))
 
 (defn str-to-int [s & [fallback]]
   (let [fallback (or fallback 0)]
